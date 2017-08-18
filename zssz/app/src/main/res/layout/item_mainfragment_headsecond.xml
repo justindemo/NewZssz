@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_citypersonreport"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="我要举报"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_mayorphone"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="市长热线"
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

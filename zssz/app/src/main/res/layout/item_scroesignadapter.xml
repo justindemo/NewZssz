@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:background="@color/cc_dark_fade"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+    <ImageView
+        android:scaleType="fitXY"
+        android:id="@+id/item_iv_scoresign"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <RelativeLayout
+        android:padding="10dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_scoresign_request"
+            android:text="会员积分500以上"
+            android:textSize="18sp"
+            android:layout_marginTop="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_scoresign_prize"
+            android:text="领取"
+            android:layout_marginRight="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_rect_btn_orage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

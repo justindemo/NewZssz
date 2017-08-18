@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:background="@color/graybackground"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"/>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+
+    <TextView
+        android:id="@+id/tv_mainfragment_title"
+        android:text="注册会员"
+        android:drawablePadding="6dp"
+        android:drawableLeft="@drawable/shape_title"
+        android:drawableRight="@drawable/shape_title"
+        android:textSize="18sp"
+        android:paddingTop="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@color/cc_dark_fade"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_rv_mainfragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

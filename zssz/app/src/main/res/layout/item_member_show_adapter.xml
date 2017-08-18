@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="210dp">
+
+    <ImageView
+        android:scaleType="fitXY"
+        android:id="@+id/iv_membershow"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:background="#aaFFFFFF"
+            android:id="@+id/tv_membershow"
+            android:text="北京市市政协会"
+            android:layout_above="@+id/view_bottom"
+            android:maxLines="2"
+            android:padding="4dp"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/iv_rightarrow"
+            android:layout_above="@+id/view_bottom"
+            android:layout_alignParentRight="true"
+            android:background="@mipmap/rightarrow"
+            android:layout_width="22dp"
+            android:layout_height="22dp" />
+        <View
+            android:layout_marginTop="3dp"
+            android:id="@+id/view_bottom"
+            android:layout_alignParentBottom="true"
+            android:background="@color/graybackground"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+    </RelativeLayout>
+
+
+</FrameLayout>

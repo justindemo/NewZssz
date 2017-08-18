@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/iv_send_photo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            />
+
+        <RelativeLayout
+            android:id="@+id/rl_send_road_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            >
+            <TextView
+                android:id="@+id/tv_survey_faci"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上报设施："
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/tv_survey_faciname"
+                android:layout_toRightOf="@+id/tv_survey_faci"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="道路设施"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_below="@+id/tv_survey_faciname"
+                android:id="@+id/tv_survey_time"
+                android:layout_toRightOf="@+id/tv_survey_timetitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="2017-8-8 16:58"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_below="@+id/tv_survey_faciname"
+                android:id="@+id/tv_survey_timetitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="上报时间："
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_alignParentBottom="true"
+                android:id="@+id/tv_deal_statue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="处理状态："
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_survey_statue"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/tv_deal_statue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="正在处置中"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:background="@color/cc_dark_fade"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
+
+
+</LinearLayout>

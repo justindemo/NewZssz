@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cde6c7"
+    android:orientation="vertical">
+
+    <Button
+        android:textSize="20sp"
+        android:textColor="@color/cc_text_blank"
+        android:text="一类病害"
+        android:id="@+id/btn_help_frist"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_setting_btn"/>
+    <Button
+        android:textSize="20sp"
+        android:textColor="@color/cc_text_blank"
+        android:text="二类病害"
+        android:layout_marginTop="6dp"
+        android:id="@+id/btn_help_second"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_setting_btn"/>
+    <Button
+        android:textSize="20sp"
+        android:textColor="@color/cc_text_blank"
+        android:text="三类病害"
+        android:id="@+id/btn_help_thrid"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/shape_setting_btn"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:visibility="invisible"
+            android:background="@drawable/list_item_bg_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/textred"
+                android:text="管理制度"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:src="@mipmap/arrow_down" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

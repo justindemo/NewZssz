@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/graybackground">
+
+    <LinearLayout
+        android:layout_above="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/shape_exit"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:text="协会名称："
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/association_tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="北京市市政协会"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/shape_exit">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:text="协会负责人："
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/association_tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:text="zzc"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/shape_exit">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:text="协会位置："
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_see_loca"
+                android:layout_marginRight="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cc_green"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="查看详细位置"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+            />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/shape_exit">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:text="负责人电话："
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_marginRight="3dp"
+                android:id="@+id/association_tv_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:padding="3dp"
+                android:text="12323123"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/shape_exit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_margin="6dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:background="@color/colorPrimary"
+                    android:layout_width="4dp"
+                    android:layout_height="20dp"/>
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:text="如何获取数据"
+                    android:textSize="15sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <View
+                android:background="@color/graybackground"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_getcontent"
+                    android:text="1、请按以下八类病害举报：道路设施、交通设施、桥梁设施、照明设施、公共设施、排水设施、河道设施、城市环境。\n
+2、上报期间请确保手机GPS处于开启状态，以便于更明确的反应上报事件事实性。\n
+3、上报病害需要抓拍三张照片，确定病害图片一张，街道标牌一张，附近明显建筑物一张。\n
+4、病害举报图片，要清晰反应病害性质、街道、病害地点和标志性建筑物。\n
+5、禁止在骑行或驾车时上报操作，以免发生交通意外。\n
+6、我们鼓励您参与实名举报病害信息行为，市政部门会保护举报人的个人隐私。\n
+"
+                    android:layout_width="match_parent"
+                    android:scrollbars="vertical"
+                    android:maxLines="12"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+            </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_margin="6dp"
+            android:text="获取数据"
+            android:textSize="18sp"
+            android:textColor="@color/cc_white"
+            android:id="@+id/btn_getcotent"
+            android:background="@drawable/btn_positive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:targetApi="lollipop"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:stateListAnimator="@drawable/lift_on_touch"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/dp_4"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="false">
+
+    <LinearLayout
+        android:padding="3dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="80dp" />
+
+        <RelativeLayout
+            android:layout_marginLeft="6dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:textColor="#000000"
+                android:id="@+id/tv_news_title"
+                android:text="第六届阿萨德路口附近代理费鸡丝豆腐阿萨德附近阿斯蒂芬啦阿桑德拉夫阿斯兰多夫萨拉蒂夫塑料口袋福萨利的法律撒地方"
+                android:textSize="18sp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="2017-8-8 16:35:59"
+                android:textSize="16sp"
+                android:textColor="#aa000000"
+                android:id="@+id/tv_news_time"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+</android.support.v7.widget.CardView>

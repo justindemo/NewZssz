@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">掌上市政</string>
+    <string name="logo_userName">账号 :</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="logo_passWordName">密码 :</string>
+    <string name="report_dealgrade">处置等级：</string>
+    <string name="report_dealcategory">处置类别：</string>
+    <string name="report_department">受理部门：</string>
+    <string name="report_facategory">设施类别：</string>
+    <string name="report_faname">设施名称：</string>
+    <string name="report_pbtype">病害类型：</string>
+    <string name="report_facility">设施材料：</string>
+    <string name="report_fasize">材料规格：</string>
+    <string name="report_roadname">道路名称：</string>
+
+
+    <string name="permission_get_accounts_hint">没有此权限，无法开启这个功能，请开启权限。PERMISSION_GET_ACCOUNTS</string>
+    <string name="permission_read_phone_hint">读取手机权限</string>
+    <string name="permission_call_phone_hint">请打开电话权限</string>
+    <string name="permission_camera_hint">请打开拍照权限</string>
+    <string name="permission_access_fine_location_hint">请打开位置信息，提供定位信息</string>
+    <string name="permission_access_coarse_location_hint">请打开位置信息，提供定位信息</string>
+    <string name="permission_read_external_hint">请允许读取SD卡</string>
+    <string name="permission_white_external_hint">请允许读写SD卡</string>
+    <string name="permission_recode_audio_hint">请打开录音权限</string>
+
+
+
+    <string-array name="permissions">
+        <item>@string/permission_recode_audio_hint</item>
+        <item>@string/permission_get_accounts_hint</item>
+        <item>@string/permission_read_phone_hint</item>
+        <item>@string/permission_call_phone_hint</item>
+        <item>@string/permission_camera_hint</item>
+        <item>@string/permission_access_fine_location_hint</item>
+        <item>@string/permission_access_coarse_location_hint</item>
+        <item>@string/permission_read_external_hint</item>
+        <item>@string/permission_white_external_hint</item>
+    </string-array>
+
+</resources>

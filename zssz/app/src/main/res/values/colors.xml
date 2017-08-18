@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF4500</color>
+    <color name="colorPrimaryDark">#F36c21</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="uncheck">#72bcdf</color>
+    <color name="red">#e681a3</color>
+    <color name="allbule">#72bcdf</color>
+    <color name="textred">#e23751</color>
+    <color name="white">#FFFFFF</color>
+    <color name="settingButton">#aa00957E</color>
+    <color name="graybackground">#e7e7e7</color>
+    <color name="gray">#464646</color>
+    <color name="greenbackground1">#cde6c7</color>
+    <color name="greenbackground">#add7a5</color>
+    <color name="greenCheck">#84c774</color>
+    <color name="bule">#8fc6f2</color>
+    <color name="cc_orage">#e9c6a2</color>
+    <color name="cc_orage_start">#fff08519</color>
+    <color name="cc_orage_end">#fff06f19</color>
+    <color name="cc_orage_bk">#fff07019</color>
+    <color name="cc_orage_light">#fff09d48</color>
+    <color name="cc_orage_enable">#ffcfcfcf</color><!-- 浅白fff0a75b -->
+    <color name="cc_orage_hint">#22f08519</color><!-- 不透明#fff0e6dc -->
+    <color name="cc_orage_red">#fff86851</color>
+    <color name="cc_orage_dark">#ffde7b17</color>
+    <color name="cc_orage_head">#fff08519</color>
+    <color name="cc_blue">#909bed</color>
+    <color name="cc_blue_hot">#ff00557f</color>
+    <color name="cc_lay_nomal">#ffffffff</color>
+    <color name="cc_lay_pressed">#07000000</color>
+    <color name="cc_lay_pressed_untran">#fff9f9f9</color>
+    <color name="cc_lay_pressed_untran_dark">#fff5f5f5</color>
+    <color name="cc_lay_pressed_white">#44ffffff</color>
+    <color name="cc_lay_selected">#11000000</color>
+    <color name="cc_light">#10000000</color>
+    <color name="cc_cyan">#fac9efd7</color>
+    <color name="cc_dark">#ff555555</color>
+    <color name="cc_dark_fade">#33000000</color>
+    <color name="cc_hint">#ffcccccc</color>
+    <color name="cc_hintlight">#ffdddddd</color>
+    <color name="cc_line">#11000000</color>
+    <color name="cc_line_dark">#33000000</color>
+    <color name="cc_line_darklight">#22000000</color>
+    <color name="cc_head_bk">#22000000</color>
+    <color name="cc_string">#ffb8a087</color>
+    <color name="cc_stroke">#ffe4e4e4</color><!-- 描边颜色 -->
+    <color name="cc_shadow_dark">#05000000</color>
+    <color name="cc_shadow_light">#11ffffff</color>
+    <color name="none">#00000000</color>
+    <color name="cc_card_hot">#44000000</color>
+    <color name="cc_cricle_red">#fdff7d7d</color>
+
+    <color name="cc_bluelight">#ff3dc3ff</color>
+
+    <color name="cc_green">#a3e4b7</color>
+
+    <color name="background">#eefdea</color>
+    <color name="cc_coffeedark">#b39972</color>
+    <color name="cc_red">#fff86851</color>
+    <color name="cc_cofee">#ff9c7145</color>
+    <color name="cc_add_dark">#44000000</color>
+    <color name="cc_white_head">#fff0f0f0</color>
+    <color name="cc_white">#ffeeeeee</color>
+    <color name="cc_bk">#fff0f0f0</color><!-- fff1f1f1 -->
+    <color name="cc_bk_dark">#ffdcdcdc</color>
+    <color name="cc_text_blank">#ff4b4b4b</color>
+    <color name="cc_text_dark">#414840</color>
+    <color name="cc_text_darklight">#7b7b7b</color>
+    <color name="cc_text_light">#ffcccccc</color>
+    <color name="cc_text_logolight">#ff999999</color>
+    <color name="cc_btn_off">#ffdedede</color>
+    <color name="cc_dot_orage">#fff08519</color>
+    <color name="cc_dot_dark">#ffdcd3cb</color>
+    <color name="cc_btn_bule">#FF3CA9B6</color>
+
+    <color name="cc_list_title_bk">#fff0f0f0</color>
+
+</resources>

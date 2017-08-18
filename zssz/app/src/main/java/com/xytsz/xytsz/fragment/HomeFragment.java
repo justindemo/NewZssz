@@ -1,0 +1,344 @@
+package com.xytsz.xytsz.fragment;
+
+
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.view.View;
+import android.widget.TextView;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.TextureMapView;
+import com.baidu.mapapi.model.LatLng;
+import com.dalong.marqueeview.MarqueeView;
+import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.activity.CheckActivity;
+import com.xytsz.xytsz.activity.DealActivity;
+import com.xytsz.xytsz.activity.PostActivity;
+import com.xytsz.xytsz.activity.ReportActivity;
+import com.xytsz.xytsz.activity.ReviewActivity;
+import com.xytsz.xytsz.activity.SendActivity;
+import com.xytsz.xytsz.base.BaseFragment;
+
+import com.xytsz.xytsz.global.GlobalContanstant;
+
+import com.xytsz.xytsz.net.NetUrl;
+import com.xytsz.xytsz.util.IntentUtil;
+import com.xytsz.xytsz.util.PermissionUtils;
+import com.xytsz.xytsz.util.SpUtils;
+import com.xytsz.xytsz.util.ToastUtil;
+
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
+/**
+ * Created by admin on 2017/1/4.
+ *
+ */
+public class HomeFragment extends BaseFragment implements ActivityCompat.OnRequestPermissionsResultCallback {
+
+
+    private TextureMapView mapview;
+    private BaiduMap map;
+    private View mllReport;
+    private View mllReview;
+    private View mllDeal;
+    private View mllSend;
+    private View mllUncheck;
+    private View mllCheck;
+    private TextView mtvdealNumber;
+    private TextView mtvreviewNumber;
+    private TextView mtvsendNumber;
+    private TextView mtvuncheckNumber;
+    private TextView mtvcheckNumber;
+    private LocationClient locationClient;
+    private double longitude;
+    private double latitude;
+    public BDLocationListener myListener = new MyListener();
+    private View.OnClickListener listener = new MyListener();
+    private int role;
+    private PermissionUtils.PermissionGrant mPermissionGrant
+            = new PermissionUtils.PermissionGrant() {
+
+        @Override
+        public void onPermissionGranted(int requestCode) {
+            switch (requestCode) {
+                //case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
+                    case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
+                    locat();
+                    break;
+            }
+        }
+    };
+    private MarqueeView mtvMarquee;
+
+
+    @Override
+    public View initView() {
+        View view = View.inflate(getActivity(), R.layout.fragment_home, null);
+        mtvMarquee = (MarqueeView) view.findViewById(R.id.tv_marquee);
+        mapview = (TextureMapView) view.findViewById(R.id.home_mv);
+        mllReport = view.findViewById(R.id.ll_home_report);
+        mllReview = view.findViewById(R.id.ll_home_review);
+        mllDeal = view.findViewById(R.id.ll_home_deal);
+        mllSend = view.findViewById(R.id.ll_home_send);
+        mllUncheck = view.findViewById(R.id.ll_home_uncheck);
+        mllCheck = view.findViewById(R.id.ll_home_check);
+        mtvdealNumber = (TextView) view.findViewById(R.id.tv_home_deal_number);
+        mtvreviewNumber = (TextView) view.findViewById(R.id.tv_home_review_number);
+        mtvsendNumber = (TextView) view.findViewById(R.id.tv_home_send_number);
+        mtvuncheckNumber = (TextView) view.findViewById(R.id.tv_home_unchecek_number);
+        mtvcheckNumber = (TextView) view.findViewById(R.id.tv_home_check_number);
+        return view;
+    }
+
+    private  int personId;
+
+    @Override
+    public void initData() {
+
+        mtvMarquee.setText("全国掌上市政上线人数："+"10086");
+        mtvMarquee.setFocusable(true);
+        mtvMarquee.requestFocus();
+        mtvMarquee.sepX = 2;
+        mtvMarquee.startScroll();
+
+
+        //获取当前登陆人的ID
+        personId = SpUtils.getInt(getContext(),GlobalContanstant.PERSONID);
+
+        //是否显示缩放按钮
+        mapview.showZoomControls(false);
+        //是否显示地图标尺
+        mapview.showScaleControl(false);
+        map = mapview.getMap();
+
+        //PermissionUtils.requestPermission(this.getActivity(), PermissionUtils.CODE_ACCESS_FINE_LOCATION, mPermissionGrant);
+        PermissionUtils.requestPermission(this.getActivity(), PermissionUtils.CODE_ACCESS_COARSE_LOCATION, mPermissionGrant);
+
+        map.setMapStatus(MapStatusUpdateFactory.zoomTo(18));
+        //1,纬度double latitude  2，经度longitude  116.347005,39.812991
+        mllCheck.setOnClickListener(listener);
+        mllReport.setOnClickListener(listener);
+        mllUncheck.setOnClickListener(listener);
+        mllDeal.setOnClickListener(listener);
+        mllSend.setOnClickListener(listener);
+        mllReview.setOnClickListener(listener);
+
+    }
+
+    private void locat() {
+        locationClient = new LocationClient(getContext());
+        locationClient.registerLocationListener(myListener);
+
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);// 可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");// 可选，默认gcj02，设置返回的定位结果坐标系
+        int span = 3600 * 1000;
+        option.setScanSpan(5000);// 可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);// 可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);// 可选，默认false,设置是否使用gps
+        option.setLocationNotify(false);// 可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIgnoreKillProcess(true);// 可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
+        locationClient.setLocOption(option);
+
+    }
+
+    private void markMe(LatLng latlng) {
+        BitmapDescriptor bitmap = BitmapDescriptorFactory
+                .fromResource(R.mipmap.icon_geo);
+        MarkerOptions option = new MarkerOptions();
+        //经纬度
+        option.position(latlng).icon(bitmap);
+        map.clear();
+        map.addOverlay(option);
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtils.requestPermissionsResult(getActivity(),requestCode,permissions,grantResults,mPermissionGrant);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+       if (locationClient != null) {
+           locationClient.start();
+       }
+        role = SpUtils.getInt(getContext(), GlobalContanstant.ROLE);
+        mtvMarquee.startScroll();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapview.onResume();
+        mtvMarquee.startScroll();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapview.onPause();
+        if (locationClient != null) {
+            locationClient.stop();
+        }
+        mtvMarquee.stopScroll();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapview.onDestroy();
+        super.onDestroy();
+    }
+    private static final int ISLOAD = 33301;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what){
+                case ISLOAD:
+                    String isload = (String) msg.obj;
+                    if (!isload.equals("true")){
+                        ToastUtil.shortToast(getContext(),"上报位置信息失败，请检查网络");
+                    }
+                    break;
+            }
+        }
+    };
+
+    private class MyListener implements BDLocationListener, View.OnClickListener {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            //获取到经度
+            longitude = bdLocation.getLongitude();
+            //获取到纬度
+            latitude = bdLocation.getLatitude();
+            //经纬度  填的是纬度，经度
+            LatLng latlng = new LatLng(latitude, longitude);
+            try {
+                if (map != null) {
+                    map.setMapStatus(MapStatusUpdateFactory.newLatLng(latlng));
+                    markMe(latlng);
+                } else {
+                    ToastUtil.shortToast(getContext(), "无法定位，请检查网络");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            new Thread(){
+                @Override
+                public void run() {
+
+                    try {
+                        String isLoad = toUpLoadLocation(personId, latitude+"", longitude+"");
+
+                        Message message = Message.obtain();
+                        message.what = ISLOAD;
+                        message.obj = isLoad;
+                        handler.sendMessage(message);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }.start();
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ll_home_report:
+
+                    IntentUtil.startActivity(getContext(), ReportActivity.class);
+
+                    break;
+                case R.id.ll_home_review:
+                    if (role == 1) {
+                        IntentUtil.startActivity(getContext(), ReviewActivity.class);
+                    } else {
+                        ToastUtil.shortToast(getContext(), "您没有审核的权限");
+                    }
+                    //IntentUtil.startActivity(getContext(), ReviewActivity.class);
+
+                    break;
+                case R.id.ll_home_send:
+                    //下派
+                    if (role == 1) {
+                        IntentUtil.startActivity(getContext(), SendActivity.class);
+                    } else {
+                        ToastUtil.shortToast(getContext(), "您没有下派的权限");
+                    }
+                    //IntentUtil.startActivity(getContext(), SendActivity.class);
+                    break;
+                case R.id.ll_home_deal:
+                    //处置 1，2
+                    if (role == 1 || role == 2) {
+                        IntentUtil.startActivity(getContext(), DealActivity.class);
+                    } else {
+                        ToastUtil.shortToast(getContext(), "您没有处置的权限");
+                    }
+                    //IntentUtil.startActivity(getContext(), DealActivity.class);
+                    break;
+                case R.id.ll_home_uncheck:
+                    //报验
+                    if (role == 1 || role == 2) {
+                        IntentUtil.startActivity(getContext(), PostActivity.class);
+                    } else {
+                        ToastUtil.shortToast(getContext(), "您没有报验的权限");
+                    }
+                    //IntentUtil.startActivity(getContext(), PostActivity.class);
+                    break;
+                case R.id.ll_home_check:
+                    //验收
+                    if (role == 1) {
+                        IntentUtil.startActivity(getContext(), CheckActivity.class);
+                    } else {
+                        ToastUtil.shortToast(getContext(), "您没有验收的权限");
+                    }
+                    //IntentUtil.startActivity(getContext(), CheckActivity.class);
+                    break;
+            }
+        }
+    }
+    
+    private String toUpLoadLocation(int personID, String latitude, String longitude) throws  Exception{
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace,NetUrl.uploadLocationmethodName);
+        soapObject.addProperty("personId",personID);
+        soapObject.addProperty("latitude",latitude);
+        soapObject.addProperty("longitude",longitude);
+
+        SoapSerializationEnvelope envelope  =new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.setOutputSoapObject(soapObject);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet= true;
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(NetUrl.toUploadlocation_SOAP_ACTION,envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+        return result;
+    }
+
+}

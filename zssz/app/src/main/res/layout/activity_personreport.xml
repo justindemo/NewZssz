@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/cc_dark_fade" />
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上报人电话："
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/et_person_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="@color/graybackground" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上报人姓名："
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/et_person_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请输入姓名"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/cc_dark_fade" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上报设施："
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/report_spinner">
+
+            <Spinner
+                android:id="@+id/report_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="详细描述："
+            android:textSize="18sp" />
+
+        <EditText
+            android:padding="6dp"
+            android:id="@+id/et_personreport_inform"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_title"
+            android:background="@drawable/shape_uncheck_information"
+            android:gravity="top" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="6dp">
+
+        <TextView
+            android:id="@+id/pic"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="上报图片：" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pic"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/shape_uncheck_information"
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/iv_person_report_pic1"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/iv_person_report_pic2"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="8dp"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/iv_person_report_pic3"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="8dp"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="4dp"
+            android:layout_below="@+id/ll_iv"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上报位置："
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_person_add"
+                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:background="@drawable/report_spinner"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:layout_weight="1"
+                android:textSize="17sp" />
+
+
+            <ImageView
+                android:id="@+id/iv_update_loca"
+                android:clickable="true"
+                android:background="@mipmap/icon_locat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_person_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:background="@drawable/btn_positive"
+            android:text="提交审核" />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_myscore_msc"
+        android:text="签到"
+        android:paddingTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_myscore_num"
+        android:text="+10"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textColor="@color/cc_orage_red"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_myscore_signtime"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/tv_myscore_msc"
+        android:textColor="@color/cc_text_darklight"
+        android:text="2017-7-17 17:10:20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_below="@+id/tv_myscore_signtime"
+        android:layout_marginTop="4dp"
+        android:background="@color/cc_dark_fade"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"/>
+</RelativeLayout>

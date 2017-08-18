@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.xytsz.xytsz.ui.NoScrollViewpager
+        android:id="@+id/homeactivity_vp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/cc_dark_fade"/>
+
+    <!--底部按钮-->
+    <RadioGroup
+        android:id="@+id/homeactivity_rg_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:background="@color/white"
+        >
+        <!-- checked : 是否选中RadioButton true:选中,false:不选中
+             button : 设置单选按钮的样式,@null : 不使用样式
+             drawableTop : 在文本的顶部设置图片
+        -->
+        <RadioButton
+            android:id="@+id/homeactivity_rbtn_working"
+            style="@style/HomeActivityRadioButtonStyle"
+            android:drawableTop="@mipmap/button_setting_nor"
+            android:text="巡护" />
+
+        <RadioButton
+            android:id="@+id/homeactivity_rbtn_more"
+            style="@style/HomeActivityRadioButtonStyle"
+            android:drawableTop="@mipmap/button_supervise_nor"
+            android:text="监管" />
+
+        <RadioButton
+            android:id="@+id/homeactivity_rbtn_home"
+            style="@style/HomeActivityRadioButtonStyle"
+            android:drawableTop="@mipmap/button_home_nor"
+            android:text="首页" />
+
+        <RadioButton
+            android:id="@+id/homeactivity_rbtn_data"
+            style="@style/HomeActivityRadioButtonStyle"
+            android:drawableTop="@mipmap/button_data_nor"
+            android:text="数据" />
+
+        <RadioButton
+            android:id="@+id/homeactivity_rbtn_me"
+            style="@style/HomeActivityRadioButtonStyle"
+            android:drawableTop="@mipmap/button_me_nor"
+            android:text="我的" />
+
+
+    </RadioGroup>
+</LinearLayout>

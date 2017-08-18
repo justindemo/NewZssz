@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:background="@color/graybackground"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+    <LinearLayout
+        android:id="@+id/item_lightsight_ll_title"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="今日大牌"
+            android:textSize="18sp"
+            android:drawableLeft="@mipmap/green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ImageView
+        android:scaleType="fitXY"
+        android:src="@mipmap/logo"
+        android:id="@+id/lightsight_imagview"
+        android:layout_width="match_parent"
+        android:layout_height="185dp" />
+</LinearLayout>

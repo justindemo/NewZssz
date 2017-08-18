@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popupmap"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/marker_reporter_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@mipmap/my_icon" />
+
+    <TextView
+        android:id="@+id/report_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/marker_reporter_icon"
+        android:layout_marginTop="6dp"
+        android:text="张何阳"
+        android:textSize="19sp" />
+
+    <ImageView
+        android:id="@+id/status_deal"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/marker_reporter_icon"
+        android:background="@drawable/shape_statu" />
+
+    <TextView
+        android:id="@+id/tv_statu"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/status_deal"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:layout_toRightOf="@+id/marker_reporter_icon"
+        android:text="审核中"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/iv_deal_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/tv_statu" />
+
+    <Button
+        android:id="@+id/bt_navi"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_name"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/bule"
+        android:text="导航"
+        android:textColor="@color/white"
+        android:textSize="23sp" />
+
+    <Button
+        android:id="@+id/bt_mark_detail"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/report_name"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/cc_green"
+        android:text="详细"
+        android:textColor="@color/white"
+        android:textSize="23sp" />
+
+</RelativeLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/iv_reporte"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="center"/>
+
+    <RelativeLayout
+        android:paddingTop="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <TextView
+            android:layout_marginLeft="3dp"
+            android:id="@+id/tv_my_reporter_title"
+            android:text="上报人："
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_my_reporter"
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/tv_my_reporter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/tv_my_reporter"
+            android:layout_marginLeft="3dp"
+            android:id="@+id/tv_my_pbname_title"
+            android:text="病害名称："
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:text="一类病害"
+            android:id="@+id/tv_my_pbname"
+            android:layout_below="@id/tv_my_reporter"
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/tv_my_pbname_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/tv_my_pbname_title"
+            android:layout_marginLeft="3dp"
+            android:id="@+id/tv_my_report_time_title"
+            android:text="上报时间："
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:text="2017-05-31 09:29:54"
+            android:id="@+id/tv_my_report_time"
+            android:layout_below="@id/tv_my_pbname_title"
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/tv_my_pbname_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </RelativeLayout>
+</LinearLayout>
