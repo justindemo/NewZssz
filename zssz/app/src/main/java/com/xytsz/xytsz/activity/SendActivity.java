@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 import com.xytsz.xytsz.R;
@@ -52,12 +53,15 @@ public class SendActivity extends AppCompatActivity {
     private SendAdapter adapter;
     private int size;
     private ProgressBar mProgressBar;
+    private TextView mtvfail;
+    private String nodata;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send);
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
+        nodata = getString(R.string.send_nodata);
         initView();
         initData();
 
@@ -66,6 +70,7 @@ public class SendActivity extends AppCompatActivity {
     private void initView() {
         mLv = (ListView) findViewById(R.id.lv_send);
         mProgressBar = (ProgressBar) findViewById(R.id.review_progressbar);
+        mtvfail = (TextView) findViewById(R.id.tv_send_fail);
     }
 
     private void initData() {
@@ -99,7 +104,9 @@ public class SendActivity extends AppCompatActivity {
 
                                     mLv.setAdapter(adapter);
                                     if (list.size() == 0){
-                                        ToastUtil.shortToast(getApplicationContext(),"没有下派数据");
+                                        mtvfail.setText(nodata);
+                                        mtvfail.setVisibility(View.VISIBLE);
+                                        ToastUtil.shortToast(getApplicationContext(),nodata);
                                     }
                                     mProgressBar.setVisibility(View.GONE);
                                 }

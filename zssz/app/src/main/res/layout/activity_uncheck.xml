@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="处置前："
+            android:text="@string/uncheck_redeal"
             android:layout_marginLeft="6dp"
             android:textSize="20sp" />
 
@@ -72,7 +72,7 @@
     <Button
         android:id="@+id/bt_uncheck_predeal"
         android:textColor="@color/white"
-        android:text="上报"
+        android:text="@string/reprote"
         android:textSize="23sp"
         android:background="@drawable/slecetor_btn_uncheck"
         android:layout_width="match_parent"
@@ -88,7 +88,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="处置中："
+            android:text="@string/uncheck_deal"
             android:layout_marginLeft="6dp"
             android:textSize="20sp" />
 
@@ -133,7 +133,7 @@
     <Button
         android:id="@+id/bt_uncheck_dealing"
         android:textColor="@color/white"
-        android:text="上报"
+        android:text="@string/reprote"
         android:textSize="23sp"
         android:background="@drawable/slecetor_btn_uncheck"
         android:layout_width="match_parent"
@@ -150,7 +150,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="处置后："
+            android:text="@string/uncheck_dealed"
             android:layout_marginLeft="6dp"
             android:textSize="20sp" />
 
@@ -198,7 +198,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:padding="5dp"
-        android:hint="维修备注："
+        android:hint="@string/check_detail_repair"
         android:gravity="top"
         android:maxLines="3"
 
@@ -208,7 +208,7 @@
 
     <Button
         android:id="@+id/bt_uncheck_dealed"
-        android:text="报验"
+        android:text="@string/post"
         android:textColor="@color/white"
         android:background="@drawable/slecetor_btn_uncheck"
         android:textSize="23sp"

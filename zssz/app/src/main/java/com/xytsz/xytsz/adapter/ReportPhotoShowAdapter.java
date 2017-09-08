@@ -50,8 +50,8 @@ public class ReportPhotoShowAdapter extends PagerAdapter{
 
         String path = imageUrllist.get(position);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
-        Bitmap imageBitmap = rotateBitmap(bitmap, 90f);
-        imageView.setImageBitmap(imageBitmap);
+        //Bitmap imageBitmap = rotateBitmap(bitmap, 90f);
+        imageView.setImageBitmap(bitmap);
         //Glide.with(container.getContext()).load(imageUrllist.get(position)).transform(new RotateTransformation(container.getContext(),90f)).into(imageView);
         container.addView(imageView);
         return imageView;

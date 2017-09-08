@@ -131,8 +131,6 @@ public class RoadActivity extends AppCompatActivity {
 
 
 
-
-
                         Review.ReviewRoad reviewRoad = review.getReviewRoadList().get(position);
 
                         List<Review.ReviewRoad.ReviewRoadDetail> list = reviewRoad.getList();

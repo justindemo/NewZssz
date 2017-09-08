@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,6 +23,7 @@ import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.SpUtils;
+import com.xytsz.xytsz.util.ToastUtil;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -44,21 +47,25 @@ public class MyDealedActivity extends AppCompatActivity {
     private static final int DEALED = 100002;
     @Bind(R.id.lv_reprote)
     ListView lvReprote;
+    @Bind(R.id.myreport_progressbar)
+    ProgressBar myreportProgressbar;
+    @Bind(R.id.tv_fail)
+    TextView tvFail;
     private int personId;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case DEALED:
 
                     final List<ForMyDis> details = (List<ForMyDis>) msg.obj;
 
                     if (details.size() != 0) {
                         //加载数据
-                        MyReportAdapter adapter = new MyReportAdapter(details,imageUrlLists);
+                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists);
                         if (adapter != null) {
+                            myreportProgressbar.setVisibility(View.GONE);
                             lvReprote.setAdapter(adapter);
                         }
                         lvReprote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -66,14 +73,19 @@ public class MyDealedActivity extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 //点击的时候把数据传进去
 
-                                Intent intent = new Intent(MyDealedActivity.this,MyDealedDetailActivity.class);
-                                intent.putExtra("detail",details.get(position));
-                                intent.putExtra("imageUrlreport",(Serializable) imageUrlLists.get(position));
-                                intent.putExtra("imageUrlpost",(Serializable) imageUrlPostLists.get(position));
+                                Intent intent = new Intent(MyDealedActivity.this, MyDealedDetailActivity.class);
+                                intent.putExtra("detail", details.get(position));
+                                intent.putExtra("imageUrlreport", (Serializable) imageUrlLists.get(position));
+                                intent.putExtra("imageUrlpost", (Serializable) imageUrlPostLists.get(position));
 
                                 startActivity(intent);
                             }
                         });
+                    } else {
+                        tvFail.setVisibility(View.VISIBLE);
+                        tvFail.setText(nodata);
+                        myreportProgressbar.setVisibility(View.GONE);
+                        ToastUtil.shortToast(getApplicationContext(), nodata);
                     }
                     break;
 
@@ -82,6 +94,7 @@ public class MyDealedActivity extends AppCompatActivity {
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
     private List<List<ImageUrl>> imageUrlPostLists = new ArrayList<>();
+    private String nodata;
 
 
     @Override
@@ -92,15 +105,16 @@ public class MyDealedActivity extends AppCompatActivity {
         //拿到当前登陆人的ID;
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
         //取网络数据
-
+        nodata = getString(R.string.mydealed_nodata);
         initData();
 
     }
 
 
-
     private void initData() {
-        new Thread(){
+
+        myreportProgressbar.setVisibility(View.VISIBLE);
+        new Thread() {
             @Override
             public void run() {
                 String data = getData();
@@ -110,7 +124,7 @@ public class MyDealedActivity extends AppCompatActivity {
                     }.getType());
 
 
-                    for (ForMyDis forMyDis:details){
+                    for (ForMyDis forMyDis : details) {
                         String taskNumber = forMyDis.getTaskNumber();
 
                         String json = null;
@@ -127,7 +141,7 @@ public class MyDealedActivity extends AppCompatActivity {
                             }
 
 
-                            if (post != null){
+                            if (post != null) {
                                 List<ImageUrl> imageUrlPostList = new Gson().fromJson(post, new TypeToken<List<ImageUrl>>() {
                                 }.getType());
 
@@ -167,14 +181,14 @@ public class MyDealedActivity extends AppCompatActivity {
 
         httpTransportSE.call(NetUrl.getPostImageURL_SOAP_ACTION, envelope);
         SoapObject object = (SoapObject) envelope.bodyIn;
-        String result =  object.getProperty(0).toString();
+        String result = object.getProperty(0).toString();
         return result;
     }
 
     private String getData() {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace,NetUrl.getALlDealByPersonID);
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getALlDealByPersonID);
 
-        soapObject.addProperty("personid",personId);
+        soapObject.addProperty("personid", personId);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.bodyOut = soapObject;
@@ -184,7 +198,7 @@ public class MyDealedActivity extends AppCompatActivity {
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
         try {
-            httpTransportSE.call(NetUrl.getALlDealByPersonID_SOAP_ACTION,envelope);
+            httpTransportSE.call(NetUrl.getALlDealByPersonID_SOAP_ACTION, envelope);
         } catch (Exception e) {
             e.printStackTrace();
         }

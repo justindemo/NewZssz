@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.CheckAdapter;
@@ -38,7 +39,7 @@ public class CheckActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case ISCHECK:
-                    ToastUtil.shortToast(getApplicationContext(), "没有已审核的数据，请稍后重试");
+                    //ToastUtil.shortToast(getApplicationContext(), "没有已审核的数据，请稍后重试");
                     break;
             }
         }
@@ -48,12 +49,14 @@ public class CheckActivity extends AppCompatActivity {
     private int position;
     private int size;
     private ProgressBar mProgressBar;
-
+    private TextView mtvfail;
+    private String nodata;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
+        nodata = getString(R.string.check_nodata);
         initView();
         initData();
     }
@@ -61,13 +64,16 @@ public class CheckActivity extends AppCompatActivity {
     private void initView() {
         mLv = (ListView) findViewById(R.id.lv_check);
         mProgressBar = (ProgressBar) findViewById(R.id.review_progressbar);
+        mtvfail = (TextView) findViewById(R.id.tv_check_fail);
+
+
     }
 
     private void initData() {
 
         mProgressBar.setVisibility(View.VISIBLE);
 
-        ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
+        //ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
         new Thread() {
             @Override
             public void run() {
@@ -93,6 +99,11 @@ public class CheckActivity extends AppCompatActivity {
                             public void run() {
                                 if (adapter != null) {
                                     mLv.setAdapter(adapter);
+                                    if (list.size() == 0){
+                                        mtvfail.setText(nodata);
+                                        mtvfail.setVisibility(View.VISIBLE);
+                                        ToastUtil.shortToast(getApplicationContext(),nodata);
+                                    }
                                     mProgressBar.setVisibility(View.GONE);
                                 }
                             }

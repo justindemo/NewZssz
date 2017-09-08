@@ -1,11 +1,16 @@
 package com.xytsz.xytsz.activity;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,7 +22,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.reflect.TypeToken;
@@ -54,8 +62,14 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import javax.microedition.khronos.opengles.GL;
 
 /**
  * Created by admin on 2017/1/3.
@@ -64,9 +78,14 @@ import java.util.List;
  */
 public class HomeActivity extends AppCompatActivity {
 
+    private static final int ALLUSERCOUNT = 1000001;
     private RadioGroup mRadiogroup;
     private NoScrollViewpager mViewpager;
     private ArrayList<Fragment> fragments;
+    private Boolean isFive;
+    private RelativeLayout rl_notonlie;
+    private Button mbtrefresh;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,10 +112,22 @@ public class HomeActivity extends AppCompatActivity {
          *
          * 最后去掉注释
          */
-        getData();
 
         initView();
         initData();
+        if (isNetworkAvailable(getApplicationContext())) {
+            getData();
+        }else {
+            rl_notonlie.setVisibility(View.VISIBLE);
+            mbtrefresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isNetworkAvailable(getApplicationContext()))
+                        getData();
+                }
+            });
+
+        }
     }
 
     private void getData() {
@@ -112,6 +143,9 @@ public class HomeActivity extends AppCompatActivity {
                     String faSizejson = getJson(NetUrl.faSizemethodName, NetUrl.fasize_SOAP_ACTION);
                     String streetjson = getJson(NetUrl.streetmethodName, NetUrl.street_SOAP_ACTION);
 
+                    int allUserCount = getAllUserCount(NetUrl.getAllUserCountMethodName, NetUrl.getAllUserCount_SOAP_ACITION);
+
+                    SpUtils.saveInt(getApplicationContext(), GlobalContanstant.ALLUSERCOUNT,allUserCount);
 
                     List<DealType> dealtypeList = JsonUtil.jsonToBean(dealTypejson, new TypeToken<List<DealType>>() {
                     }.getType());
@@ -165,7 +199,6 @@ public class HomeActivity extends AppCompatActivity {
                                 }
                             }
                             Deal.facilityTypes.add(strings);
-
                         }
 
                         for (int i = 0; i < fatypeList.size(); i++) {
@@ -260,6 +293,10 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
 
+
+
+
+
                     }else {
                         Message message = Message.obtain();
                         message.what = DATA_REPORT;
@@ -281,6 +318,9 @@ public class HomeActivity extends AppCompatActivity {
     private void initView() {
         mRadiogroup = (RadioGroup) findViewById(R.id.homeactivity_rg_radiogroup);
         mViewpager = (NoScrollViewpager) findViewById(R.id.homeactivity_vp);
+
+        rl_notonlie = (RelativeLayout)findViewById(R.id.rl_notonline);
+        mbtrefresh = (Button) findViewById(R.id.btn_refresh);
         //默认显示home界面
         mRadiogroup.check(R.id.homeactivity_rbtn_home);
     }
@@ -289,8 +329,8 @@ public class HomeActivity extends AppCompatActivity {
 
         fragments = new ArrayList<>();
         fragments.clear();
-        fragments.add(new MainFragments());
         fragments.add(new HomeFragment());
+        fragments.add(new MainFragments());
         fragments.add(new SuperviseFragment());
         fragments.add(new TableFragment());
         fragments.add(new MeFragment());
@@ -384,7 +424,49 @@ public class HomeActivity extends AppCompatActivity {
             }
         }.start();
 
+        //判断是否是周五下午5点
 
+        isFive = isweekfive();
+
+        if (isFive){
+            String content ="主人,您已经使用一周的掌上市政了,花一分钟的时间对他评价一下吧！";
+
+            new AlertDialog.Builder(this).setTitle("掌上市政评价").setMessage(content).setNegativeButton("别烦我", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    isFive = false;
+                }
+            }).setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    IntentUtil.startActivity(HomeActivity.this,AppraiseActivity.class);
+                    dialog.dismiss();
+                    isFive = false;
+                }
+            }).create().show();
+        }
+
+    }
+
+    private Boolean isweekfive() {
+
+        final long time = System.currentTimeMillis();
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTimeInMillis(time);
+
+        int week = calendar.get(Calendar.DAY_OF_WEEK);
+
+        int hour = calendar.get(Calendar.HOUR);
+
+        int minute = calendar.get(Calendar.MINUTE);
+        if (week == 6 && hour == 17 ){
+            return true;
+        }
+
+        return false;
 
     }
 
@@ -404,28 +486,30 @@ public class HomeActivity extends AppCompatActivity {
         return object.getProperty(0).toString();
     }
 
-    public static String getAllPersonList() throws Exception {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getPersonList);
 
+    /**
+     * @param context： 上下文
+     * @return 网络是否可用
+     */
 
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
-        envelope.setOutputSoapObject(soapObject);
-        envelope.dotNet = true;
-        envelope.bodyOut = soapObject;
-
-        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-
-        httpTransportSE.call(NetUrl.getPersonList_SOAP_ACTION, envelope);
-        SoapObject object = (SoapObject) envelope.bodyIn;
-        String result = object.getProperty(0).toString();
-        return result;
-
-
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
-
-
+    private static final int DATA_SUCCESS = 1166666;
     private static final int VERSIONINFO = 144211;
     private static final int DATA_REPORT = 155552;
     private Handler handler = new Handler(){
@@ -433,6 +517,11 @@ public class HomeActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+
+
+                case DATA_SUCCESS:
+                    rl_notonlie.setVisibility(View.GONE);
+                    break;
                 case VERSIONINFO:
                     String  info = (String) msg.obj;
                     if (info !=null){
@@ -566,6 +655,60 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //判断是否有网络
+        if (isNetworkAvailable(getApplicationContext())){
+            getData();
+        }else{
+            ToastUtil.shortToast(getApplicationContext(),"网络打盹了");
+        }
+
+        isFive =  isweekfive();
+        if (isFive){
+            String content ="主人,您已经使用一周的掌上市政了,花一分钟的时间对他评价一下吧！";
+
+            new AlertDialog.Builder(this).setTitle("掌上市政评价").setMessage(content).setNegativeButton("别烦我", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    isFive = false;
+                }
+            }).setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    IntentUtil.startActivity(HomeActivity.this,AppraiseActivity.class);
+                    dialog.dismiss();
+                    isFive = false;
+                }
+            }).create().show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
+    public int getAllUserCount(String method,String soap_action) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(soap_action, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        return Integer.valueOf(object.getProperty(0).toString());
 
     }
 }

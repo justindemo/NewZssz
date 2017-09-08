@@ -3,6 +3,7 @@ package com.xytsz.xytsz.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -84,9 +85,25 @@ public class SendRoadDetailActivity extends AppCompatActivity implements View.On
 
         setContentView(R.layout.activity_sendroaddetail);
         ButterKnife.bind(this);
+
+        initAcitionbar();
         initData();
     }
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle("病害详细");
+        }
+    }
 
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
 
     private void initData() {
 

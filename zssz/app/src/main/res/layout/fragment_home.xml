@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <com.baidu.mapapi.map.TextureMapView
+
             android:id="@+id/home_mv"
             android:layout_width="match_parent"
             android:layout_height="@dimen/map_height" />
@@ -46,11 +47,10 @@
 
             <LinearLayout
                 android:id="@+id/ll_home_report"
-                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -68,8 +68,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textSize="16sp"
-                        android:text="上报" />
+                        android:textSize="15sp"
+                        android:text="@string/reprote" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -84,12 +84,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:gravity="center"
                 android:id="@+id/ll_home_deal"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -107,8 +106,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textSize="16sp"
-                        android:text="处置" />
+                        android:textSize="15sp"
+                        android:text="@string/deal" />
 
                     <TextView
                         android:id="@+id/tv_home_deal_number"
@@ -125,12 +124,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:gravity="center"
                 android:id="@+id/ll_home_uncheck"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -148,8 +146,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textSize="16sp"
-                        android:text="报验" />
+                        android:textSize="15sp"
+                        android:text="@string/post" />
 
                     <TextView
                         android:id="@+id/tv_home_unchecek_number"
@@ -175,11 +173,10 @@
 
             <LinearLayout
                 android:id="@+id/ll_home_review"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
@@ -197,8 +194,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textSize="16sp"
-                        android:text="审核" />
+                        android:textSize="15sp"
+                        android:text="@string/review" />
 
                     <TextView
                         android:id="@+id/tv_home_review_number"
@@ -216,11 +213,11 @@
 
             <LinearLayout
                 android:id="@+id/ll_home_send"
-                android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
@@ -238,8 +235,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textSize="16sp"
-                        android:text="下派" />
+                        android:textSize="15sp"
+                        android:text="@string/send" />
 
                     <TextView
                         android:id="@+id/tv_home_send_number"
@@ -257,11 +254,10 @@
 
             <LinearLayout
                 android:id="@+id/ll_home_check"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
@@ -279,8 +275,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:textSize="16sp"
-                        android:text="验收" />
+                        android:textSize="15sp"
+                        android:text="@string/check" />
 
                     <TextView
                         android:id="@+id/tv_home_check_number"

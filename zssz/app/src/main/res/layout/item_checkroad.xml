@@ -9,7 +9,7 @@
         android:layout_height="30dp">
         <TextView
             android:gravity="center"
-            android:text="上报前"
+            android:text="@string/check_ireport"
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_weight="1"
@@ -21,7 +21,7 @@
         <TextView
             android:gravity="center"
             android:textSize="18sp"
-            android:text="维修后"
+            android:text="@string/check_ireport"
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="match_parent" />
@@ -88,7 +88,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="上报人：" />
+                android:text="@string/check_report" />
 
             <TextView
                 android:id="@+id/tv_check_reporter"
@@ -108,7 +108,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="处置人：" />
+                    android:text="@string/check_dealer" />
 
                 <TextView
                     android:id="@+id/tv_check_dealer"

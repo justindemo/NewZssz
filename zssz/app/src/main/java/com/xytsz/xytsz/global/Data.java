@@ -1,13 +1,13 @@
 package com.xytsz.xytsz.global;
 
-
-
 /**
  * Created by admin on 2017/1/11.
  *
  * 基础设施
  */
 public class Data {
+
+
     /**
      * 当前处置状态
      */

@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上报人电话："
+            android:text="@string/personreporte_phone"
             android:textSize="18sp" />
 
         <EditText
@@ -50,7 +50,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上报人姓名："
+            android:text="@string/personreporte_name"
             android:textSize="18sp" />
 
         <EditText
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="请输入姓名"
+            android:hint="@string/personreporte_namehint"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -78,7 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上报设施："
+            android:text="@string/personreporte_faci"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -108,7 +108,7 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="详细描述："
+            android:text="@string/personreporte_des"
             android:textSize="18sp" />
 
         <EditText
@@ -131,7 +131,7 @@
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上报图片：" />
+            android:text="@string/personreporte_photo" />
 
 
         <LinearLayout
@@ -179,7 +179,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="上报位置："
+                android:text="@string/personreporte_loca"
                 android:textSize="18sp" />
 
             <TextView
@@ -208,8 +208,8 @@
             android:layout_alignParentBottom="true"
             android:textSize="20sp"
             android:textColor="@color/white"
-            android:background="@drawable/btn_positive"
-            android:text="提交审核" />
+            android:background="@drawable/selector_cityperon_btn"
+            android:text="@string/personreporte_commit" />
     </RelativeLayout>
 
 

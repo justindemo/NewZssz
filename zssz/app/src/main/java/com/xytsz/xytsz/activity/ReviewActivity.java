@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.ReviewAdapter;
@@ -42,12 +43,15 @@ public class ReviewActivity extends AppCompatActivity{
     private int position;
     private int size;
     private ProgressBar mProgressBar;
+    private TextView tvFail;
+    private String nodata;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
+        nodata = getString(R.string.review_nodata);
         initView();
         //获取的是所有人员的上报信息 这里显示的就是所有的道路
         initData();
@@ -58,6 +62,7 @@ public class ReviewActivity extends AppCompatActivity{
     private void initView() {
         mLv = (ListView) findViewById(R.id.review_lv);
         mProgressBar = (ProgressBar) findViewById(R.id.review_progressbar);
+        tvFail = (TextView)findViewById(R.id.tv_fail);
     }
 
     private void initData() {
@@ -100,6 +105,7 @@ public class ReviewActivity extends AppCompatActivity{
 
                 Log.i("result",json);
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
             return json;
@@ -116,6 +122,13 @@ public class ReviewActivity extends AppCompatActivity{
                 list = review.getReviewRoadList();
 
 
+                if (list == null || list.size() == 0){
+                    tvFail.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.GONE);
+                    ToastUtil.shortToast(getApplicationContext(), nodata);
+
+                }
+
                 reviewAdapter = new ReviewAdapter(list);
 
                /* int reviewSum = 0;
@@ -125,12 +138,8 @@ public class ReviewActivity extends AppCompatActivity{
                 SpUtils.saveInt(getApplicationContext(),GlobalContanstant.REVIEWSUM,reviewSum);*/
 
 
-
-                    mLv.setAdapter(reviewAdapter);
-                    if (list.size() == 0){
-                        ToastUtil.shortToast(getApplicationContext(),"未上报数据");
-                    }
-                    mProgressBar.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
+                mLv.setAdapter(reviewAdapter);
 
 
                 mLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,9 +150,6 @@ public class ReviewActivity extends AppCompatActivity{
                         startActivityForResult(intent,500);
                     }
                 });
-            }else {
-                ToastUtil.shortToast(getApplicationContext(), "未上报数据");
-
             }
         }
     }

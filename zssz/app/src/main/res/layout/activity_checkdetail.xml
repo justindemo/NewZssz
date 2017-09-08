@@ -16,7 +16,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginBottom="6dp"
-            android:text="养护作业"
+            android:text="@string/check_detail_title"
             android:textColor="@color/cc_red"
             android:textSize="26sp" />
 
@@ -169,7 +169,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_reporteplace"
             android:layout_marginTop="6dp"
-            android:text="审核人员："
+            android:text="@string/check_detail_reviewer"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -189,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_reviewer_title"
             android:layout_marginTop="6dp"
-            android:text="处置人员："
+            android:text="@string/check_detail_dealer"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -209,7 +209,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_dealer_title"
             android:layout_marginTop="6dp"
-            android:text="上报时间："
+            android:text="@string/check_detail_reporttime"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -229,7 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_reportetime_title"
             android:layout_marginTop="6dp"
-            android:text="审核时间："
+            android:text="@string/check_detail_reviewtime"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -249,7 +249,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_check_road_title"
             android:layout_marginTop="6dp"
-            android:text="要求完成时间："
+            android:text="@string/check_detail_requesttime"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -269,7 +269,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_requesttime"
             android:layout_marginTop="6dp"
-            android:text="实际完成时间："
+            android:text="@string/check_detail_resultetime"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -289,7 +289,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_reviewtime_title"
             android:layout_marginTop="6dp"
-            android:text="维修备注："
+            android:text="@string/check_detail_repair"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -310,7 +310,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_decs"
             android:layout_marginTop="6dp"
-            android:text="详细位置："
+            android:text="@string/check_detail_location"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -341,7 +341,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="处置前"
+                android:text="@string/check_detail_ideal"
                 android:textSize="18sp" />
 
             <TextView
@@ -354,7 +354,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="处置后"
+                android:text="@string/check_detail_deali"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -417,7 +417,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/cc_red"
-                android:text="通过"
+                android:text="@string/review_tv_pass"
                 android:textSize="18sp" />
 
             <TextView
@@ -428,7 +428,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/cc_btn_bule"
-                android:text="驳回"
+                android:text="@string/review_tv_fail"
                 android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>

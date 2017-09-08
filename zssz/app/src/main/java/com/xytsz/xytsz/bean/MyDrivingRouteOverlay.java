@@ -12,7 +12,7 @@ import com.xytsz.xytsz.R;
 
 /**
  * Created by admin on 2017/6/30.
- *
+ *  线路辅助类
  */
 public class MyDrivingRouteOverlay extends DrivingRouteOverlay {
 

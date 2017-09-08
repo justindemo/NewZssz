@@ -156,4 +156,12 @@ public class NetUrl {
     public static final String getALlReviewByPersonID_SOAP_ACTION = "http://xytsz.org/getAllExamineByPersonID";
     public static final String getenlist = "GetEnList";
     public static final String getenlist_SOAP_ACTION = "http://xytsz.org/GetEnList";
+    public static final String citypersonreportemethodName = "ToSoReporting";
+
+    public static final String getAllUserCountMethodName = "GetALLUserCount";
+    public static final String getAllUserCount_SOAP_ACITION = "http://xytsz.org/GetALLUserCount";
+    public static final String getszUserCountInfomethod = "GetSZDisCountInfo";
+    public static final String getszUserCountInfo_SOAP_ACTION = "http://xytsz.org/GetSZDisCountInfo";
+    public static final String getSZPeoplemethodName = "GetSZPeople";
+    public static final String getSZPeople_SOAP_ACTION = "http://xytsz.org/GetSZPeople";
 }

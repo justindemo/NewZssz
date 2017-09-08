@@ -51,7 +51,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:text="上报"
+                android:text="@string/reprote"
                 android:gravity="center"
                 android:textSize="22sp"
                 android:background="@drawable/selector_camera_ok"

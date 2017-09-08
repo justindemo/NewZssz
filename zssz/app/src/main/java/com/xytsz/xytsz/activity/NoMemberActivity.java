@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.util.IntentUtil;
+import com.xytsz.xytsz.util.ToastUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -82,8 +84,15 @@ public class NoMemberActivity extends AppCompatActivity {
                 break;
             case R.id.btn_getcotent:
                 //支付  判断 如果支付成功然后显示电话
-                associationTvPhone.setBackgroundColor(Color.WHITE);
+
+                //setresult 中去显示的
+
+
                 //TODO:支付
+
+                Intent intent1 = new Intent(view.getContext(),AllPayActivity.class);
+
+                startActivityForResult(intent1,2);
 
                 break;
         }
@@ -94,5 +103,23 @@ public class NoMemberActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode ==2){
+            switch (resultCode){
+                case 1:
+                    boolean result = data.getBooleanExtra("result", false);
+                    if (result){
+                        associationTvPhone.setBackgroundColor(Color.WHITE);
+                    }else {
+                        ToastUtil.shortToast(getApplicationContext(),"数据未获取成功");
+                    }
+                    break;
+            }
+        }
     }
 }

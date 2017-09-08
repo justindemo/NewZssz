@@ -1,13 +1,11 @@
 package com.xytsz.xytsz.fragment;
 
-import android.content.Intent;
-import android.os.Bundle;
+
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dalong.marqueeview.MarqueeView;
@@ -20,7 +18,6 @@ import com.xytsz.xytsz.activity.MemberLocationActivity;
 import com.xytsz.xytsz.activity.RoadNumberActivity;
 import com.xytsz.xytsz.adapter.SuperviseAdapter;
 import com.xytsz.xytsz.base.BaseFragment;
-import com.xytsz.xytsz.bean.Road;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.SpUtils;
@@ -32,6 +29,7 @@ import java.util.List;
 /**
  * Created by admin on 2017/6/29.
  *
+ *  监管界面
  */
 public class SuperviseFragment extends BaseFragment implements View.OnClickListener {
 
@@ -41,8 +39,9 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
     private static final int PROBLEM = 1;
     private static final int LIB = 3;
     private static final int FLOOD = 4;
-    private static final int NOTICE = 2;
+    private static final int CAROIL = 2;
     private MarqueeView mheadMarquee;
+    private int alluser;
 
 
     @Override
@@ -61,11 +60,13 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
     private List<String>  titles = new ArrayList<>();
     @Override
     public void initData() {
+        String alltitle = getString(R.string.alltitle);
+        alluser = SpUtils.getInt(getContext(), GlobalContanstant.ALLUSERCOUNT);
         titles.clear();
         titles.add("人员定位");
         titles.add("病害处置");
-        titles.add("掌上公告");
-        titles.add("井盖定位");
+        titles.add("车辆管理");
+        titles.add("设施管理");
         titles.add("防汛警告");
 
 
@@ -98,7 +99,7 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
                         IntentUtil.startActivity(getContext(), LibActivity.class);
                         //井盖
                         break;
-                    case NOTICE:
+                    case CAROIL:
                         //公告
                         //showDialog();
                         break;
@@ -117,7 +118,7 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
 
         mheadMarquee = (MarqueeView) headview.findViewById(R.id.tv_headmarquee);
 
-        mheadMarquee.setText("全国掌上市政上线人数："+"10086");
+        mheadMarquee.setText(alltitle + alluser);
         mheadMarquee.setFocusable(true);
         mheadMarquee.requestFocus();
         mheadMarquee.sepX = 2;

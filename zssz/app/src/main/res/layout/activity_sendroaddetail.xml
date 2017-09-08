@@ -15,7 +15,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginBottom="6dp"
-            android:text="病害明细"
+            android:text="@string/myreport_title"
             android:textColor="@color/cc_red"
             android:textSize="26sp" />
 
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_send_detail_name"
             android:layout_marginTop="6dp"
-            android:text="上报人："
+            android:text="@string/allreporter"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -187,7 +187,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_send_detail_faname_title"
             android:layout_marginTop="6dp"
-            android:text="病害位置："
+            android:text="@string/problemlocation"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -209,7 +209,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_send_detail_loca"
             android:layout_marginTop="8dp"
-            android:text="上报时间："
+            android:text="@string/reportertime"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -230,7 +230,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_send_detail_reportetime"
             android:layout_marginTop="6dp"
-            android:text="位置描述："
+            android:text="@string/locationdes"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -251,7 +251,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_send_detail_address"
             android:layout_marginTop="6dp"
-            android:text="上报图片："
+            android:text="@string/reportimg"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 

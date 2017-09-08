@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:visibility="invisible"
         android:id="@+id/rl_contact_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -62,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:text="zzc"
+                android:text="张祥龙"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -91,7 +92,6 @@
                 android:text="查看详细位置"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
-            />
         </LinearLayout>
 
 
@@ -115,7 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:text="12323123"
+                android:text="1531300881*"
+                tools:ignore="HardcodedText"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -152,7 +153,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
 
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_marginLeft="10dp"
@@ -162,12 +162,10 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tv_citycontent"
-                    android:text="1、请按以下八类病害举报：道路设施、交通设施、桥梁设施、照明设施、公共设施、排水设施、河道设施、城市环境。\n
-2、上报期间请确保手机GPS处于开启状态，以便于更明确的反应上报事件事实性。\n
-3、上报病害需要抓拍三张照片，确定病害图片一张，街道标牌一张，附近明显建筑物一张。\n
-4、病害举报图片，要清晰反应病害性质、街道、病害地点和标志性建筑物。\n
-5、禁止在骑行或驾车时上报操作，以免发生交通意外。\n
-6、我们鼓励您参与实名举报病害信息行为，市政部门会保护举报人的个人隐私。\n
+                    android:text="1、负责管理区域的道路设施、交通设施、桥梁设施、照明设施、公共设施、排水设施、河道设施、城市环境的维护。\n
+2、加入市政会员可享受市政设施的基本养护共享。\n
+3、加入市政会员可以共同去创建养护技术交流。\n
+4、加入市政会员可以共享市政协会的基础信息。\n
 "
                     android:layout_width="match_parent"
                     android:scrollbars="vertical"
@@ -188,7 +186,7 @@
 
         <Button
             android:layout_margin="6dp"
-            android:text="联系办公室"
+            android:text="加入市政会员"
             android:textSize="18sp"
             android:textColor="@color/cc_white"
             android:id="@+id/btn_contactcity"
@@ -204,7 +202,7 @@
         android:layout_height="match_parent">
 
     <ProgressBar
-        style="@android:style/Widget.Material.Light.ProgressBar"
+        android:indeterminateDrawable="@drawable/progress_loading"
         android:layout_centerInParent="true"
         android:id="@+id/contact_progressbar"
         android:layout_width="wrap_content"

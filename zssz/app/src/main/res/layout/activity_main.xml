@@ -22,119 +22,34 @@
         android:src="@mipmap/logo" />
 </RelativeLayout>
 
-<RelativeLayout
-    android:layout_marginTop="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
     <LinearLayout
-        android:padding="6dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/userNameTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:paddingTop="6dp"
-                android:text="@string/logo_userName"
-                android:textSize="19sp" />
-            <EditText
-                android:id="@+id/login_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="20dp"
-                android:singleLine="true" />
-        </LinearLayout>
-        <LinearLayout
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/passWordTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="@string/logo_passWordName"
-                android:textSize="19sp" />
+        android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/passWord"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="20dp"
-                android:inputType="textPassword" />
-        </LinearLayout>
-        <LinearLayout
-
+        <android.support.design.widget.TabLayout
+            android:id="@+id/login_tab"
+            app:tabMode="fixed"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/miantitle"
+            app:tabIndicatorHeight="3dp"
+            app:tabSelectedTextColor="@color/miantitle"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"/>
 
-            <Button
-                android:id="@+id/login"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@color/cc_orage_red"
-                android:text="@string/login"
-                android:textColor="@color/cc_white"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/register"
-                android:layout_width="150dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/register"
-                android:textSize="20sp"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
+        <android.support.v4.view.ViewPager
+            android:id="@+id/login_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_marginBottom="15dp"
-    android:layout_alignParentBottom="true"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-    <TextView
-        android:gravity="center_horizontal"
-        android:text="北京向阳天科技有限公司"
-        android:layout_width="match_parent"
-        android:textSize="16sp"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:gravity="center_horizontal"
-        android:text="www.xytgps.com"
-        android:layout_width="match_parent"
-        android:textSize="16sp"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:gravity="center_horizontal"
-        android:text="全国财富招商热线：400-865-2007"
-        android:layout_width="match_parent"
-        android:textSize="16sp"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
-
-</RelativeLayout>
 
 </LinearLayout>

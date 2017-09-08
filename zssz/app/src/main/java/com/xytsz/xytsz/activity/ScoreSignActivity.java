@@ -1,5 +1,6 @@
 package com.xytsz.xytsz.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,11 +18,14 @@ import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.ScoreSignAdapter;
+import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.ui.LineView;
 import com.xytsz.xytsz.util.IntentUtil;
+import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -42,6 +46,9 @@ public class ScoreSignActivity extends AppCompatActivity {
     private RelativeLayout mrlScore;
     private TextView mtvSign;
     private TextView mtvScore;
+    private boolean isSign;
+    private String signed;
+    private String tip;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,12 +60,15 @@ public class ScoreSignActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("签到及领奖");
+            String title = getString(R.string.sign_title);
+            actionBar.setTitle(title);
 
         }
 
+        signed = getString(R.string.signed);
+        tip = getString(R.string.sign_tip);
+        isSign = SpUtils.getBoolean(getApplicationContext(), GlobalContanstant.SIGN, false);
         getData();
-
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -68,6 +78,17 @@ public class ScoreSignActivity extends AppCompatActivity {
         list.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
         list.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
         list.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
+
+
+        //Todo  : 获取当前时间    在00:00 的时候重置
+
+        long time = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+
+        int hour = calendar.get(Calendar.HOUR);
+        int minute = calendar.get(Calendar.MINUTE);
+
 
 
         ScoreSignAdapter adapter = new ScoreSignAdapter(list,this);
@@ -81,14 +102,25 @@ public class ScoreSignActivity extends AppCompatActivity {
         mtvSign = (TextView) headView.findViewById(R.id.tv_headview_sign);
         mtvScore = (TextView) headView.findViewById(R.id.tv_headview_myscorenum);
 
+        if (hour == 0 && minute == 0){
+            mtvSign.setText(R.string.sign);
+        }
+        if (isSign){
+            mtvSign.setText(signed);
+        }
+
         mtvSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.equals(mtvSign.getText().toString(),"已签到")){
-                    ToastUtil.shortToast(ScoreSignActivity.this,"每天只能签一次");
+
+                SpUtils.saveBoolean(getApplicationContext(), GlobalContanstant.SIGN,true);
+                if (TextUtils.equals(mtvSign.getText().toString(),signed)){
+                    ToastUtil.shortToast(ScoreSignActivity.this,tip);
                 }
 
-                mtvSign.setText("已签到");
+                mtvSign.setText(signed);
+                Intent intent = getIntent();
+                setResult(200,intent);
             }
         });
 
@@ -96,7 +128,6 @@ public class ScoreSignActivity extends AppCompatActivity {
         mrlScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 IntentUtil.startActivity(v.getContext(),MyScoreActivity.class);
 
             }

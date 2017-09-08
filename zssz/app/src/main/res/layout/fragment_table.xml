@@ -4,13 +4,20 @@
     android:id="@+id/root_scroll"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
         <TextView
-            android:text="掌上市政用户统计表:"
+            android:text="@string/table_top"
             android:padding="6dp"
             android:textSize="18sp"
             android:layout_width="match_parent"
@@ -40,7 +47,7 @@
                 android:padding="6dp"
                 android:textSize="18sp"
                 android:drawableLeft="@mipmap/green"
-                android:text="掌上市政使用者的数据:"
+                android:text="@string/table_mid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <View
@@ -56,7 +63,7 @@
                 android:layout_height="200dp"/>
         </LinearLayout>
         <TextView
-            android:text="掌上市政用户分布:"
+            android:text="@string/table_bottom"
             android:padding="6dp"
             android:textSize="18sp"
             android:layout_width="match_parent"
@@ -74,6 +81,33 @@
             android:layout_width="match_parent"
             android:layout_height="300dp" />
     </LinearLayout>
+        <RelativeLayout
+            android:background="@color/white"
+            android:visibility="gone"
+            android:id="@+id/rl_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <TextView
+                android:gravity="center"
+                android:text="@string/table_nodata"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"
+                android:layout_above="@+id/table_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/table_refresh"
+                android:textSize="15sp"
+                android:textColor="@color/miantitle"
+                android:text="@string/home_refresh"
+                android:background="@drawable/selector_btn_refresh"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
 </ScrollView>

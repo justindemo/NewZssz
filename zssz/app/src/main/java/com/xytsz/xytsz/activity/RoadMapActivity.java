@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/6/30.
- *
+ * 道路长度的具体信息
  */
 public class RoadMapActivity extends AppCompatActivity implements OnGetRoutePlanResultListener {
     @Bind(R.id.roadmap_mv)
@@ -80,8 +80,6 @@ public class RoadMapActivity extends AppCompatActivity implements OnGetRoutePlan
 
 
     }
-
-
 
     @Override
     public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
@@ -145,14 +143,6 @@ public class RoadMapActivity extends AppCompatActivity implements OnGetRoutePlan
 
 
     @Override
-    protected void onDestroy() {
-        roadmapMv.onDestroy();
-        super.onDestroy();
-
-        mSearch.destroy();
-    }
-
-    @Override
     protected void onPause() {
         roadmapMv.onPause();
         super.onPause();
@@ -164,6 +154,11 @@ public class RoadMapActivity extends AppCompatActivity implements OnGetRoutePlan
         super.onResume();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        roadmapMv.onDestroy();
+        super.onDestroy();
+        mSearch.destroy();
+    }
 
 }

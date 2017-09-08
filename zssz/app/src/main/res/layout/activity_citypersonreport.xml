@@ -48,7 +48,7 @@
                 android:drawablePadding="6dp"
                 android:drawableTop="@mipmap/icon_my_report"
                 android:gravity="center"
-                android:text="我要举报" />
+                android:text="@string/personreport" />
 
             <TextView
                 android:id="@+id/tv_person_history"
@@ -58,7 +58,7 @@
                 android:drawablePadding="6dp"
                 android:drawableTop="@mipmap/icon_my_history"
                 android:gravity="center"
-                android:text="历史举报" />
+                android:text="@string/historyreport" />
 
             <TextView
                 android:id="@+id/tv_person_help"
@@ -68,7 +68,7 @@
                 android:drawablePadding="6dp"
                 android:drawableTop="@mipmap/icon_my_help"
                 android:gravity="center"
-                android:text="如何举报" />
+                android:text="@string/howreport" />
 
         </LinearLayout>
 
@@ -99,7 +99,7 @@
 
                 <TextView
                     android:layout_marginLeft="10dp"
-                    android:text="如何进行举报"
+                    android:text="@string/howtoreport"
                     android:textSize="15sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -119,13 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:text="1、请按以下八类病害举报：道路设施、交通设施、桥梁设施、照明设施、公共设施、排水设施、河道设施、城市环境。\n
-2、上报期间请确保手机GPS处于开启状态，以便于更明确的反应上报事件事实性。\n
-3、上报病害需要抓拍三张照片，确定病害图片一张，街道标牌一张，附近明显建筑物一张。\n
-4、病害举报图片，要清晰反应病害性质、街道、病害地点和标志性建筑物。\n
-5、禁止在骑行或驾车时上报操作，以免发生交通意外。\n
-6、我们鼓励您参与实名举报病害信息行为，市政部门会保护举报人的个人隐私。\n
-"
+                    android:text="@string/howreportetitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <ImageView

@@ -44,7 +44,6 @@ import org.ksoap2.transport.HttpTransportSE;
 
 /**
  * Created by admin on 2017/1/4.
- *
  */
 public class HomeFragment extends BaseFragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -75,13 +74,20 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         public void onPermissionGranted(int requestCode) {
             switch (requestCode) {
                 //case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
-                    case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
+                case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
                     locat();
                     break;
             }
         }
     };
     private MarqueeView mtvMarquee;
+    private int alluser;
+    private String noreport;
+    private String noreview;
+    private String nosend;
+    private String nodeal;
+    private String nopost;
+    private String nocheck;
 
 
     @Override
@@ -103,12 +109,21 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         return view;
     }
 
-    private  int personId;
+    private int personId;
 
     @Override
     public void initData() {
+        String alltitle = getString(R.string.alltitle);
+        noreport = getString(R.string.home_noreporte);
+        noreview = getString(R.string.home_noreview);
+        nosend = getString(R.string.home_nosend);
+        nodeal = getString(R.string.home_nodeal);
+        nopost = getString(R.string.home_nopost);
+        nocheck = getString(R.string.home_nocheck);
 
-        mtvMarquee.setText("全国掌上市政上线人数："+"10086");
+
+        alluser = SpUtils.getInt(getContext(), GlobalContanstant.ALLUSERCOUNT);
+        mtvMarquee.setText(alltitle + alluser);
         mtvMarquee.setFocusable(true);
         mtvMarquee.requestFocus();
         mtvMarquee.sepX = 2;
@@ -116,7 +131,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
 
         //获取当前登陆人的ID
-        personId = SpUtils.getInt(getContext(),GlobalContanstant.PERSONID);
+        personId = SpUtils.getInt(getContext(), GlobalContanstant.PERSONID);
 
         //是否显示缩放按钮
         mapview.showZoomControls(false);
@@ -171,15 +186,15 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtils.requestPermissionsResult(getActivity(),requestCode,permissions,grantResults,mPermissionGrant);
+        PermissionUtils.requestPermissionsResult(getActivity(), requestCode, permissions, grantResults, mPermissionGrant);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-       if (locationClient != null) {
-           locationClient.start();
-       }
+        if (locationClient != null) {
+            locationClient.start();
+        }
         role = SpUtils.getInt(getContext(), GlobalContanstant.ROLE);
         mtvMarquee.startScroll();
     }
@@ -207,16 +222,17 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         mapview.onDestroy();
         super.onDestroy();
     }
+
     private static final int ISLOAD = 33301;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
                 case ISLOAD:
                     String isload = (String) msg.obj;
-                    if (!isload.equals("true")){
-                        ToastUtil.shortToast(getContext(),"上报位置信息失败，请检查网络");
+                    if (!isload.equals("true")) {
+                        ToastUtil.shortToast(getContext(), "上报位置信息失败，请检查网络");
                     }
                     break;
             }
@@ -244,12 +260,12 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
             }
 
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
 
                     try {
-                        String isLoad = toUpLoadLocation(personId, latitude+"", longitude+"");
+                        String isLoad = toUpLoadLocation(personId, latitude + "", longitude + "");
 
                         Message message = Message.obtain();
                         message.what = ISLOAD;
@@ -269,45 +285,44 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ll_home_report:
-
-                    IntentUtil.startActivity(getContext(), ReportActivity.class);
-
+                    if (role == 0) {
+                        ToastUtil.shortToast(getContext(),noreport);
+                    } else {
+                        IntentUtil.startActivity(getContext(), ReportActivity.class);
+                    }
                     break;
                 case R.id.ll_home_review:
                     if (role == 1) {
                         IntentUtil.startActivity(getContext(), ReviewActivity.class);
                     } else {
-                        ToastUtil.shortToast(getContext(), "您没有审核的权限");
+                        ToastUtil.shortToast(getContext(), noreview);
                     }
-                    //IntentUtil.startActivity(getContext(), ReviewActivity.class);
-
                     break;
                 case R.id.ll_home_send:
                     //下派
                     if (role == 1) {
                         IntentUtil.startActivity(getContext(), SendActivity.class);
                     } else {
-                        ToastUtil.shortToast(getContext(), "您没有下派的权限");
+                        ToastUtil.shortToast(getContext(), nosend);
                     }
-                    //IntentUtil.startActivity(getContext(), SendActivity.class);
+
                     break;
                 case R.id.ll_home_deal:
                     //处置 1，2
                     if (role == 1 || role == 2) {
                         IntentUtil.startActivity(getContext(), DealActivity.class);
                     } else {
-                        ToastUtil.shortToast(getContext(), "您没有处置的权限");
+                        ToastUtil.shortToast(getContext(), nodeal);
                     }
-                    //IntentUtil.startActivity(getContext(), DealActivity.class);
                     break;
                 case R.id.ll_home_uncheck:
                     //报验
                     if (role == 1 || role == 2) {
                         IntentUtil.startActivity(getContext(), PostActivity.class);
                     } else {
-                        ToastUtil.shortToast(getContext(), "您没有报验的权限");
+                        ToastUtil.shortToast(getContext(), nopost);
                     }
-                    //IntentUtil.startActivity(getContext(), PostActivity.class);
+
                     break;
                 case R.id.ll_home_check:
                     //验收
@@ -316,25 +331,25 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                     } else {
                         ToastUtil.shortToast(getContext(), "您没有验收的权限");
                     }
-                    //IntentUtil.startActivity(getContext(), CheckActivity.class);
+
                     break;
             }
         }
     }
-    
-    private String toUpLoadLocation(int personID, String latitude, String longitude) throws  Exception{
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace,NetUrl.uploadLocationmethodName);
-        soapObject.addProperty("personId",personID);
-        soapObject.addProperty("latitude",latitude);
-        soapObject.addProperty("longitude",longitude);
 
-        SoapSerializationEnvelope envelope  =new SoapSerializationEnvelope(SoapEnvelope.VER12);
+    private String toUpLoadLocation(int personID, String latitude, String longitude) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.uploadLocationmethodName);
+        soapObject.addProperty("personId", personID);
+        soapObject.addProperty("latitude", latitude);
+        soapObject.addProperty("longitude", longitude);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.setOutputSoapObject(soapObject);
         envelope.bodyOut = soapObject;
-        envelope.dotNet= true;
+        envelope.dotNet = true;
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        httpTransportSE.call(NetUrl.toUploadlocation_SOAP_ACTION,envelope);
+        httpTransportSE.call(NetUrl.toUploadlocation_SOAP_ACTION, envelope);
 
         SoapObject object = (SoapObject) envelope.bodyIn;
         String result = object.getProperty(0).toString();

@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -51,7 +52,7 @@ import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
-import org.kobjects.base64.Base64;
+
 import org.ksoap2.SoapEnvelope;
 
 import org.ksoap2.serialization.SoapObject;
@@ -120,7 +121,16 @@ public class ReportActivity extends AppCompatActivity {
     private String taskNumber;
     private Uri fileUri;
     private int personId;
-
+    private String dialogtitle;
+    private String dialogcontent1;
+    private String dialogcontent2;
+    private String uploading;
+    private String upimg;
+    private String imgsuccess;
+    private String request;
+    private String notifa;
+    private String notifatitle;
+    private String error;
 
 
     @Override
@@ -130,6 +140,17 @@ public class ReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report);
 
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
+        dialogtitle = this.getString(R.string.report_dialog_title);
+        dialogcontent1 =this.getString(R.string.report_dialog_content1);
+        dialogcontent2 =this.getString(R.string.report_dialog_content2);
+        uploading = this.getString(R.string.report_uploading);
+        upimg = this.getString(R.string.report_upimg);
+        imgsuccess = this.getString(R.string.report_imgsuccess);
+        request =this.getString(R.string.report_request);
+
+        notifa = this.getString(R.string.report_notifica);
+        notifatitle = this.getString(R.string.report_notifica_title);
+        error = this.getString(R.string.report_error);
         initView();
         initData();
     }
@@ -220,8 +241,9 @@ public class ReportActivity extends AppCompatActivity {
 
             }
         });
+
         if (Deal.dealType.size() == 0){
-            ToastUtil.shortToast(getApplicationContext(),"网络异常，不能上报病害");
+            ToastUtil.shortToast(getApplicationContext(),error);
         }else {
             //处置类型
             dealtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, Deal.dealType);
@@ -411,7 +433,8 @@ public class ReportActivity extends AppCompatActivity {
         locationClient.setLocOption(option);
     }
     private String person_id;
-    private String[] items = new String[]{"拍照","相册"};
+
+    private String[] items = new String[]{"拍照","照片"};
 
     private PermissionUtils.PermissionGrant mPermissionGrant = new PermissionUtils.PermissionGrant(){
         @Override
@@ -420,7 +443,7 @@ public class ReportActivity extends AppCompatActivity {
 
                 case PermissionUtils.CODE_CAMERA:
 
-                    new AlertDialog.Builder(ReportActivity.this).setTitle("请选择").setItems(items, new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(ReportActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                            switch (which){
@@ -442,7 +465,7 @@ public class ReportActivity extends AppCompatActivity {
                     }).create().show();
                     break;
 
-                case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
+                //case PermissionUtils.CODE_ACCESS_FINE_LOCATION:
                 case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
                     locat();
                     break;
@@ -469,7 +492,7 @@ public class ReportActivity extends AppCompatActivity {
                     break;
                 case R.id.iv_report_icon2:
                     //拍照
-                    new AlertDialog.Builder(ReportActivity.this).setTitle("请选择").setItems(items, new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(ReportActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which){
@@ -497,7 +520,7 @@ public class ReportActivity extends AppCompatActivity {
                     break;
                 case R.id.iv_report_icon3:
                     //拍照
-                    new AlertDialog.Builder(ReportActivity.this).setTitle("请选择").setItems(items, new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(ReportActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which){
@@ -543,11 +566,11 @@ public class ReportActivity extends AppCompatActivity {
                             reportTask.execute(diseaseInformation);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            ToastUtil.shortToast(getApplicationContext(), "网络异常，请稍后");
+                            ToastUtil.shortToast(getApplicationContext(), error);
                         }
-                        ToastUtil.shortToast(getApplicationContext(), "开始上传");
+                        ToastUtil.shortToast(getApplicationContext(), uploading);
                     } else {
-                        ToastUtil.shortToast(getApplicationContext(), "至少选择一张上报图片");
+                        ToastUtil.shortToast(getApplicationContext(), request);
                         return;
                     }
 
@@ -582,7 +605,6 @@ public class ReportActivity extends AppCompatActivity {
         soapObject.addProperty("Department_ID", diseaseInformation.department_ID);
         soapObject.addProperty("Longitude", diseaseInformation.longitude);
         soapObject.addProperty("Latitude", diseaseInformation.latitude);
-
 
         soapObject.addProperty("AddressDescription", diseaseInformation.locationDesc);
 
@@ -628,7 +650,7 @@ public class ReportActivity extends AppCompatActivity {
 
             if (reportResult != null) {
                 if (reportResult.equals("true")) {
-                    ToastUtil.shortToast(getApplicationContext(), "正在上传图片...");
+                    ToastUtil.shortToast(getApplicationContext(), upimg);
 
                     /**
                      * 上报图片
@@ -648,17 +670,19 @@ public class ReportActivity extends AppCompatActivity {
                                     return;
                                 }
 
-                                Message message = Message.obtain();
-                                message.what = IS_PHOTO_SUCCESS1;
-                                message.obj = isphotoSuccess1;
-                                handler.sendMessage(message);
+
                             }
+
+                            Message message = Message.obtain();
+                            message.what = IS_PHOTO_SUCCESS1;
+                            message.obj = isphotoSuccess1;
+                            handler.sendMessage(message);
 
                         }
                     }.start();
 
                 } else if (reportResult.equals("false")) {
-                    ToastUtil.shortToast(getApplicationContext(), "网络出错，请稍后重试");
+                    ToastUtil.shortToast(getApplicationContext(), error);
                 }
 
             }
@@ -936,7 +960,9 @@ public class ReportActivity extends AppCompatActivity {
             while ((count = fis.read(buffer)) >= 0) {
                 baos.write(buffer, 0, count);
             }
-            String uploadBuffer = Base64.encode(baos.toByteArray()) + "";
+
+            byte[] encode = Base64.encode(baos.toByteArray(),Base64.DEFAULT);
+            String uploadBuffer = new String(encode);
             Log.i("upload", uploadBuffer);
             fis.close();
             return uploadBuffer;
@@ -976,9 +1002,9 @@ public class ReportActivity extends AppCompatActivity {
                                 NotificationManager nm = (NotificationManager) getSystemService(android.content.Context.NOTIFICATION_SERVICE);
                                 //Uri ringUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                                 Notification noti = new NotificationCompat.Builder(getApplicationContext())
-                                        .setTicker(userName + ": 新上报一条病害")
+                                        .setTicker(userName + notifatitle)
                                         .setContentTitle(userName)
-                                        .setContentText("上报一条新病害")
+                                        .setContentText(notifa)
                                         .setSmallIcon(R.mipmap.ic_launcher)
                                         .setLargeIcon(largeBitmap)
                                         .setContentIntent(getContentIntent())
@@ -991,10 +1017,10 @@ public class ReportActivity extends AppCompatActivity {
                                 //id =0 =  用来定义取消的id
                                 nm.notify(0, noti);
 
-                                ToastUtil.shortToast(getApplicationContext(), "上传图片成功");
+                                ToastUtil.shortToast(getApplicationContext(), imgsuccess);
                             }
                         } else {
-                            ToastUtil.shortToast(getApplicationContext(), "网络异常，请稍后重试");
+                            ToastUtil.shortToast(getApplicationContext(), error);
                         }
                     }
                     break;

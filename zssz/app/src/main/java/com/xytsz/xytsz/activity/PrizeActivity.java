@@ -43,7 +43,8 @@ public class PrizeActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("奖品领取");
+            String title = getString(R.string.prize_title);
+            actionBar.setTitle(title);
 
         }
 

@@ -3,6 +3,7 @@ package com.xytsz.xytsz.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,8 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/5/31.
+ *
+ * 我的的处置
  */
 public class MyDealedDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -97,9 +100,30 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
         ButterKnife.bind(this);
 
 
+
+        initAcitionbar();
+
+
         initData();
 
 
+    }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            String actionstr = getString(R.string.mydealed);
+            actionBar.setTitle(actionstr);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 
     private void initData() {

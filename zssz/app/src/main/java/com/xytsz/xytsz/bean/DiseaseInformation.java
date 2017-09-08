@@ -42,6 +42,7 @@ import java.util.Hashtable;
  * 维度             Latitude
  */
 public class DiseaseInformation implements KvmSerializable {
+
     public int id;
     public int level;
     public String taskNumber;

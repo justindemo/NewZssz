@@ -88,6 +88,7 @@ public class LightFacilityActiviy extends AppCompatActivity {
         facilityTab.setTabsFromPagerAdapter(lightFragmentAdapter);
 
 
+
     }
 
 

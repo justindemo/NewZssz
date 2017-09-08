@@ -9,6 +9,7 @@ import android.os.Vibrator;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.reflect.TypeToken;
+import com.mob.MobApplication;
 import com.mob.commons.SHARESDK;
 import com.xytsz.xytsz.bean.Deal;
 import com.xytsz.xytsz.bean.DealType;
@@ -41,7 +42,7 @@ import cn.sharesdk.framework.ShareSDK;
  * Created by admin on 2017/1/11.
  *
  */
-public class MyApplication extends Application {
+public class MyApplication extends MobApplication {
 
     private Vibrator mVibrator;
 
@@ -60,6 +61,7 @@ public class MyApplication extends Application {
 
 
         mVibrator = (Vibrator) getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+
 
 
     }

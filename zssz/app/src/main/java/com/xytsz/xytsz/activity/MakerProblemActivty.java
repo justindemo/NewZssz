@@ -96,7 +96,8 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_maker);
-        ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
+        String loading = getString(R.string.loading);
+        ToastUtil.shortToast(getApplicationContext(), loading);
         initView();
         initData();
     }

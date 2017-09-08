@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/tv_scoresign_prize"
-            android:text="领取"
+            android:text="@string/sign_getprize"
             android:layout_marginRight="10dp"
             android:textSize="18sp"
             android:textColor="@color/white"

@@ -3,6 +3,7 @@ package com.xytsz.xytsz.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/5/31.
+ *
  */
 public class MyReporteDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -83,11 +85,12 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
 
     }
 
+
+
     private void initData() {
 
 
         String upload_person_id = detail.getUpload_Person_ID() + "";
-
 
         //通过上报人的ID 拿到上报人的名字
         //获取到所有人的列表 把对应的 id 找出名字

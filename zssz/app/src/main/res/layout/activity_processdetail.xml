@@ -33,7 +33,7 @@
             android:layout_toRightOf="@id/tv_report_time"
             android:layout_marginRight="3dp"
             android:layout_marginLeft="3dp"
-            android:text="上报"
+            android:text="@string/reprote"
             android:textSize="18sp" />
 
         <ImageView
@@ -57,7 +57,7 @@
             android:padding="3dp"
             android:id="@+id/tv_review_title"
             android:layout_toRightOf="@id/tv_review_time"
-            android:text="审核"
+            android:text="@string/review"
             android:textSize="18sp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
             android:layout_toRightOf="@id/tv_deal_time"
             android:layout_marginRight="3dp"
             android:layout_marginLeft="3dp"
-            android:text="处置"
+            android:text="@string/deal"
             android:textSize="18sp" />
 
         <ImageView
@@ -121,7 +121,7 @@
             android:padding="3dp"
             android:id="@+id/tv_send_title"
             android:layout_toRightOf="@id/tv_send_time"
-            android:text="派工"
+            android:text="@string/send"
             android:textSize="18sp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
@@ -160,7 +160,7 @@
             android:layout_toRightOf="@id/tv_post_time"
             android:layout_marginRight="3dp"
             android:layout_marginLeft="3dp"
-            android:text="报验"
+            android:text="@string/post"
             android:textSize="18sp" />
 
         <ImageView
@@ -183,7 +183,7 @@
             android:padding="3dp"
             android:id="@+id/tv_check_title"
             android:layout_toRightOf="@id/tv_check_time"
-            android:text="验收"
+            android:text="@string/check"
             android:textSize="18sp"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
@@ -203,7 +203,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
-        android:text="任务单号："
+        android:text="@string/process_tasknumer"
         android:textSize="19sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -243,10 +243,10 @@
 
             <TextView
                 android:layout_marginTop="6dp"
-                android:layout_marginLeft="8dp"
-                android:text="处置前照片"
+                android:gravity="center"
+                android:text="@string/process_redeal"
                 android:textSize="16sp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <ImageView
@@ -269,9 +269,9 @@
             <TextView
                 android:textSize="16sp"
                 android:layout_marginTop="6dp"
-                android:layout_marginLeft="8dp"
-                android:text="处置中照片"
-                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:text="@string/process_dealing"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <ImageView
@@ -294,10 +294,10 @@
 
             <TextView
                 android:layout_marginTop="6dp"
-                android:layout_marginLeft="8dp"
-                android:text="处置后照片"
+                android:gravity="center"
+                android:text="@string/process_dealed"
                 android:textSize="16sp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <ImageView
@@ -329,7 +329,7 @@
 
         <TextView
             android:id="@+id/tv_report_name_title"
-            android:text="上报人："
+            android:text="@string/process_report"
             android:textSize="19sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -342,7 +342,7 @@
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_review_name_title"
-            android:text="审核人："
+            android:text="@string/process_review"
             android:textSize="19sp"
             android:layout_toLeftOf="@+id/tv_review_name"
             android:layout_width="wrap_content"
@@ -366,7 +366,7 @@
 
         <TextView
             android:id="@+id/tv_deal_name_title"
-            android:text="处置人："
+            android:text="@string/process_deal"
             android:textSize="19sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -379,7 +379,7 @@
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_check_name_title"
-            android:text="验收人："
+            android:text="@string/process_check"
             android:textSize="19sp"
             android:layout_toLeftOf="@+id/tv_check_name"
             android:layout_width="wrap_content"

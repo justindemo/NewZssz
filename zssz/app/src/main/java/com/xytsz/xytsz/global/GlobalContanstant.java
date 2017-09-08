@@ -65,4 +65,6 @@ public class GlobalContanstant {
     public static final int REVIEWPASS = 600;
     public static final int CHECKROADPASS = 509;
     public static final int CHECKROADFAIL = 510;
+    public static final String SIGN = "sign";
+    public static final String ALLUSERCOUNT = "allusercount";
 }

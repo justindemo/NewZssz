@@ -53,7 +53,8 @@ public class MyScoreActivity extends AppCompatActivity {
             //actionBar.setCustomView(mActionBar,lp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("我的积分");
+            String score = getString(R.string.mine_score);
+            actionBar.setTitle(score);
 
         }
         LinearLayoutManager manager = new LinearLayoutManager(this);

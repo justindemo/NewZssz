@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.PostAdapter;
@@ -43,7 +44,9 @@ public class PostActivity extends AppCompatActivity {
         }
     };
     private ProgressBar mProgressBar;
-
+    private TextView mtvfail;
+    private List<Review.ReviewRoad> list;
+    private String nodata;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,16 +55,18 @@ public class PostActivity extends AppCompatActivity {
         mlv = (ListView) findViewById(R.id.lv_post);
 
         mProgressBar = (ProgressBar) findViewById(R.id.review_progressbar);
+
+        mtvfail = (TextView) findViewById(R.id.tv_post_fail);
         //获取当前登陆人的ID;   sp 获取
         personID = SpUtils.getInt(getApplicationContext(),GlobalContanstant.PERSONID);
-
+        nodata = getString(R.string.deal_nodata);
 
         initData();
     }
 
     private void initData() {
 
-        ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
+        //ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
         mProgressBar.setVisibility(View.VISIBLE);
         new Thread() {
             @Override
@@ -71,7 +76,7 @@ public class PostActivity extends AppCompatActivity {
                     String sendData = DealActivity.getDealData(GlobalContanstant.GETPOST,personID);
                     if (sendData != null) {
                         Review review = JsonUtil.jsonToBean(sendData, Review.class);
-                        List<Review.ReviewRoad> list = review.getReviewRoadList();
+                        list = review.getReviewRoadList();
 
                         int postSum = 0;
                         for (Review.ReviewRoad reviewRoad : list){
@@ -87,6 +92,12 @@ public class PostActivity extends AppCompatActivity {
                             public void run() {
                                 if (adapter != null) {
                                     mlv.setAdapter(adapter);
+
+                                    if (list.size() == 0){
+                                        mtvfail.setText(nodata);
+                                        mtvfail.setVisibility(View.VISIBLE);
+                                        ToastUtil.shortToast(getApplicationContext(),nodata);
+                                    }
                                     mProgressBar.setVisibility(View.GONE);
                                 }
                             }

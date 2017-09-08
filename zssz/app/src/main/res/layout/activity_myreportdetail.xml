@@ -5,7 +5,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F5FFF5"
         android:padding="4dp">
 
         <TextView
@@ -15,7 +14,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginBottom="6dp"
-            android:text="病害明细"
+            android:text="@string/myreport_title"
             android:textColor="@color/cc_red"
             android:textSize="26sp" />
 
@@ -25,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_name"
             android:layout_marginTop="6dp"
-            android:text="上报人："
+            android:text="@string/allreporter"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -45,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_mydetail_reporter_title"
             android:layout_marginTop="6dp"
-            android:text="病害名称："
+            android:text="@string/report_dealgrade"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -65,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_name_title"
             android:layout_marginTop="6dp"
-            android:text="处置等级："
+            android:text="@string/report_dealcategory"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -85,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_grade_title"
             android:layout_marginTop="6dp"
-            android:text="处置类型："
+            android:text="@string/report_facategory"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -106,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_dealtype_title"
             android:layout_marginTop="6dp"
-            android:text="设施类型："
+            android:text="@string/report_faname"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -126,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_fatype_title"
             android:layout_marginTop="6dp"
-            android:text="病害类型："
+            android:text="@string/report_pbtype"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -146,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_pbtype_title"
             android:layout_marginTop="6dp"
-            android:text="上报地点："
+            android:text="@string/report_roadname"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -167,7 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_reporteplace"
             android:layout_marginTop="6dp"
-            android:text="设施名称："
+            android:text="@string/report_facility"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -187,7 +186,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_faname_title"
             android:layout_marginTop="6dp"
-            android:text="设施规格："
+            android:text="@string/report_fasize"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -207,7 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_fasize_title"
             android:layout_marginTop="6dp"
-            android:text="上报时间："
+            android:text="@string/reportertime"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 
@@ -227,7 +226,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_mydetail_reportetime"
             android:layout_marginTop="6dp"
-            android:text="上报图片："
+            android:text="@string/reportimg"
             android:textColor="@color/cc_text_blank"
             android:textSize="20sp" />
 

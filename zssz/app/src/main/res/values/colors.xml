@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#FF4500</color>
     <color name="colorPrimaryDark">#F36c21</color>
+    <color name="miantitle">#ea9c71</color>
     <color name="colorAccent">#FF4081</color>
     <color name="uncheck">#72bcdf</color>
     <color name="red">#e681a3</color>
@@ -50,6 +51,8 @@
     <color name="none">#00000000</color>
     <color name="cc_card_hot">#44000000</color>
     <color name="cc_cricle_red">#fdff7d7d</color>
+
+    <color name="navpage">#FFE1E8EB</color>
 
     <color name="cc_bluelight">#ff3dc3ff</color>
 

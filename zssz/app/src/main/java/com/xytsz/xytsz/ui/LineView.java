@@ -9,19 +9,28 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.xytsz.xytsz.R;
+
 /**
  * Created by admin on 2017/7/18.
  * 签到  画线
  */
-public class LineView extends View{
+public class LineView extends View {
 
     private float mEndX;
     private float endx;
     private float halfWidth;
     private float endWidth;
     private RunnableTask runnableTask;
+    private String simpletext;
+    private String simple;
+    private String experttext;
+    private String expert;
 
-    private Handler handler = new Handler(){
+    private String supertext;
+    private String supernumber;
+
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
@@ -30,22 +39,33 @@ public class LineView extends View{
         }
     };
 
-    public LineView(Context context,float endX) {
-        super(context,null);
+    private Context context;
+
+    public LineView(Context context, float endX) {
+        super(context, null);
         this.endx = endX;
+        this.context = context;
+
+        simpletext = context.getString(R.string.sign_simple);
+        simple = context.getString(R.string.sign_simple_standar);
+        experttext = context.getString(R.string.sign_great);
+        expert = context.getString(R.string.sign_grent_standar);
+        supertext = context.getString(R.string.sign_super);
+        supernumber = context.getString(R.string.sign_super_standar);
+
 
         runnableTask = new RunnableTask();
     }
 
     public LineView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public LineView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    class RunnableTask implements Runnable{
+    class RunnableTask implements Runnable {
         @Override
         public void run() {
             // 进行滚动操作
@@ -61,7 +81,7 @@ public class LineView extends View{
     }
 
     public void updateX() {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
@@ -71,7 +91,7 @@ public class LineView extends View{
                 }
                 if (mEndX < endx) {
                     while (mEndX != endx) {
-                        mEndX+= 1;
+                        mEndX += 1;
                         handler.postDelayed(runnableTask, 500);
 
                     }
@@ -84,13 +104,6 @@ public class LineView extends View{
 
     private float y = (float) 7;
 
-    private String simpletext = "普通会员";
-    private String simple = "会员积分100+";
-    private String experttext = "市政达人";
-    private String expert = "会员积分500+";
-    private String supertext = "超级会员";
-    private String supernumber = "会员积分2000+";
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -99,16 +112,16 @@ public class LineView extends View{
         originalPaint.setColor(Color.parseColor("#55000000"));
         originalPaint.setStrokeWidth(5);
         originalPaint.setStyle(Paint.Style.FILL);
-        canvas.drawLine(y*2,y,halfWidth-y,y,originalPaint);
-        canvas.drawLine(halfWidth+y,y,endWidth-2*y,y,originalPaint);
+        canvas.drawLine(y * 2, y, halfWidth - y, y, originalPaint);
+        canvas.drawLine(halfWidth + y, y, endWidth - 2 * y, y, originalPaint);
 
         //画原点
         Paint circlePaint = new Paint();
         circlePaint.setColor(Color.parseColor("#fa8072"));
         circlePaint.setStrokeWidth(5);
-        canvas.drawCircle(y, y,7,circlePaint);
-        canvas.drawCircle(halfWidth, y,7,circlePaint);
-        canvas.drawCircle(endWidth-y,y,7,circlePaint);
+        canvas.drawCircle(y, y, 7, circlePaint);
+        canvas.drawCircle(halfWidth, y, 7, circlePaint);
+        canvas.drawCircle(endWidth - y, y, 7, circlePaint);
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.parseColor("#fa8072"));
@@ -116,20 +129,19 @@ public class LineView extends View{
         float stringWidth = textPaint.measureText(supertext);
         float string2Width = textPaint.measureText(supernumber);
         // textPaint.setStrokeWidth(10);
-        canvas.drawText(simpletext,0,6*y,textPaint);
-        canvas.drawText(simple,0,12*y,textPaint);
-        canvas.drawText(experttext,halfWidth-stringWidth/2,6*y,textPaint);
-        canvas.drawText(expert,halfWidth-stringWidth/1.5f,12*y,textPaint);
-        canvas.drawText(supertext,endWidth-stringWidth,6*y,textPaint);
-        canvas.drawText(supernumber,endWidth-string2Width,12*y,textPaint);
-
+        canvas.drawText(simpletext, 0, 6 * y, textPaint);
+        canvas.drawText(simple, 0, 12 * y, textPaint);
+        canvas.drawText(experttext, halfWidth - stringWidth / 2, 6 * y, textPaint);
+        canvas.drawText(expert, halfWidth - stringWidth / 1.5f, 12 * y, textPaint);
+        canvas.drawText(supertext, endWidth - stringWidth, 6 * y, textPaint);
+        canvas.drawText(supernumber, endWidth - string2Width, 12 * y, textPaint);
 
 
         Paint paint = new Paint();
         paint.setColor(Color.parseColor("#fa8072"));
         paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawLine(y,y,mEndX,y,paint);
+        canvas.drawLine(y, y, mEndX, y, paint);
 
 
     }
@@ -138,7 +150,7 @@ public class LineView extends View{
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        halfWidth = w/2;
+        halfWidth = w / 2;
         endWidth = w;
     }
 }

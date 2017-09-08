@@ -43,7 +43,7 @@
             android:gravity="center"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="驳回"
+            android:text="@string/review_tv_fail"
             android:textSize="19sp"
             android:textColor="#fff" />
     </LinearLayout>
@@ -69,7 +69,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginRight="6dp"
             android:id="@+id/tv_detail"
-            android:text="详细"
+            android:text="@string/review_tv_detail"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:background="@color/cc_blue"
@@ -85,7 +85,7 @@
             android:layout_toRightOf="@id/iv_swipe_icon"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
-            android:text="上报人:"
+            android:text="@string/allreporter"
             android:textSize="18sp" />
 
         <TextView
@@ -111,7 +111,7 @@
             android:layout_below="@+id/tv_problem_reporter_title"
             android:ellipsize="end"
             android:layout_toRightOf="@id/iv_swipe_icon"
-            android:text="病害位置:"
+            android:text="@string/problemlocation"
             android:textSize="18sp" />
 
         <TextView
@@ -135,7 +135,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
-            android:text="上报时间:"
+            android:text="@string/reportertime"
             android:layout_toRightOf="@id/iv_swipe_icon"
             android:textSize="18sp" />
 

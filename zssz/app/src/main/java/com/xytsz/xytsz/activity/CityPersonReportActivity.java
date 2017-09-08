@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dalong.marqueeview.MarqueeView;
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
+import com.xytsz.xytsz.util.SpUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,6 +23,8 @@ import butterknife.OnClick;
 
 /**
  * Created by admin on 2017/7/12.
+ *
+ * 城市居民举报界面
  */
 public class CityPersonReportActivity extends AppCompatActivity {
 
@@ -34,6 +38,7 @@ public class CityPersonReportActivity extends AppCompatActivity {
     TextView tvPersonHelp;
     @Bind(R.id.tv_marqueeview)
     MarqueeView tvMarqueeview;
+    private int alluser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,11 +50,14 @@ public class CityPersonReportActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("我要举报");
+            String personreport = getString(R.string.personreport);
+            actionBar.setTitle(personreport);
 
         }
 
-        tvMarqueeview.setText("全国使用掌上市政上线举报人数："+"10086");
+        alluser = SpUtils.getInt(getApplicationContext(), GlobalContanstant.ALLUSERCOUNT);
+        String alltitle = getString(R.string.alltitle);
+        tvMarqueeview.setText(alltitle + alluser);
         tvMarqueeview.setFocusable(true);
         tvMarqueeview.requestFocus();
         tvMarqueeview.sepX = 2;

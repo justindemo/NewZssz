@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,6 +23,7 @@ import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.SpUtils;
+import com.xytsz.xytsz.util.ToastUtil;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -29,7 +32,6 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -41,21 +43,27 @@ import butterknife.ButterKnife;
  */
 public class MyReporteActivity extends AppCompatActivity {
 
-    private static final int  REPORTE= 100003;
+    private static final int REPORTE = 100003;
     @Bind(R.id.lv_reprote)
     ListView lvReprote;
+    @Bind(R.id.myreport_progressbar)
+    ProgressBar myreportProgressbar;
+    @Bind(R.id.tv_fail)
+    TextView tvFail;
     private int personId;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case REPORTE:
 
                     final List<ForMyDis> details = (List<ForMyDis>) msg.obj;
                     if (details.size() != 0) {
-                        MyReportAdapter adapter = new MyReportAdapter(details,imageUrlLists);
+                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists);
                         if (adapter != null) {
+
+                            myreportProgressbar.setVisibility(View.GONE);
                             lvReprote.setAdapter(adapter);
                         }
 
@@ -63,45 +71,53 @@ public class MyReporteActivity extends AppCompatActivity {
                         lvReprote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent intent = new Intent(MyReporteActivity.this,MyReporteDetailActivity.class);
-                                intent.putExtra("detail",details.get(position));
-                                intent.putExtra("imageUrlReport",(Serializable) imageUrlLists.get(position));
+                                Intent intent = new Intent(MyReporteActivity.this, MyReporteDetailActivity.class);
+                                intent.putExtra("detail", details.get(position));
+                                intent.putExtra("imageUrlReport", (Serializable) imageUrlLists.get(position));
                                 startActivity(intent);
                             }
                         });
+                    } else {
+                        tvFail.setVisibility(View.VISIBLE);
+                        tvFail.setText(nodata);
+                        myreportProgressbar.setVisibility(View.GONE);
+                        ToastUtil.shortToast(getApplicationContext(), nodata);
                     }
                     break;
             }
         }
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
+    private String nodata;
 
     @Override
-    protected void 
+    protected void
     onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myreporte);
         ButterKnife.bind(this);
 
-        personId =   SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
-        initData();
+        personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
 
+        nodata = getString(R.string.myreported_nodata);
+        initData();
 
 
     }
 
     private void initData() {
-        new Thread(){
+
+        myreportProgressbar.setVisibility(View.VISIBLE);
+        new Thread() {
             @Override
             public void run() {
                 String data = getData();
-                if (data != null){
+                if (data != null) {
                     List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
                     }.getType());
 
 
-
-                    for (ForMyDis forMyDis:details){
+                    for (ForMyDis forMyDis : details) {
                         String taskNumber = forMyDis.getTaskNumber();
 
                         String json = null;
@@ -135,9 +151,9 @@ public class MyReporteActivity extends AppCompatActivity {
 
 
     private String getData() {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace,NetUrl.getALlReportByPersonID);
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getALlReportByPersonID);
 
-        soapObject.addProperty("personid",personId);
+        soapObject.addProperty("personid", personId);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.bodyOut = soapObject;
@@ -147,7 +163,7 @@ public class MyReporteActivity extends AppCompatActivity {
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
         try {
-            httpTransportSE.call(NetUrl.getALlReportByPersonID_SOAP_ACTION,envelope);
+            httpTransportSE.call(NetUrl.getALlReportByPersonID_SOAP_ACTION, envelope);
         } catch (Exception e) {
             e.printStackTrace();
         }

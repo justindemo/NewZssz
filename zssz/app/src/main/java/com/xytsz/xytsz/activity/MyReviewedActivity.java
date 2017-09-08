@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -39,6 +41,7 @@ import butterknife.ButterKnife;
 /**
  * Created by admin on 2017/6/9.
  *
+ * wod 审核页面
  */
 public class MyReviewedActivity extends AppCompatActivity {
 
@@ -46,6 +49,10 @@ public class MyReviewedActivity extends AppCompatActivity {
     private static final int REPORTE = 100004;
     @Bind(R.id.lv_reprote)
     ListView lvReprote;
+    @Bind(R.id.myreport_progressbar)
+    ProgressBar myreportProgressbar;
+    @Bind(R.id.tv_fail)
+    TextView tvFail;
 
     private int personId;
     private Handler handler = new Handler() {
@@ -59,6 +66,7 @@ public class MyReviewedActivity extends AppCompatActivity {
                     if (details.size() != 0) {
                         MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists);
                         if (adapter != null) {
+                            myreportProgressbar.setVisibility(View.GONE);
                             lvReprote.setAdapter(adapter);
                         }
 
@@ -72,12 +80,18 @@ public class MyReviewedActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
+                    } else {
+                        tvFail.setVisibility(View.VISIBLE);
+                        tvFail.setText(nodata);
+                        myreportProgressbar.setVisibility(View.GONE);
+                        ToastUtil.shortToast(getApplicationContext(), nodata);
                     }
                     break;
             }
         }
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
+    private String nodata;
 
 
     @Override
@@ -86,23 +100,27 @@ public class MyReviewedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_myreporte);
         ButterKnife.bind(this);
 
-        personId =  SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
-        ToastUtil.shortToast(getApplicationContext(), "正在加载数据..");
+        personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
+        String loading = getString(R.string.loading);
+        nodata = getString(R.string.myreviewed_nodata);
+
+
+        ToastUtil.shortToast(getApplicationContext(), loading);
         initData();
     }
 
     private void initData() {
-        new Thread(){
+        myreportProgressbar.setVisibility(View.VISIBLE);
+        new Thread() {
             @Override
             public void run() {
                 String data = getData();
-                if (data != null){
+                if (data != null) {
                     List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
                     }.getType());
 
 
-
-                    for (ForMyDis forMyDis:details){
+                    for (ForMyDis forMyDis : details) {
                         String taskNumber = forMyDis.getTaskNumber();
 
                         String json = null;
@@ -136,9 +154,8 @@ public class MyReviewedActivity extends AppCompatActivity {
 
 
     private String getData() {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace,NetUrl.getALlReviewByPersonID);
-
-        soapObject.addProperty("personid",personId);
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getALlReviewByPersonID);
+        soapObject.addProperty("personid", personId);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.bodyOut = soapObject;
@@ -148,7 +165,7 @@ public class MyReviewedActivity extends AppCompatActivity {
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
         try {
-            httpTransportSE.call(NetUrl.getALlReviewByPersonID_SOAP_ACTION,envelope);
+            httpTransportSE.call(NetUrl.getALlReviewByPersonID_SOAP_ACTION, envelope);
             SoapObject object = (SoapObject) envelope.bodyIn;
             String result = object.getProperty(0).toString();
             return result;
@@ -156,6 +173,6 @@ public class MyReviewedActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-       return null;
+        return null;
     }
 }

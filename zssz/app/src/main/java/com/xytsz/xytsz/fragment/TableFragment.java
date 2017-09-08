@@ -1,13 +1,16 @@
 package com.xytsz.xytsz.fragment;
 
 
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 
 import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -28,28 +31,84 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ValueFormatter;
+import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.TableAdapter;
 import com.xytsz.xytsz.base.BaseFragment;
+import com.xytsz.xytsz.bean.SzUserInfo;
+import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.ui.ListViewInScrollView;
+import com.xytsz.xytsz.util.JsonUtil;
+import com.xytsz.xytsz.util.ToastUtil;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * Created by admin on 2017/1/4.
- *
+ * <p/>
+ * 数据界面
  */
-public class TableFragment extends BaseFragment  {
+public class TableFragment extends BaseFragment {
 
+    private static final int FAIL = 505;
     private BarChart mBarchart;
     private MapView mMv;
     private ListViewInScrollView mLv;
-    private LatLng latlng = new LatLng(39.768234,116.355976);
+    private LatLng latlng = new LatLng(39.768234, 116.355976);
     private List<Integer> list = new ArrayList<>();
     private List<String> memberList = new ArrayList<>();
     private ScrollView mScroll;
+
+
+    private List<SzUserInfo> infos;
+    public static final int USERINFO = 100100;
+
+    private Handler handler = new Handler() {
+
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case USERINFO:
+                    infos = (List<SzUserInfo>) msg.obj;
+                    if (infos != null) {
+                        BarData barData = getBarChartData(infos.size(), 4000);
+                        //设置柱状图
+                        setBarData(mBarchart, barData);
+                        //添加表数据
+                        //设置地图,添加数据
+                        setMapView();
+                        //设置lv
+                        setListView();
+                    }
+                    break;
+
+                case FAIL:
+                    mrlnoData.setVisibility(View.VISIBLE);
+                    mbtRefresh.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            initData();
+                        }
+                    });
+                    ToastUtil.shortToast(getContext(), nodata);
+                    break;
+            }
+        }
+    };
+    private String nodata;
+    private String title;
+    private RelativeLayout mrlnoData;
+    private Button mbtRefresh;
 
     @Override
     public View initView() {
@@ -58,43 +117,81 @@ public class TableFragment extends BaseFragment  {
         mBarchart = (BarChart) view.findViewById(R.id.bar_chart);
         mMv = (MapView) view.findViewById(R.id.mv_table);
         mLv = (ListViewInScrollView) view.findViewById(R.id.lv_table);
+
+        mrlnoData = (RelativeLayout) view.findViewById(R.id.rl_nodata);
+        mbtRefresh = (Button) view.findViewById(R.id.table_refresh);
+
         return view;
     }
 
     @Override
     public void initData() {
+        nodata = getString(R.string.table_nodata);
+        title = getString(R.string.table_top_title);
 
-        BarData barData = getBarChartData(5, 4000);
-        //设置柱状图
-        setBarData(mBarchart,barData);
-        //添加表数据
-        //设置地图,添加数据
-        setMapView();
-        //设置lv
-        setListView();
+        new Thread() {
+            @Override
+            public void run() {
 
+                try {
+                    String json = getSZDisCountInfo(NetUrl.getszUserCountInfomethod, NetUrl.getszUserCountInfo_SOAP_ACTION);
+                    List<SzUserInfo> list = JsonUtil.jsonToBean(json, new TypeToken<List<SzUserInfo>>() {
+                    }.getType());
+
+                    if (list != null) {
+                        if (list.size() != 0) {
+                            Message message = Message.obtain();
+                            message.obj = list;
+                            message.what = USERINFO;
+                            handler.sendMessage(message);
+                        }
+                    } else {
+                        Message message = Message.obtain();
+                        message.what = FAIL;
+                        handler.sendMessage(message);
+                    }
+                } catch (Exception e) {
+
+                    Message message = Message.obtain();
+                    message.what = FAIL;
+                    handler.sendMessage(message);
+                }
+
+            }
+        }.start();
+
+
+
+    }
+
+
+    private String getSZDisCountInfo(String method, String soap_action) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(soap_action, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        return object.getProperty(0).toString();
     }
 
     private void setListView() {
         list.clear();
-        for (int i = 0; i < 8; i++) {
-
-            list.add((int) (Math.random()*1000)+4000);
-            //memberList.add("北京市怀柔区" +i);
-        }
         memberList.clear();
+        for (int i = 0; i < infos.size(); i++) {
 
-        memberList.add("怀柔区");
-        memberList.add("市门头沟区");
-        memberList.add("大兴区");
-        memberList.add("密云区");
-        memberList.add("齐齐哈尔市");
-        memberList.add("齐齐哈尔市");
-        memberList.add("齐齐哈尔市");
-        memberList.add("齐齐哈尔市");
+            list.add(infos.get(i).getCount());
+            memberList.add(infos.get(i).getName());
+        }
 
 
-        final TableAdapter adapter = new TableAdapter(list,memberList);
+        final TableAdapter adapter = new TableAdapter(list, memberList);
         mLv.setAdapter(adapter);
 
         mLv.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -104,15 +201,15 @@ public class TableFragment extends BaseFragment  {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0){
+                if (firstVisibleItem == 0) {
                     View firstview = mLv.getChildAt(0);
-                    if (firstview != null && firstview.getTop() == 0){
+                    if (firstview != null && firstview.getTop() == 0) {
                         //滚动到顶部了
                         mLv.getParent().requestDisallowInterceptTouchEvent(false);
                     }
-                }else if (firstVisibleItem + visibleItemCount == totalItemCount){
+                } else if (firstVisibleItem + visibleItemCount == totalItemCount) {
                     View lastView = mLv.getChildAt(mLv.getChildCount() - 1);
-                    if (lastView != null && lastView.getBottom() == mLv.getHeight()){
+                    if (lastView != null && lastView.getBottom() == mLv.getHeight()) {
                         mLv.getParent().requestDisallowInterceptTouchEvent(false);
                     }
                 }
@@ -130,14 +227,14 @@ public class TableFragment extends BaseFragment  {
         mMv.showZoomControls(true);
         mMv.showScaleControl(false);
         BaiduMap map = mMv.getMap();
-        View v=mMv.getChildAt(0);
+        View v = mMv.getChildAt(0);
 
         v.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP){
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mScroll.requestDisallowInterceptTouchEvent(false);
-                }else {
+                } else {
                     mScroll.requestDisallowInterceptTouchEvent(true);
 
                 }
@@ -154,15 +251,15 @@ public class TableFragment extends BaseFragment  {
 
         latLngs.clear();
         latLngs.add(latlng);
-        latLngs.add(new LatLng(47.379552,123.691898));
+        latLngs.add(new LatLng(47.379552, 123.691898));
 
         for (int i = 0; i < 2; i++) {
-            View view =  View.inflate(getContext(), R.layout.pop_tv, null);
+            View view = View.inflate(getContext(), R.layout.pop_tv, null);
             TextView tv = (TextView) view.findViewById(R.id.tv_number);
-            tv.setText(list.get(i) +"");
+            tv.setText(list.get(i) + "");
             view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            view.layout(0,0,view.getMeasuredWidth(),view.getMeasuredHeight());
+            view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
             view.buildDrawingCache();
 
 
@@ -174,9 +271,6 @@ public class TableFragment extends BaseFragment  {
 
             map.addOverlay(options);
         }
-
-
-
 
 
     }
@@ -221,36 +315,28 @@ public class TableFragment extends BaseFragment  {
 
     }
 
-    private BarData getBarChartData(int count ,int range) {
+    private BarData getBarChartData(int count, int range) {
         ArrayList<String> xValues = new ArrayList<String>();
-        /*for (int i = 0; i < count; i++) {
-            xValues.add("北京市大兴" + (i + 1));
-        }*/
-            xValues.add("怀柔区");
-            xValues.add("门头沟区");
-            xValues.add("大兴区");
-            xValues.add("密云区");
-            xValues.add("齐齐哈尔市");
-
         ArrayList<BarEntry> yValues = new ArrayList<BarEntry>();
 
         for (int i = 0; i < count; i++) {
-            float value = (float) (Math.random() * 1000/*100以内的随机数*/) + range;
+            xValues.add(infos.get(i).getName());
+            float value = (float) (infos.get(i).getCount());
             yValues.add(new BarEntry(value, i));
         }
 
         // y轴的数据集合
-        BarDataSet barDataSet = new BarDataSet(yValues, "掌上市政使用数据");
+        BarDataSet barDataSet = new BarDataSet(yValues, title);
 
         barDataSet.setColor(Color.parseColor("#F36c21"));
 
-        barDataSet.setValueTextSize(12f);
+        barDataSet.setValueTextSize(13f);
         barDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 int y = (int) value;
 
-                String s = y+"";
+                String s = y + "";
 
                 return s;
             }
@@ -282,4 +368,6 @@ public class TableFragment extends BaseFragment  {
         mMv.onDestroy();
         super.onDestroy();
     }
+
+
 }

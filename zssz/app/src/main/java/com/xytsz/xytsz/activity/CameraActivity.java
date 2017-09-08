@@ -32,13 +32,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xytsz.xytsz.R;
-import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.ToastUtil;
+
+import org.kobjects.base64.Base64;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -81,6 +83,9 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     private CameraSizeComparator sizeComparator = new CameraSizeComparator();
     private int[] startLocation;
     private int[] endLocation;
+    private List<String> picpaths = new ArrayList<>();
+    private String photoresult;
+    private String photorequest;
 
 
     @Override
@@ -106,6 +111,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
+        picpaths.clear();
 
     }
 
@@ -120,9 +126,14 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
             case R.id.title_btn_ok:
                 if (num != 3) {
-                    ToastUtil.shortToast(getApplicationContext(), "需要拍三张照片");
+                    String tip = getString(R.string.camera_tip);
+                    ToastUtil.shortToast(getApplicationContext(), tip);
                 } else {
-                    IntentUtil.startActivity(view.getContext(), PersonReportActivity.class);
+                    //IntentUtil.startActivity(view.getContext(), PersonReportActivity.class);
+
+                    Intent intent = new Intent(CameraActivity.this,PersonReportActivity.class);
+                    intent.putExtra("picpaths",(Serializable) picpaths);
+                    CameraActivity.this.startActivity(intent);
                     finish();
                 }
                 break;
@@ -176,24 +187,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         parameters.setPictureSize(picSize.width, picSize.height);
         parameters.setPreviewSize(preSize.width, preSize.height);
 
-
-        /*if (maxSize > 1) {
-            for (int i = 0; i < length; i++) {
-                if (maxSize < Math.max(supportedPictureSizes.get(i).width, supportedPictureSizes.get(i).height)) {
-                    parameters.setPictureSize(supportedPictureSizes.get(i).width, supportedPictureSizes.get(i).height);
-                    break;
-                }
-            }
-        }
-
-       if (maxSize > 1) {
-            for (int i = 0; i < showLength; i++) {
-                if (maxSize < Math.max(previewSizes.get(i).width, previewSizes.get(i).height)) {
-                    parameters.setPreviewSize(previewSizes.get(i).width, previewSizes.get(i).height);
-                    break;
-                }
-            }
-        }*/
 
         setparamer(camera, parameters);
     }
@@ -307,6 +300,8 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         //ToastUtil.shortToast(getApplicationContext(),"正在拍照");
+
+
         if (num < 3) {
             FileOutputStream bos = null;
             Bitmap bm = null;
@@ -315,6 +310,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
                 // 获得图片
                 bm = BitmapFactory.decodeByteArray(data, 0, data.length);
 
+                bm =rotateBitmap(bm,90f);
                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
                     //照片保存路径
@@ -332,13 +328,18 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
                     getBitmap(screenwidth, screenheight, picPath, num);
 
 
-
+                    picpaths.add(picPath);
                     num++;
-                    ToastUtil.shortToast(getApplicationContext(), "已拍摄" + num + "张照片");
+                    String play = getString(R.string.camera_play);
+                    String played = getString(R.string.camera_played);
+                    String plese = getString(R.string.camera_request_report);
+                    photorequest = getString(R.string.camera_photorequest);
+                    photoresult = getString(R.string.camera_photoresult);
+                    ToastUtil.shortToast(getApplicationContext(), play + num + played);
                     playAnimator(bm,num);
 
                     if (num == 3) {
-                        ToastUtil.shortToast(getApplicationContext(), "请点击上报");
+                        ToastUtil.shortToast(getApplicationContext(), plese);
                         return;
                     }
 
@@ -360,11 +361,13 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             }
 
         } else {
-            ToastUtil.shortToast(getApplicationContext(), "已拍摄3张照片,请点击上报");
+
+            ToastUtil.shortToast(getApplicationContext(), photoresult);
         }
     }
 
     private List<String> imageUrllist = new ArrayList<>();
+
     private void playAnimator(Bitmap bitmap,int num) {
         //从屏幕中间 到左下角 的一个抛物线
         //开始地方
@@ -382,11 +385,11 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
 
         setAnim(ball);
-        Bitmap rotateBitmap = rotateBitmap(bitmap, 90f);
-        ivAlbum.setImageBitmap(rotateBitmap);
+        //Bitmap rotateBitmap = rotateBitmap(bitmap, 90f);
+        ivAlbum.setImageBitmap(bitmap);
 
         if (num <3){
-            ToastUtil.shortToast(getApplicationContext(),"请拍满三张照片");
+            ToastUtil.shortToast(getApplicationContext(),photorequest);
         }else {
             ivAlbum.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -520,6 +523,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         factoryOptions.inJustDecodeBounds = false;
         factoryOptions.inSampleSize = scaleFactor;
         factoryOptions.inPurgeable = true;
+
         bitmap = BitmapFactory.decodeFile(path,
                 factoryOptions);
         BufferedOutputStream bos = null;

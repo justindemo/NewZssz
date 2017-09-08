@@ -13,65 +13,64 @@
     <ImageView
         android:id="@+id/iv_reporte"
         android:layout_width="110dp"
-        android:layout_height="120dp"
+        android:layout_height="110dp"
         android:scaleType="fitXY"/>
 
     <RelativeLayout
-        android:paddingTop="3dp"
-        android:layout_marginLeft="3dp"
+        android:padding="6dp"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
         <TextView
             android:id="@+id/tv_my_reporter_title"
-            android:text="上报人："
-            android:textSize="18sp"
+            android:text="@string/allreporter"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_history_reporter"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_toRightOf="@id/tv_my_reporter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
         <TextView
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="6dp"
             android:layout_below="@id/tv_history_reporter"
             android:id="@+id/tv_my_pbname_title"
-            android:text="病害位置："
-            android:textSize="18sp"
+            android:text="@string/problemlocation"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="6dp"
             android:text="金星路"
             android:id="@+id/tv_history_adds"
             android:layout_below="@id/tv_history_reporter"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_toRightOf="@id/tv_my_pbname_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
         <TextView
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="6dp"
             android:layout_below="@+id/tv_history_adds"
             android:id="@+id/tv_my_report_time_title"
-            android:text="上报时间："
-            android:textSize="18sp"
+            android:text="@string/reportertime"
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="6dp"
             android:text="2017-05-31 09:29:54"
             android:id="@+id/tv_my_report_time"
             android:layout_below="@+id/tv_history_adds"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_toRightOf="@id/tv_my_pbname_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

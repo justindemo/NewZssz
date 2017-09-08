@@ -161,11 +161,17 @@ public class ContactCityActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.btn_contactcity:
-                Intent intent1 = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "13122231233"));
-                if (ActivityCompat.checkSelfPermission(ContactCityActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                startActivity(intent1);
+//                Intent intent1 = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "13122231233"));
+//                if (ActivityCompat.checkSelfPermission(ContactCityActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//                startActivity(intent1);
+
+
+                Intent intent1 = new Intent(view.getContext(),AllPayActivity.class);
+
+                startActivityForResult(intent1,2);
+
                 break;
         }
     }
@@ -182,6 +188,9 @@ public class ContactCityActivity extends AppCompatActivity {
         },2000);
 
         tvCitycontent.setMovementMethod(ScrollingMovementMethod.getInstance());
-        tvChargepersonphone.setText("13122231233");
+        //tvChargepersonphone.setText("13122231233");
     }
+
+
+
 }

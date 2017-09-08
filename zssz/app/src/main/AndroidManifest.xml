@@ -27,6 +27,8 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -155,6 +157,8 @@
         <activity android:name=".activity.CityInformationActivity"/>
         <activity android:name=".activity.PersonSurveyActivity"/>
         <activity android:name=".activity.InformationDeatailActivity"/>
+        <activity android:name=".activity.AllPayActivity"/>
+        <activity android:name=".activity.AppraiseActivity"/>
 
 
         <activity android:name=".activity.CameraActivity"
@@ -194,6 +198,19 @@
         <activity
             android:name=".activity.IngPhotoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+
+        <!-- alipay sdk begin -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
+        <!-- alipay sdk end -->
+
+
 
 
 
@@ -237,12 +254,21 @@
             android:exported="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
 
-        <service android:name=".service.LocationService" />
+        <service android:name=".service.LocationService" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
 
     </application>

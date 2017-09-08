@@ -1,0 +1,281 @@
+<resources>
+    <string name="app_name">掌上市政</string>
+    <string name="logo_userName">賬號 :</string>
+    <string name="phone_number">請輸入手機號</string>
+    <string name="phone_password">請輸入驗證碼</string>
+    <string name="login">登錄</string>
+    <string name="register">注冊</string>
+    <string name="logo_passWordName">密碼:</string>
+    <string name="report_dealgrade">處置等級：</string>
+    <string name="report_dealcategory">處置類別：</string>
+    <string name="report_department">受理部門：</string>
+    <string name="report_facategory">設施類別：</string>
+    <string name="report_faname">設施名稱：</string>
+    <string name="report_pbtype">病害類型：</string>
+    <string name="report_facility">設施材料：</string>
+    <string name="report_fasize">材料規格：</string>
+    <string name="report_roadname">道路名稱：</string>
+    <string name="app_tip">提示</string>
+
+    <string name="reportimg">上報圖片：</string>,,
+    <string name="locationdes">位置描述：</string>
+    <string name="myreport_title">病害明細</string>
+
+
+    <string name="reprote">上報</string>
+    <string name="review">審核</string>
+    <string name="send">下派</string>
+    <string name="deal">處置</string>
+    <string name="post">報驗</string>
+    <string name="check">驗收</string>
+
+    <string name="bottom_first">首頁</string>
+    <string name="bottom_second">會員</string>
+    <string name="bottom_thrid">監管</string>
+    <string name="bottom_fourth">數據</string>
+    <string name="bottom_fifth">我的</string>
+
+    <string name="personreport">我要舉報</string>
+    <string name="historyreport">曆史舉報</string>
+    <string name="howreport">如何舉報</string>
+    <string name="howtoreport">如何進行舉報</string>
+    <string name="howreportetitle">1、請按以下八類病害舉報：道路設施、交通設施、橋梁設施、照明設施、公共設施、排水設施、河道設施、城市環境。\n
+2、上報期間請確保手機GPS處于開啓狀態，以便于更明確的反應上報事件事實性。\n
+3、上報病害需要抓拍三張照片，確定病害圖片一張，街道標牌一張，附近明顯建築物一張。\n
+4、病害舉報圖片，要清晰反應病害性質、街道、病害地點和標志性建築物。\n
+5、禁止在騎行或駕車時上報操作，以免發生交通意外。\n
+6、我們鼓勵您參與實名舉報病害信息行爲，市政部門會保護舉報人的個人隱私。\n</string>
+
+    <string name="camera_tip">需要拍三張照片</string>
+    <string name="camera_request_report">請點擊上報</string>
+    <string name="camera_play">已拍攝</string>
+    <string name="camera_played">張照片</string>
+    <string name="camera_photoresult">已拍攝3張照片,請點擊上報</string>
+    <string name="camera_photorequest">請拍滿三張照片</string>
+    <string name="personreporte_title">問題上報</string>
+    <string name="personreporte_phone">上報人電話：</string>
+    <string name="personreporte_name">上報人姓名：</string>
+    <string name="personreporte_namehint">請輸入姓名</string>
+    <string name="personreporte_faci">上報設施：</string>
+    <string name="personreporte_des">詳細描述：</string>
+    <string name="personreporte_photo">上報圖片：</string>
+    <string name="personreporte_loca">上報位置：</string>
+    <string name="personreporte_commit">提交審核</string>
+    <string name="personreporte_success">上報成功</string>
+    <string name="personreporte_fail">網絡異常</string>
+    <string name="personreporte_commiting">正在上報···</string>
+
+    <string name="locating">正在定位···</string>
+    <string name="loading">正在加載數據···</string>
+
+
+    <string name="memeber_assiation">市政協會</string>
+    <string name="memeber_bussiness">市政企業</string>
+    <string name="memeber_company">集采企業</string>
+    <string name="memeber_mid_title">掌上市政會員服務</string>
+
+    <string name="supervise_title">養護管理</string>
+    <string name="supervise_road">道路</string>
+    <string name="supervise_bridge">橋梁</string>
+
+    <string name="table_top">掌上市政用戶統計表</string>
+    <string name="table_mid">掌上市政使用者數據</string>
+    <string name="table_bottom">掌上市政用戶分布</string>
+    <string name="prize">領獎</string>
+
+    <string name="sign">簽到</string>
+
+    <string name="mine_review">我審核過的</string>
+    <string name="mine_sign">簽到</string>
+    <string name="mine_information">我的資料</string>
+
+
+    <string name="mine_score">我的積分</string>
+    <string name="mine_update">軟件更新</string>
+    <string name="mine_share">軟件分享</string>
+    <string name="mine_appraise">軟件評價</string>
+
+    <string name="mine_exit">退出登錄</string>
+    <string name="companyname">北京向陽天科技有限公司</string>
+    <string name="connacteus">全國財富招商熱線：400-865-2007</string>
+
+
+    <string name="information_name">姓名：</string>
+    <string name="hint_name">請輸入姓名</string>
+    <string name="information_phone">手機號碼：</string>
+    <string name="information_department">所屬部門：</string>
+
+
+    <string name="socre_title_left">當前積分</string>
+    <string name="socre_title_right">使用幫助</string>
+    <string name="socre_title_sign">積分簽到及兌換</string>
+    <string name="socre_detail">積分明細</string>
+
+    <string name="sign_title">簽到及領獎</string>
+    <string name="sign_simple">普通會員</string>
+    <string name="sign_simple_standar">會員積分100+</string>
+    <string name="sign_grent_standar">會員積分500+</string>
+    <string name="sign_super_standar">會員積分1000+</string>
+
+    <string name="sign_great">市政達人</string>
+    <string name="sign_super">超級會員</string>
+    <string name="sign_socre">會員積分</string>
+    <string name="sign_socre_title">積分</string>
+    <string name="sign_getprize">領取</string>
+    <string name="prize_title">獎品領取</string>
+    <string name="prize_commit">立即申請</string>
+    <string name="signed">已簽到</string>
+    <string name="sign_tip">每天只能簽一次</string>
+
+
+    <string name="appraise_title">軟件的整體評價</string>
+    <string name="appraise_hint">對軟件提出的意見</string>
+    <string name="appraise_commit">提交評價</string>
+
+
+    <string name="allreporter">上報人員：</string>
+    <string name="problemlocation">病害位置：</string>
+    <string name="reportertime">上報時間：</string>
+    <string name="review_tv_detail">詳細</string>
+    <string name="review_tv_pass">通過</string>
+    <string name="review_tv_fail">駁回</string>
+    <string name="review_tv_nodata">未上報數據</string>
+
+    <string name="report_image">病害圖片：</string>
+    <string name="report_locaiton">地理位置描述：</string>
+    <string name="report_problemdes">病害描述：</string>
+    <string name="report_commit">提交</string>
+    <string name="report_dialog_title">請選擇</string>
+    <string name="report_dialog_content1">拍照</string>
+    <string name="report_upimg">正在上傳圖片···</string>
+    <string name="report_uploading">開始上傳</string>
+    <string name="report_imgsuccess">上傳圖片成功</string>
+    <string name="report_dialog_content2">相冊</string>
+    <string name="report_request">至少選擇一張上報圖片</string>
+    <string name="report_notifica">上報一條新病害</string>
+    <string name="report_notifica_title">：新上報一條病害</string>
+    <string name="report_error">網絡異常，請稍後重試</string>
+
+
+    <string name="home_notnetwork">網絡未連接</string>
+    <string name="home_refresh">刷新</string>
+
+    <string name="review_nodata">未上報數據</string>
+
+    <string name="deal_navi">導航</string>
+    <string name="deal_nodata">沒有需要您處置數據</string>
+    <string name="check_nodata">沒有需要您處置數據</string>
+
+    <string name="send_request_time">要求時間</string>
+    <string name="send_send">派發</string>
+    <string name="send_fail">駁回</string>
+    <string name="send_nodata">沒有下派數據</string>
+
+    <string name="check_ireport">上報前</string>
+    <string name="check_irepair">維修後</string>
+    <string name="check_report">上報人：</string>
+    <string name="check_dealer">處置人：</string>
+
+    <string name="check_detail_title">養護作業</string>
+    <string name="check_detail_reviewer">審核人員：</string>
+    <string name="check_detail_dealer">處置人員：</string>
+    <string name="check_detail_reporttime">上報時間：</string>
+    <string name="check_detail_reviewtime">審核時間：</string>
+    <string name="check_detail_repair">維修備注：</string>
+    <string name="check_detail_location">詳細位置：</string>
+    <string name="check_detail_requesttime">要求完成時間：</string>
+    <string name="check_detail_resultetime">實際完成時間：</string>
+    <string name="check_detail_ideal">處置前</string>
+    <string name="check_detail_deali">處置後</string>
+
+
+    <string name="process_tasknumer">任務單號：</string>
+    <string name="process_report">上報人：</string>
+    <string name="process_review">審核人：</string>
+    <string name="process_deal">處置人：</string>
+    <string name="process_check">驗收人：</string>
+    <string name="process_redeal">處置前照片</string>
+    <string name="process_dealing">處置中照片</string>
+    <string name="process_dealed">處置後照片</string>
+
+
+    <string name="employee">職位：</string>
+    <string name="employee_title">職稱：</string>
+
+    <string name="permission_get_accounts_hint">沒有此權限，無法開啓這個功能，請開啓權限。PERMISSION_GET_ACCOUNTS</string>
+    <string name="permission_read_phone_hint">讀取手機權限</string>
+    <string name="permission_call_phone_hint">請打開電話權限</string>
+    <string name="permission_camera_hint">請打開拍照權限</string>
+    <string name="permission_access_fine_location_hint">請打開位置信息，提供定位信息</string>
+    <string name="permission_access_coarse_location_hint">請打開位置信息，提供定位信息</string>
+    <string name="permission_read_external_hint">請允許讀取SD卡</string>
+    <string name="permission_white_external_hint">請允許讀寫SD卡</string>
+    <string name="permission_recode_audio_hint">請打開錄音權限</string>
+
+    <string name="pay_result_tip">這個界面用于顯示第三方app通過微信支付的結果</string>
+    <string name="pay_result_callback_msg" formatted="false">微信支付結果：%s</string>
+    <string name="uncheck_redeal">處置前：</string>
+    <string name="uncheck_deal">處置中：</string>
+    <string name="uncheck_dealed">處置後：</string>
+
+    <string name="myreviewed">我的審核</string>
+    <string name="myreviewed_nodata">您未審核過</string>
+
+    <string name="mydealed">我的處置</string>
+    <string name="mydealed_nodata">您未處置過</string>
+    <string name="myreported_nodata">您未上報過</string>
+    <string name="myreported">我的上報</string>
+    <string name="membershowtitle">會員展示</string>
+    <string name="join">加盟</string>
+    <string name="alltitle">全國掌上市政上線人數：</string>
+    <string name="personloca">人員定位</string>
+    <string name="problemdeal">病害處置</string>
+    <string name="carmanage">車輛管理</string>
+    <string name="facilitymanage">設施管理</string>
+    <string name="waterwaring">防汛警告</string>
+    <string name="table_nodata">數據未加載</string>
+    <string name="table_top_title">掌上市政使用數據</string>
+
+
+    <string name="visitor">遊客</string>
+    <string name="visitor_department">社會群眾</string>
+    <string name="visitor_login_success">登錄成功</string>
+    <string name="visitor_VerificationCode">驗證碼已發送</string>
+    <string name="visitor_phone_error">手機號格式錯誤</string>
+    <string name="visitor_reget">重新獲取</string>
+    <string name="visitor_resend">重新發送</string>
+    <string name="visitor_datanull">號碼不能為空</string>
+
+
+
+    <string name="logining">正在登錄···</string>
+    <string name="login_error">用戶名或密碼錯誤</string>
+    <string name="login_datanull">用戶名或密碼不能為空</string>
+    <string name="login_checknet">請檢查網絡</string>
+    <string name="login_neterror">網絡異常，未獲取數據</string>
+
+
+    <string name="home_noreporte">您沒有上報的權限</string>
+    <string name="home_noreview">您沒有審核的權限</string>
+    <string name="home_nosend">您沒有下派的權限</string>
+    <string name="home_nodeal">您沒有處置的權限</string>
+    <string name="home_nopost">您沒有報驗的權限</string>
+    <string name="home_nocheck">您沒有驗收的權限</string>
+
+
+    <string name="information_compelet">完善資料</string>
+    <string name="information_save">保存</string>
+
+    <string-array name="permissions">
+        <item>@string/permission_recode_audio_hint</item>
+        <item>@string/permission_get_accounts_hint</item>
+        <item>@string/permission_read_phone_hint</item>
+        <item>@string/permission_call_phone_hint</item>
+        <item>@string/permission_camera_hint</item>
+        <item>@string/permission_access_fine_location_hint</item>
+        <item>@string/permission_access_coarse_location_hint</item>
+        <item>@string/permission_read_external_hint</item>
+        <item>@string/permission_white_external_hint</item>
+    </string-array>
+
+</resources>
