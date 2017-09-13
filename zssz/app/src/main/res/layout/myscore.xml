@@ -75,9 +75,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/myscore_recycleview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
+        <ProgressBar
+            android:id="@+id/myscore_progressbar"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminateDrawable="@drawable/progress_loading"
+            />
+        <TextView
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:id="@+id/tv_myscore_zero"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="你还没有任何积分，赶紧去签到或举报病害"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </LinearLayout>

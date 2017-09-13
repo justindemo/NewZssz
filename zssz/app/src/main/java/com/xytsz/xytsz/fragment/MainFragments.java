@@ -17,8 +17,11 @@ import com.xytsz.xytsz.activity.ContactCityActivity;
 import com.xytsz.xytsz.activity.MemberShowActivity;
 import com.xytsz.xytsz.activity.PersonSurveyActivity;
 import com.xytsz.xytsz.base.BaseFragment;
+import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.ui.ScrollViewPager;
 import com.xytsz.xytsz.util.IntentUtil;
+import com.xytsz.xytsz.util.SpUtils;
+import com.xytsz.xytsz.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +59,8 @@ public class MainFragments extends BaseFragment {
 
     private List<View> mllDots = new ArrayList<>();
     private List<String> mImageUrls = new ArrayList<>();
+    private int role;
+    private String toHome;
 
     @Override
     public View initView() {
@@ -66,6 +71,8 @@ public class MainFragments extends BaseFragment {
 
     @Override
     public void initData() {
+        toHome = getString(R.string.to_home);
+        role = SpUtils.getInt(getActivity(), GlobalContanstant.ROLE);
         getData();
     }
 
@@ -151,7 +158,11 @@ public class MainFragments extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_citypersonreport:
+                if (role != 0 ){
+                    ToastUtil.shortToast(getContext(),toHome);
+                }else {
                 IntentUtil.startActivity(view.getContext(), CityPersonReportActivity.class);
+                }
                 break;
             case R.id.rl_contect_main:
                 IntentUtil.startActivity(view.getContext(),ContactCityActivity.class);

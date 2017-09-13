@@ -219,8 +219,8 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
     @Override
     public void onDestroy() {
-        mapview.onDestroy();
         super.onDestroy();
+        mapview.onDestroy();
     }
 
     private static final int ISLOAD = 33301;

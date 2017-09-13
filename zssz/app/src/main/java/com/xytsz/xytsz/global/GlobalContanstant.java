@@ -67,4 +67,5 @@ public class GlobalContanstant {
     public static final int CHECKROADFAIL = 510;
     public static final String SIGN = "sign";
     public static final String ALLUSERCOUNT = "allusercount";
+    public static final String INERGRAL = "inergral";
 }

@@ -1,5 +1,6 @@
 package com.xytsz.xytsz.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,8 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.jar.Attributes;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -56,6 +59,8 @@ public class MyInformationActivity extends AppCompatActivity {
     private String username;
     private int role;
     private String name;
+    private String success;
+    private String originalName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +80,8 @@ public class MyInformationActivity extends AppCompatActivity {
 
 
         String compelet = getString(R.string.information_compelet);
-
+        success = getString(R.string.save_success);
+        originalName = getString(R.string.visitor);
         phone = SpUtils.getString(getApplicationContext(), GlobalContanstant.LOGINID);
 
         username = SpUtils.getString(getApplicationContext(), GlobalContanstant.USERNAME);
@@ -95,14 +101,51 @@ public class MyInformationActivity extends AppCompatActivity {
 
         if (role == 0) {
             mineCompelet.setVisibility(View.VISIBLE);
-            if (TextUtils.isEmpty(username)) {
+
+            if (username.equals(originalName)){
                 ToastUtil.shortToast(getApplicationContext(), compelet);
+            }else {
+                myName.setText(username);
+                myName.setCursorVisible(false);
+                myName.setFocusable(false);
+                myName.setFocusableInTouchMode(false);
+                mineCompelet.setVisibility(View.GONE);
             }
+
             myTelephone.setText(phone);
             myDepartment.setText(visitor);
+            mineCompelet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    name = myName.getText().toString();
+                    if (TextUtils.isEmpty(name)) {
+                        ToastUtil.shortToast(getApplicationContext(), "姓名不能为空");
+                        return;
+                    }
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                String json = getvisitor();
+                                if (json != null) {
+                                    Message message = Message.obtain();
+                                    message.obj = json;
+                                    message.what = SUCCESS;
+                                    handler.sendMessage(message);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+                }
+            });
 
         } else {
             myName.setText(username);
+            myName.setCursorVisible(false);
+            myName.setFocusable(false);
+            myName.setFocusableInTouchMode(false);
             myTelephone.setText(phones);
             myDepartment.setText(Data.departments[department - 1]);
         }
@@ -124,46 +167,24 @@ public class MyInformationActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SUCCESS:
                     String json = (String) msg.obj;
-                    VisitorInfo visitorInfo = JsonUtil.jsonToBean(json, VisitorInfo.class);
-                    String name = visitorInfo.getName();
-                    SpUtils.saveString(getApplicationContext(), GlobalContanstant.USERNAME, name);
+                    if (json.equals("true")) {
+                        SpUtils.saveString(getApplicationContext(), GlobalContanstant.USERNAME, name);
+                        ToastUtil.shortToast(getApplicationContext(),success);
+                        Intent intent = getIntent();
+                        setResult(3,intent);
+                        MyInformationActivity.this.finish();
+                    }
                     break;
             }
         }
     };
 
 
-    @OnClick(R.id.mine_compelet)
-    public void onViewClicked() {
-
-        name = myName.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            ToastUtil.shortToast(getApplicationContext(), "姓名不能为空");
-            return;
-        }
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    String json = getvisitor();
-                    if (json != null) {
-                        Message message = Message.obtain();
-                        message.obj = json;
-                        message.what = SUCCESS;
-                        handler.sendMessage(message);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-    }
-
     private String getvisitor() throws Exception {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getSZPeoplemethodName);
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.updatePesronmethodName);
         soapObject.addProperty("tel", phone);
         soapObject.addProperty("name", name);
-        soapObject.addProperty("bir", " ");
+        soapObject.addProperty("bir", "1989-08-08");
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.setOutputSoapObject(soapObject);
@@ -171,7 +192,7 @@ public class MyInformationActivity extends AppCompatActivity {
         envelope.dotNet = true;
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        httpTransportSE.call(NetUrl.getSZPeople_SOAP_ACTION, envelope);
+        httpTransportSE.call(NetUrl.updatePesron_SOAP_ACTION, envelope);
 
         SoapObject object = (SoapObject) envelope.bodyIn;
         String result = object.getProperty(0).toString();

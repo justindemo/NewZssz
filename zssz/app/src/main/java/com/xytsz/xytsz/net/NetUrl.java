@@ -8,7 +8,7 @@ package com.xytsz.xytsz.net;
 public class NetUrl {
 
 
-    //public static final String SERVERURL = "http://dxsz.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
+    //public static final String SERVERURL = "http://my.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
     //public static final String SERVERURL = "http://hr.xytgps.com:10001/SZWEBSERVICE/newxytszServices.asmx";
     public static final String SERVERURL = "http://sz.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
     //public static final String SERVERURL = "http://mtg.xytgps.com:10004/SZWEBSERVICE/newxytszServices.asmx";
@@ -148,7 +148,7 @@ public class NetUrl {
     public static final String getALlDealByPersonID_SOAP_ACTION = "http://xytsz.org/getAllDealByPersonID";
 
     public static final String uploadHeadImg_SOAP_ACTION = "http://xytsz.org/uploadHeadImg";
-    //TODo:修改
+    //修改
     public static final String sendBack_SOAP_ACTION = "http://xytsz.org/uploadHeadImg";
 
 
@@ -164,4 +164,8 @@ public class NetUrl {
     public static final String getszUserCountInfo_SOAP_ACTION = "http://xytsz.org/GetSZDisCountInfo";
     public static final String getSZPeoplemethodName = "GetSZPeople";
     public static final String getSZPeople_SOAP_ACTION = "http://xytsz.org/GetSZPeople";
+    public static final String isSignMethodname = "ToSign";
+    public static final String isSign_SOAP_ACITON = "http://xytsz.org/ToSign";
+    public static final String updatePesronmethodName ="ToUpdateSZPeople";
+    public static final String updatePesron_SOAP_ACTION ="http://xytsz.org/ToUpdateSZPeople";
 }

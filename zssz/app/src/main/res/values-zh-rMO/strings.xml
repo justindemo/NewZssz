@@ -89,6 +89,7 @@
     <string name="mine_sign">簽到</string>
     <string name="mine_information">我的資料</string>
 
+    <string name="save_success">保存成功</string>
 
     <string name="mine_score">我的積分</string>
     <string name="mine_update">軟件更新</string>
@@ -110,6 +111,7 @@
     <string name="socre_title_right">使用幫助</string>
     <string name="socre_title_sign">積分簽到及兌換</string>
     <string name="socre_detail">積分明細</string>
+    <string name="socre_sign_success">簽到成功</string>
 
     <string name="sign_title">簽到及領獎</string>
     <string name="sign_simple">普通會員</string>
@@ -255,6 +257,12 @@
     <string name="login_neterror">網絡異常，未獲取數據</string>
 
 
+    <string name="main_password">掌上市政賬號登錄</string>
+    <string name="main_phone">手機號碼快捷登錄</string>
+    <string name="phone_nopwd">驗證碼不能為空</string>
+
+    <string name="visitor_neterror">服務器獲取數據異常</string>
+
     <string name="home_noreporte">您沒有上報的權限</string>
     <string name="home_noreview">您沒有審核的權限</string>
     <string name="home_nosend">您沒有下派的權限</string>
@@ -262,8 +270,8 @@
     <string name="home_nopost">您沒有報驗的權限</string>
     <string name="home_nocheck">您沒有驗收的權限</string>
 
-
-    <string name="information_compelet">完善資料</string>
+    <string name="to_home">請到首頁去上報</string>
+    <string name="information_compelet">請完善資料</string>
     <string name="information_save">保存</string>
 
     <string-array name="permissions">

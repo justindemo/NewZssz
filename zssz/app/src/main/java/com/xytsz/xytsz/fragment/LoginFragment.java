@@ -146,8 +146,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                                                 if (json.equals("false")) {
                                                     ToastUtil.shortToast(getContext(), error);
                                                 } else {
-
-
                                                     final PersonInfo personInfo = JsonUtil.jsonToBean(json, PersonInfo.class);
                                                     //保存到本地  ID  名字
                                                     int personID = personInfo.get_id();

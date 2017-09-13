@@ -1,16 +1,28 @@
 package com.xytsz.xytsz.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.ReportHistoryAdapter;
+import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.net.NetUrl;
+import com.xytsz.xytsz.util.JsonUtil;
+import com.xytsz.xytsz.util.SpUtils;
+import com.xytsz.xytsz.util.ToastUtil;
 
-import org.w3c.dom.ls.LSInput;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +32,45 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/7/20.
- *
- *
+ * <p>
+ * 历史举报
  */
 public class ReportHistoryActivity extends AppCompatActivity {
 
+    private static final int SUCCESS = 500;
+    private static final int FAIL = 404;
     @Bind(R.id.reporthistory_recycleView)
     RecyclerView reporthistoryRecycleView;
+    @Bind(R.id.reporthistory_progressbar)
+    ProgressBar reporthistoryProgressbar;
 
     private List<String> list = new ArrayList<>();
+    private String error;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case SUCCESS:
+
+                    list = (List<String>) msg.obj;
+                    if (list != null) {
+                        ReportHistoryAdapter adapter = new ReportHistoryAdapter(list);
+                        if (list.size() == 0) {
+                            reporthistoryProgressbar.setVisibility(View.GONE);
+                        }
+                        reporthistoryProgressbar.setVisibility(View.GONE);
+                        reporthistoryRecycleView.setAdapter(adapter);
+                    }
+                    break;
+                case FAIL:
+                    reporthistoryProgressbar.setVisibility(View.GONE);
+                    ToastUtil.shortToast(getApplicationContext(), error);
+                    break;
+            }
+        }
+    };
+    private String phone;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +85,10 @@ public class ReportHistoryActivity extends AppCompatActivity {
             actionBar.setTitle("举报历史");
 
         }
+        error = getString(R.string.login_neterror);
+        phone = SpUtils.getString(getApplicationContext(), GlobalContanstant.LOGINID);
 
+        initData();
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -52,13 +97,54 @@ public class ReportHistoryActivity extends AppCompatActivity {
         list.clear();
         for (int i = 0; i < 5; i++) {
 
-            list.add("张三"+i);
+            list.add("张三" + i);
         }
 
-        ReportHistoryAdapter adapter = new ReportHistoryAdapter(list);
 
-        reporthistoryRecycleView.setAdapter(adapter);
+    }
 
+    private void initData() {
+        reporthistoryProgressbar.setVisibility(View.VISIBLE);
+        new Thread() {
+            @Override
+            public void run() {
+                String data = null;
+                try {
+                    data = getData();
+                    //JsonUtil.jsonToBean(data, );
+                    Message message = Message.obtain();
+                    message.obj = list;
+                    message.what = SUCCESS;
+                    handler.sendMessage(message);
+
+                } catch (Exception e) {
+                    Message message = Message.obtain();
+                    message.what = FAIL;
+                    handler.sendMessage(message);
+                }
+
+            }
+        }.start();
+    }
+
+    private String getData() throws Exception {
+
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.isSignMethodname);
+        soapObject.addProperty("tel", phone);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.bodyOut = soapObject;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+
+        httpTransportSE.call(NetUrl.isSign_SOAP_ACITON, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+
+        return result;
     }
 
     @Override
@@ -66,4 +152,6 @@ public class ReportHistoryActivity extends AppCompatActivity {
         finish();
         return super.onSupportNavigateUp();
     }
+
+
 }

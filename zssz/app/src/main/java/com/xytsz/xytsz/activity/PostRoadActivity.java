@@ -76,7 +76,7 @@ public class PostRoadActivity extends AppCompatActivity {
                             String json = MyApplication.getAllImagUrl(taskNumber, GlobalContanstant.GETREVIEW);
 
                             if(json != null) {
-                                //String list = new JSONObject(json).getJSONArray("").toString();
+
                                 List<ImageUrl> imageUrlList = new Gson().fromJson(json, new TypeToken<List<ImageUrl>>() {
                                 }.getType());
 

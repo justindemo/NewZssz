@@ -20,7 +20,7 @@ public class MemberShowAdapter extends BaseQuickAdapter<MemberShow> {
 
 
 
-    public MemberShowAdapter( List<MemberShow> data) {
+    public MemberShowAdapter(List<MemberShow> data) {
         super(R.layout.item_member_show_adapter, data);
     }
 

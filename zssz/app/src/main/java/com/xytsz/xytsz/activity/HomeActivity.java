@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
@@ -78,13 +79,15 @@ import javax.microedition.khronos.opengles.GL;
  */
 public class HomeActivity extends AppCompatActivity {
 
-    private static final int ALLUSERCOUNT = 1000001;
+
     private RadioGroup mRadiogroup;
     private NoScrollViewpager mViewpager;
     private ArrayList<Fragment> fragments;
     private Boolean isFive;
     private RelativeLayout rl_notonlie;
     private Button mbtrefresh;
+    private ProgressBar mprogressbar;
+    private int role;
 
 
     @Override
@@ -100,6 +103,8 @@ public class HomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_home);
         String loginId = SpUtils.getString(getApplicationContext(), GlobalContanstant.LOGINID);
+
+        role = SpUtils.getInt(getApplicationContext(), GlobalContanstant.ROLE);
 
         if (loginId == null || TextUtils.isEmpty(loginId)) {
             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
@@ -122,8 +127,11 @@ public class HomeActivity extends AppCompatActivity {
             mbtrefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isNetworkAvailable(getApplicationContext()))
+                    if (isNetworkAvailable(getApplicationContext())){
                         getData();
+                        rl_notonlie.setVisibility(View.GONE);
+                        mprogressbar.setVisibility(View.VISIBLE);
+                    }
                 }
             });
 
@@ -291,10 +299,9 @@ public class HomeActivity extends AppCompatActivity {
                             }
                             Deal.facilitySizes.add(facilitysizes);
                         }
-
-
-
-
+                        Message message = Message.obtain();
+                        message.what = DATA_SUCCESS;
+                        handler.sendMessage(message);
 
 
                     }else {
@@ -320,6 +327,7 @@ public class HomeActivity extends AppCompatActivity {
         mViewpager = (NoScrollViewpager) findViewById(R.id.homeactivity_vp);
 
         rl_notonlie = (RelativeLayout)findViewById(R.id.rl_notonline);
+        mprogressbar = (ProgressBar) findViewById(R.id.home_progressbar);
         mbtrefresh = (Button) findViewById(R.id.btn_refresh);
         //默认显示home界面
         mRadiogroup.check(R.id.homeactivity_rbtn_home);
@@ -360,6 +368,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        if (role == 0){
+            mViewpager.setCurrentItem(1,false);
+            mRadiogroup.check(R.id.homeactivity_rbtn_working);
+        }
+
 
         mRadiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -371,7 +384,7 @@ public class HomeActivity extends AppCompatActivity {
                         mViewpager.setCurrentItem(0, false);
                         break;
 
-                        //加载作业
+                        //加载会员
                     case R.id.homeactivity_rbtn_working:
                         mViewpager.setCurrentItem(1, false);
                         break;
@@ -517,10 +530,8 @@ public class HomeActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-
-
                 case DATA_SUCCESS:
-                    rl_notonlie.setVisibility(View.GONE);
+                    mprogressbar.setVisibility(View.GONE);
                     break;
                 case VERSIONINFO:
                     String  info = (String) msg.obj;
@@ -711,4 +722,7 @@ public class HomeActivity extends AppCompatActivity {
         return Integer.valueOf(object.getProperty(0).toString());
 
     }
+
+
+
 }

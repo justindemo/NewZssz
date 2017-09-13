@@ -37,8 +37,10 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.bean.CityPersonReporte;
 import com.xytsz.xytsz.global.Data;
+import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.util.PermissionUtils;
+import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
 
@@ -241,10 +243,11 @@ public class PersonReportActivity extends AppCompatActivity {
             }
         });
 
-        etPersonPhone.setText("13111234567");
+        String phone = SpUtils.getString(getApplicationContext(), GlobalContanstant.LOGINID);
+        etPersonPhone.setText(phone);
 
 
-        cityPersonReporte.setTelNumber(etPersonPhone.getText().toString());
+        cityPersonReporte.setTelNumber(phone);
 
 
 
@@ -450,8 +453,8 @@ public class PersonReportActivity extends AppCompatActivity {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.citypersonreportemethodName);
         //传递的参数
         soapObject.addProperty("tasknumber", cityPersonReporte.getTasknumber());
-        soapObject.addProperty("telnumber", cityPersonReporte.getTelNumber());  //文件类型
-        soapObject.addProperty("name", cityPersonReporte.getName());   //参数2  图片字符串
+        soapObject.addProperty("telnumber", cityPersonReporte.getTelNumber());
+        soapObject.addProperty("name", cityPersonReporte.getName());   //
         soapObject.addProperty("dealtype", cityPersonReporte.getType_id());
         soapObject.addProperty("info", cityPersonReporte.getInfo());
         soapObject.addProperty("longitude", cityPersonReporte.getLongitude());

@@ -109,6 +109,8 @@
     <string name="socre_title_right">使用帮助</string>
     <string name="socre_title_sign">积分签到及兑换</string>
     <string name="socre_detail">积分明细</string>
+    <string name="socre_sign_success">签到成功</string>
+    <string name="save_success">保存成功</string>
 
     <string name="sign_title">签到及领奖</string>
     <string name="sign_simple">普通会员</string>
@@ -246,12 +248,19 @@
     <string name="visitor_reget">重新获取</string>
     <string name="visitor_resend">重新发送</string>
     <string name="visitor_datanull">号码不能为空</string>
+    <string name="visitor_neterror">服务器获取数据异常</string>
 
+    <string name="to_home">请到首页去上报</string>
     <string name="logining">正在登录···</string>
     <string name="login_error">用户名或密码错误</string>
     <string name="login_datanull">用户名或密码不能为空</string>
     <string name="login_checknet">请检查网络</string>
     <string name="login_neterror">网络异常，未获取数据</string>
+
+    <string name="phone_nopwd">验证码不能为空</string>
+
+    <string name="main_password">掌上市政账号登录</string>
+    <string name="main_phone">手机号码快捷登录</string>
 
 
     <string name="home_noreporte">您没有上报的权限</string>
@@ -261,7 +270,7 @@
     <string name="home_nopost">您没有报验的权限</string>
     <string name="home_nocheck">您没有验收的权限</string>
     
-    <string name="information_compelet">完善资料</string>
+    <string name="information_compelet">请完善资料</string>
     <string name="information_save">保存</string>
     
     

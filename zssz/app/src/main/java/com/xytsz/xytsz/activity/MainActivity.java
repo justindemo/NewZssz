@@ -71,11 +71,14 @@ public class MainActivity extends AppCompatActivity {
         logintab = (TabLayout) findViewById(R.id.login_tab);
         loginVg = (ViewPager)findViewById(R.id.login_viewpager);
 
+        String password =  getString(R.string.main_password);
+        String phone = getString(R.string.main_phone);
+
 
         List<String> titles = new ArrayList<>();
 
-        titles.add("掌上市政账号登录");
-        titles.add("手机号码快捷登录");
+        titles.add(password);
+        titles.add(phone);
 
         for (int i = 0; i < titles.size(); i++) {
             logintab.addTab(logintab.newTab().setText(titles.get(i)));
@@ -104,11 +107,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        return false;
-    }
 
 
 }

@@ -1,6 +1,9 @@
 package com.xytsz.xytsz.fragment;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +22,7 @@ import com.xytsz.xytsz.activity.HomeActivity;
 import com.xytsz.xytsz.bean.VisitorInfo;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
+import com.xytsz.xytsz.ui.TimeChoiceButton;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
@@ -45,6 +49,7 @@ import cn.smssdk.SMSSDK;
  */
 public class PhoneFragment extends android.support.v4.app.Fragment {
 
+    private static final int FAIL = 404;
     private EditText login_phone;
     private EditText passWord;
     private Button login;
@@ -56,6 +61,10 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
     private String reget;
     private String error;
     private String code;
+    private String checknet;
+    private String logining;
+    private String nopwd;
+    private String neterror;
 
     @Nullable
     @Override
@@ -91,9 +100,28 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
         }
     };
 
-    private void initData() {
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        PermissionUtils.requestPermission(getActivity(),PermissionUtils.CODE_RECEIVE_SMS,mPermissionGrant);
+
+    private void initData() {
+        checknet = getString(R.string.login_checknet);
+        logining = getString(R.string.logining);
+        nopwd = getString(R.string.phone_nopwd);
+        PermissionUtils.requestPermission(getActivity(), PermissionUtils.CODE_RECEIVE_SMS, mPermissionGrant);
         visitor = getString(R.string.visitor);
         success = getString(R.string.visitor_login_success);
         code = getString(R.string.visitor_VerificationCode);
@@ -101,6 +129,8 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
         reget = getString(R.string.visitor_reget);
         resend = getString(R.string.visitor_resend);
         nodata = getString(R.string.visitor_datanull);
+        neterror = getString(R.string.visitor_neterror);
+
 
         eventHandler = new EventHandler() {
             public void afterEvent(int event, int result, Object data) {
@@ -119,10 +149,10 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
 
         tvGet.setOnClickListener(new View.OnClickListener() {
 
-
             @Override
             public void onClick(View v) {
 
+                if (isNetworkAvailable(getActivity())){
                 //判断字符是否是13个
                 phone = login_phone.getText().toString();
                 if (TextUtils.isEmpty(phone)) {
@@ -134,21 +164,27 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                     if (mobileTrue) {
 
                         SMSSDK.getVerificationCode("86", phone);
+
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                for (int i = 60; i > 0; i--) {
-                                    handler.sendEmptyMessage(CODE_ING);
-                                    if (i <= 0) {
-                                        break;
-                                    }
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
+                                if (TIME == 0) {
+                                    TIME = 60;
                                 }
-                                handler.sendEmptyMessage(CODE_REPEAT);
+                                    for (int i = 60; i > 0; i--) {
+                                        handler.sendEmptyMessage(CODE_ING);
+                                        if (i <= 0) {
+                                            break;
+                                        }
+                                        try {
+                                            Thread.sleep(1000);
+
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    handler.sendEmptyMessage(CODE_REPEAT);
+
                             }
                         }).start();
 
@@ -162,6 +198,11 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                     ToastUtil.shortToast(getContext(), error);
                 }
 
+            }else {
+                    ToastUtil.shortToast(getContext(),checknet);
+                }
+
+
             }
         });
 
@@ -170,12 +211,15 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 //验证是否成功
+                phone = login_phone.getText().toString();
                 String pwd = passWord.getText().toString();
 
                 if (!TextUtils.isEmpty(pwd)) {
+
+                    ToastUtil.shortToast(getActivity(),logining);
                     SMSSDK.submitVerificationCode("86", phone, pwd);
                 } else {
-                    ToastUtil.shortToast(getContext(), "验证码不能为空");
+                    ToastUtil.shortToast(getContext(), nopwd);
                 }
 
             }
@@ -199,6 +243,9 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case FAIL:
+                    ToastUtil.shortToast(getContext(),neterror);
+                    break;
                 case SMSDDK_HANDLER:
                     int event = msg.arg1;
                     int result = msg.arg2;
@@ -207,6 +254,10 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                     if (result == SMSSDK.RESULT_COMPLETE) {
                         //验证码验证成功
                         if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+
+
+                            ToastUtil.shortToast(getActivity(),success);
+
 
                             new Thread() {
                                 @Override
@@ -220,12 +271,16 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                                             String name = visitorInfo.getName();
                                             String birthday = visitorInfo.getBirthday();
                                             int role_id = visitorInfo.getRole_id();
+                                            int integral = visitorInfo.getIntegral();
 
                                             SpUtils.exit(getActivity().getApplicationContext());
                                             SpUtils.saveString(getContext(), GlobalContanstant.LOGINID, telphone);
                                             SpUtils.saveBoolean(getContext(), GlobalContanstant.ISFIRSTENTER, false);
                                             SpUtils.saveString(getActivity().getApplicationContext(), GlobalContanstant.USERNAME, name);
                                             SpUtils.saveInt(getActivity().getApplicationContext(), GlobalContanstant.ROLE, role_id);
+
+                                            SpUtils.saveInt(getActivity().getApplicationContext(),GlobalContanstant.INERGRAL,integral);
+
 
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
@@ -241,7 +296,9 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
 
 
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+                                        Message message =Message.obtain();
+                                        message.what = FAIL;
+                                        handler.sendMessage(message);
                                     }
                                 }
                             }.start();
@@ -285,7 +342,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getSZPeoplemethodName);
         soapObject.addProperty("tel", phone);
         soapObject.addProperty("name", visitor);
-        soapObject.addProperty("bir", " ");
+        soapObject.addProperty("bir", "1989-01-10");
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.setOutputSoapObject(soapObject);

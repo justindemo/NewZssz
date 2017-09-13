@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.xytsz.xytsz.activity.PhotoShowActivity;
 import com.xytsz.xytsz.activity.SendBigPhotoActivity;
 import com.xytsz.xytsz.activity.SendRoadDetailActivity;
 import com.xytsz.xytsz.bean.ImageUrl;
@@ -245,8 +246,8 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
 
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), SendBigPhotoActivity.class);
-                    intent.putExtra("imageurl", imageUrlLists.get(position).get(0).getImgurl());
+                    Intent intent = new Intent(v.getContext(), PhotoShowActivity.class);
+                    intent.putExtra("imageUrllist", (Serializable)imageUrlLists.get(position));
                     v.getContext().startActivity(intent);
                 }
             });
