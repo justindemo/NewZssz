@@ -143,7 +143,7 @@ public class SendActivity extends AppCompatActivity {
     public static String getReviewData(int phaseIndication) throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getTaskList);
         soapObject.addProperty("PhaseIndication", phaseIndication);
-        //soapObject.addProperty("personid", personId);
+
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapSerializationEnvelope.VER12);
         envelope.bodyOut = soapObject;//由于是发送请求，所以是设置bodyOut
         envelope.dotNet = true;

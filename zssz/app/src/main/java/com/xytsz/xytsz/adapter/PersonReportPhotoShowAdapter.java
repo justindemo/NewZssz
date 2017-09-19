@@ -1,28 +1,27 @@
 package com.xytsz.xytsz.adapter;
 
 import android.graphics.Color;
-import android.media.Image;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.bean.ImageUrl;
 
 import java.util.List;
 
 /**
- * Created by admin on 2017/3/6.
+ * Created by admin on 2017/9/15.
+ *
  *
  */
-public class PhotoShowAdapter extends PagerAdapter {
+public class PersonReportPhotoShowAdapter extends PagerAdapter {
 
-    private List<ImageUrl> imageUrlList;
+    private List<String> imageUrlList;
 
 
-    public PhotoShowAdapter(List<ImageUrl> imageUrlList) {
+    public PersonReportPhotoShowAdapter(List<String> imageUrlList) {
         this.imageUrlList = imageUrlList;
 
     }
@@ -44,9 +43,9 @@ public class PhotoShowAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView imageView = new ImageView(container.getContext());
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setBackgroundColor(Color.BLACK);
-        ImageUrl imageUrl = imageUrlList.get(position);
-        String imgurl = imageUrl.getImgurl();
+        String imgurl = imageUrlList.get(position);
         Glide.with(container.getContext()).load(imgurl).into(imageView);
         container.addView(imageView);
         return imageView;

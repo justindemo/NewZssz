@@ -64,6 +64,7 @@
     <string name="personreporte_success">上报成功</string>
     <string name="personreporte_fail">网络异常</string>
     <string name="personreporte_commiting">正在上报···</string>
+    <string name="person_reproted">此处已经上报过,谢谢</string>
 
     <string name="locating">正在定位···</string>
     <string name="loading">正在加载数据···</string>
@@ -90,6 +91,7 @@
 
 
     <string name="mine_score">我的积分</string>
+    <string name="for_us">关于我们</string>
     <string name="mine_update">软件更新</string>
     <string name="mine_share">软件分享</string>
     <string name="mine_appraise">软件评价</string>

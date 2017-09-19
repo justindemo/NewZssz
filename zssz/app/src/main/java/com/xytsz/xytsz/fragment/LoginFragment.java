@@ -182,8 +182,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                                                     ToastUtil.shortToast(getContext(), success);
 
                                                     IntentUtil.startActivity(getActivity(),HomeActivity.class);
-                                                   /* Intent intent = new Intent(MainActivity.this, LocationService.class);
-                                                    startService(intent);*/
                                                     getActivity().finish();
 
 

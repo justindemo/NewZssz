@@ -6,19 +6,20 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.adapter.PersonReportPhotoShowAdapter;
 import com.xytsz.xytsz.adapter.PhotoShowAdapter;
 import com.xytsz.xytsz.bean.ImageUrl;
 
 import java.util.List;
 
 /**
- * Created by admin on 2017/3/6.
- * 图片显示
+ * Created by admin on 2017/9/15.
+ * 人員舉報的viewpager
  */
-public class PhotoShowActivity extends AppCompatActivity {
+public class PersonReportPhotoShowActivity extends AppCompatActivity {
 
     private ViewPager mvp;
-    private List<ImageUrl> imageUrllist;
+    private List<String> imageUrllist;
 
 
     @Override
@@ -26,7 +27,7 @@ public class PhotoShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (getIntent() != null){
-            imageUrllist = (List<ImageUrl>) getIntent().getSerializableExtra("imageUrllist");
+            imageUrllist = (List<String>) getIntent().getSerializableExtra("reportimageUrllist");
 
         }
 
@@ -39,7 +40,7 @@ public class PhotoShowActivity extends AppCompatActivity {
     private void initData() {
         //根据图片URL获取图片传入adapter里面
         if (imageUrllist != null) {
-            PhotoShowAdapter adapter = new PhotoShowAdapter(imageUrllist);
+            PersonReportPhotoShowAdapter adapter = new PersonReportPhotoShowAdapter(imageUrllist);
             mvp.setAdapter(adapter);
         }
     }

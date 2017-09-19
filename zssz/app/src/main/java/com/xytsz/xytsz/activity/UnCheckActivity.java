@@ -110,7 +110,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case IS_PHOTO_SUCCESS1:
                     String isphotoSuccess = (String) msg.obj;
-                    ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
                     if (isphotoSuccess.equals("true")) {
                         ToastUtil.shortToast(getApplicationContext(), "处置前照片上报成功");
                         btUncheckPredeal.setEnabled(false);
@@ -122,7 +121,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case IS_PHOTO_SUCCESS2:
                     String isphotoSuccess1 = (String) msg.obj;
-                    ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
                     if (isphotoSuccess1.equals("true")) {
                         ToastUtil.shortToast(getApplicationContext(), "处置中照片上报成功");
                         btUncheckDealing.setEnabled(false);
@@ -497,7 +495,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.iv_predeal_icon2:
                 Intent intent2 = new Intent("android.media.action.IMAGE_CAPTURE");
-
                 File file1 = new File(getPhotopath(2));
                 fileUri = Uri.fromFile(file1);
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -516,6 +513,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
             // 点击上报处置前的照片
             case R.id.bt_uncheck_predeal:
+                ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
                 new Thread() {
 
                     @Override
@@ -574,6 +572,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 //是否有处置前的照片
                 boolean ispostFirst = SpUtils.getBoolean(view.getContext(), GlobalContanstant.ISPOSTFIRST, false);
                 if (ispostFirst) {
+                    ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
                     new Thread() {
                         @Override
                         public void run() {

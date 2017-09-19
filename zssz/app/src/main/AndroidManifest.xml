@@ -159,6 +159,8 @@
         <activity android:name=".activity.InformationDeatailActivity"/>
         <activity android:name=".activity.AllPayActivity"/>
         <activity android:name=".activity.AppraiseActivity"/>
+        <activity android:name=".activity.ForUsActivity"/>
+        <activity android:name=".activity.PersonReportPhotoShowActivity"/>
 
 
         <activity android:name=".activity.CameraActivity"

@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
          */
 
         initView();
-        initData();
+
         if (isNetworkAvailable(getApplicationContext())) {
             getData();
         }else {
@@ -136,6 +136,8 @@ public class HomeActivity extends AppCompatActivity {
             });
 
         }
+
+        initData();
     }
 
     private void getData() {

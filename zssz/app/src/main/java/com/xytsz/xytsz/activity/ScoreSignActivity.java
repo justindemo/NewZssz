@@ -51,6 +51,7 @@ import butterknife.ButterKnife;
 public class ScoreSignActivity extends AppCompatActivity {
 
     private static final int FAIL = 404;
+    private static final int SUCCESS = 500;
     @Bind(R.id.scoresign_recycleview)
     RecyclerView scoresignRecycleview;
 
@@ -70,9 +71,21 @@ public class ScoreSignActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case SUCCESS:
+                    String scorenumber = (String) msg.obj;
+                    if (scorenumber != null){
+                        mtvScore.setText(scorenumber);
+                    }
+                    break;
                 case SIGN:
-                    String sign = (String) msg.obj;
+                    Bundle data = msg.getData();
+                    String sign = data.getString("sign");
+                    String score = data.getString("score");
+                    if (score != null){
+                        mtvScore.setText(score);
+                    }
                     if (sign.equals("true")) {
+                        SpUtils.saveBoolean(getApplicationContext(),GlobalContanstant.SIGN,true);
                         mtvSign.setText(signed);
                         ToastUtil.shortToast(getApplicationContext(),signSuccess);
                     }
@@ -111,6 +124,7 @@ public class ScoreSignActivity extends AppCompatActivity {
 
         error = getString(R.string.visitor_neterror);
 
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
         scoresignRecycleview.setLayoutManager(manager);
 
@@ -145,10 +159,13 @@ public class ScoreSignActivity extends AppCompatActivity {
         }
         if (hour == 0 && minute == 0) {
             mtvSign.setText(R.string.sign);
+            mtvSign.setEnabled(true);
+            mtvSign.setFocusable(true);
         }
         if (isSign) {
             mtvSign.setText(signed);
         }
+
 
         mtvSign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,10 +175,13 @@ public class ScoreSignActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-
                             String sign = signed();
+                            String score = getintegal(phone);
                             Message message = Message.obtain();
-                            message.obj = sign;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("sign",sign);
+                            bundle.putString("score",score);
+                            message.setData(bundle);
                             message.what = SIGN;
                             handler.sendMessage(message);
                         } catch (Exception e) {
@@ -176,6 +196,8 @@ public class ScoreSignActivity extends AppCompatActivity {
                 SpUtils.saveBoolean(getApplicationContext(), GlobalContanstant.SIGN, true);
                 if (TextUtils.equals(mtvSign.getText().toString(), signed)) {
                     ToastUtil.shortToast(ScoreSignActivity.this, tip);
+                    mtvSign.setEnabled(false);
+                    mtvSign.setFocusable(false);
                 }
 
                 mtvSign.setText(signed);
@@ -208,9 +230,51 @@ public class ScoreSignActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Thread(){
+            @Override
+            public void run() {
+                try{
+                    String score = getintegal(phone);
+                    Message message = Message.obtain();
+                    message.obj  = score;
+                    message.what = SUCCESS;
+                    handler.sendMessage(message);
+                }catch (Exception e){
+
+                    Message s = Message.obtain();
+                    s.what = FAIL;
+                    handler.sendMessage(s);
+                }
+            }
+        }.start();
+    }
+
+    private String getintegal(String phone) throws Exception {
+
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getScoreMethodname);
+        soapObject.addProperty("tel", phone);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.bodyOut = soapObject;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+
+        httpTransportSE.call(NetUrl.getScore_SOAP_ACTION, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+
+        return result;
+    }
+
     private String signed() throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.isSignMethodname);
-        soapObject.addProperty("tel","1523566548");
+        soapObject.addProperty("tel",phone);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.dotNet = true;

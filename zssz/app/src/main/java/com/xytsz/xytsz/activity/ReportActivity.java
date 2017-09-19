@@ -47,6 +47,7 @@ import com.xytsz.xytsz.global.Data;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 
+import com.xytsz.xytsz.receive.CustomBroadCast;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.SpUtils;
@@ -77,7 +78,7 @@ import java.util.List;
  * Created by admin on 2017/1/10.
  * 上报页面
  */
-public class ReportActivity extends AppCompatActivity {
+public class ReportActivity extends AppCompatActivity  {
 
     private LocationClient locationClient;
     public BDLocationListener myListener = new MyListener();
@@ -151,6 +152,8 @@ public class ReportActivity extends AppCompatActivity {
         notifa = this.getString(R.string.report_notifica);
         notifatitle = this.getString(R.string.report_notifica_title);
         error = this.getString(R.string.report_error);
+
+        CustomBroadCast.getInstance().registerAction(getApplicationContext());
         initView();
         initData();
     }
@@ -627,6 +630,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
 
+
     class ReportTask extends AsyncTask<DiseaseInformation, Integer, String> {
 
         @Override
@@ -1018,6 +1022,7 @@ public class ReportActivity extends AppCompatActivity {
                                 nm.notify(0, noti);
 
                                 ToastUtil.shortToast(getApplicationContext(), imgsuccess);
+
                             }
                         } else {
                             ToastUtil.shortToast(getApplicationContext(), error);

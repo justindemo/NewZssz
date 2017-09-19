@@ -12,14 +12,23 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.MyScoreAdapter;
+import com.xytsz.xytsz.bean.ScoreDetail;
 import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +38,7 @@ import butterknife.OnClick;
 
 /**
  * Created by admin on 2017/7/17.
- * <p>
+ * <p/>
  * 我的积分界面
  */
 public class MyScoreActivity extends AppCompatActivity {
@@ -44,13 +53,12 @@ public class MyScoreActivity extends AppCompatActivity {
     TextView tvSign;
     @Bind(R.id.myscore_recycleview)
     RecyclerView myscoreRecycleview;
-
     @Bind(R.id.tv_myscore_zero)
     TextView tvMyscoreZero;
     @Bind(R.id.myscore_progressbar)
     ProgressBar myscoreProgressbar;
 
-    private List<String> list = new ArrayList<>();
+    private List<ScoreDetail> list = new ArrayList<>();
     private String phone;
 
     private Handler handler = new Handler() {
@@ -60,16 +68,20 @@ public class MyScoreActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SUCCESS:
 
+                    Bundle data = msg.getData();
+                    list = (List<ScoreDetail>) data.getSerializable("list");
+                    String score = data.getString("score");
 
+                    tvMyscore.setText(score);
                     if (list != null) {
-                        MyScoreAdapter adapter = new MyScoreAdapter(list);
                         if (list.size() == 0) {
-
                             myscoreProgressbar.setVisibility(View.GONE);
                             tvMyscoreZero.setVisibility(View.VISIBLE);
-                        }
+                        } else {
+                            MyScoreAdapter adapter = new MyScoreAdapter(list);
                             myscoreProgressbar.setVisibility(View.GONE);
-                        myscoreRecycleview.setAdapter(adapter);
+                            myscoreRecycleview.setAdapter(adapter);
+                        }
                     }
 
                     break;
@@ -97,15 +109,12 @@ public class MyScoreActivity extends AppCompatActivity {
         }
 
         phone = SpUtils.getString(getApplicationContext(), GlobalContanstant.LOGINID);
+
         error = getString(R.string.login_neterror);
         initData();
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         myscoreRecycleview.setLayoutManager(manager);
-        list.clear();
-        for (int i = 0; i < 10; i++) {
-            list.add("签到" + i);
-        }
 
 
     }
@@ -117,11 +126,19 @@ public class MyScoreActivity extends AppCompatActivity {
             public void run() {
                 try {
                     String data = getData();
-                    //JsonUtil.jsonToBean(data, );
+                    String score = getintegal(phone);
+
+                    List<ScoreDetail> list = JsonUtil.jsonToBean(data, new TypeToken<List<ScoreDetail>>() {
+                    }.getType());
+
                     Message message = Message.obtain();
-                    message.obj = list;
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("list", (Serializable) list);
+                    bundle.putString("score",score);
+                    message.setData(bundle);
                     message.what = SUCCESS;
                     handler.sendMessage(message);
+
                 } catch (Exception e) {
                     Message message = Message.obtain();
                     message.what = FAIL;
@@ -132,8 +149,49 @@ public class MyScoreActivity extends AppCompatActivity {
         }.start();
     }
 
-    private String getData() {
-        return null;
+    private String getintegal(String phone) throws Exception {
+
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getScoreMethodname);
+        soapObject.addProperty("tel", phone);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.bodyOut = soapObject;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+
+        httpTransportSE.call(NetUrl.getScore_SOAP_ACTION, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+
+        return result;
+    }
+
+    private String getData() throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getScoreDetailMethodname);
+        soapObject.addProperty("tel", phone);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.bodyOut = soapObject;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+
+        httpTransportSE.call(NetUrl.getScoreDetail_SOAP_ACTION, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+
+        return result;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     @Override
@@ -147,9 +205,7 @@ public class MyScoreActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.tv_myscore_help:
                 //webView  或者 dialog
-
                 break;
-
             case R.id.tv_sign:
                 //签到界面
                 IntentUtil.startActivity(view.getContext(), ScoreSignActivity.class);

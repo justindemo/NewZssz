@@ -68,9 +68,6 @@ public class ReviewAdapter extends BaseAdapter implements Serializable {
         }
         notifyDataSetChanged();
 
-
-
-
         return convertView;
     }
 

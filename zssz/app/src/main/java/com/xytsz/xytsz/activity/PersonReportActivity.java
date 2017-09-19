@@ -344,13 +344,16 @@ public class PersonReportActivity extends AppCompatActivity {
                     List<String> results = (List<String>) msg.obj;
                     String success = getString(R.string.personreporte_success);
                     String fail = getString(R.string.personreporte_fail);
+                    String reported = getString(R.string.person_reproted);
                     if (results.get(0).equals("true")) {
                         if (results.get(1).equals("true")) {
-
                             ToastUtil.shortToast(getApplicationContext(), success);
                         }else {
                             ToastUtil.shortToast(getApplicationContext(), fail);
                         }
+                    }else
+                    {
+                        ToastUtil.shortToast(getApplicationContext(),reported);
                     }
 
                     finish();
@@ -393,10 +396,12 @@ public class PersonReportActivity extends AppCompatActivity {
                         try {
                             String result = commitServer(cityPersonReporte);
                             //String result ="true";
-                            for (int i = 0; i < imageBase64code.size(); i++) {
-                                cityPersonReporte.setIamgeBase64code(imageBase64code.get(i));
-                                cityPersonReporte.setPhotoName(phtotNames.get(i));
-                                imageResult = uploadImage(cityPersonReporte);
+                            if (result.equals("true")) {
+                                for (int i = 0; i < imageBase64code.size(); i++) {
+                                    cityPersonReporte.setIamgeBase64code(imageBase64code.get(i));
+                                    cityPersonReporte.setPhotoName(phtotNames.get(i));
+                                    imageResult = uploadImage(cityPersonReporte);
+                                }
                             }
 
                             List<String> results = new ArrayList<>();
@@ -455,11 +460,12 @@ public class PersonReportActivity extends AppCompatActivity {
         soapObject.addProperty("tasknumber", cityPersonReporte.getTasknumber());
         soapObject.addProperty("telnumber", cityPersonReporte.getTelNumber());
         soapObject.addProperty("name", cityPersonReporte.getName());   //
-        soapObject.addProperty("dealtype", cityPersonReporte.getType_id());
+        soapObject.addProperty("dealtype_id", cityPersonReporte.getType_id());
         soapObject.addProperty("info", cityPersonReporte.getInfo());
         soapObject.addProperty("longitude", cityPersonReporte.getLongitude());
         soapObject.addProperty("latitude", cityPersonReporte.getLatitude());
-
+//        soapObject.addProperty("longitude", "116.351377");
+//        soapObject.addProperty("latitude", "39.892574");
         //设置访问地址 和 超时时间
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.bodyOut = soapObject;

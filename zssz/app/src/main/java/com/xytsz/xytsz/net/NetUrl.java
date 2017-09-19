@@ -8,7 +8,6 @@ package com.xytsz.xytsz.net;
 public class NetUrl {
 
 
-    //public static final String SERVERURL = "http://my.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
     //public static final String SERVERURL = "http://hr.xytgps.com:10001/SZWEBSERVICE/newxytszServices.asmx";
     public static final String SERVERURL = "http://sz.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
     //public static final String SERVERURL = "http://mtg.xytgps.com:10004/SZWEBSERVICE/newxytszServices.asmx";
@@ -157,7 +156,6 @@ public class NetUrl {
     public static final String getenlist = "GetEnList";
     public static final String getenlist_SOAP_ACTION = "http://xytsz.org/GetEnList";
     public static final String citypersonreportemethodName = "ToSoReporting";
-
     public static final String getAllUserCountMethodName = "GetALLUserCount";
     public static final String getAllUserCount_SOAP_ACITION = "http://xytsz.org/GetALLUserCount";
     public static final String getszUserCountInfomethod = "GetSZDisCountInfo";
@@ -168,4 +166,11 @@ public class NetUrl {
     public static final String isSign_SOAP_ACITON = "http://xytsz.org/ToSign";
     public static final String updatePesronmethodName ="ToUpdateSZPeople";
     public static final String updatePesron_SOAP_ACTION ="http://xytsz.org/ToUpdateSZPeople";
+
+    public static final String getHistoryMethodname = "GetSoReport";
+    public static final String getHistory_SOAP_ACTION = "http://xytsz.org/GetSoReport";
+    public static final String getScoreDetailMethodname ="GetIntegralInfo";
+    public static final String getScoreDetail_SOAP_ACTION ="http://xytsz.org/GetIntegralInfo";
+    public static final String getScoreMethodname ="GetIntegral";
+    public static final String getScore_SOAP_ACTION ="http://xytsz.org/GetIntegral";
 }

@@ -24,6 +24,7 @@ import java.util.List;
  * 我上报界面的显示数据
  */
 public class MyReportAdapter extends BaseAdapter{
+
     private List<ForMyDis> details;
     private List<List<ImageUrl>> imageurlList;
 

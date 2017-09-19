@@ -125,7 +125,7 @@ public class LineView extends View {
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.parseColor("#fa8072"));
-        textPaint.setTextSize(25f);
+        textPaint.setTextSize(30);
         float stringWidth = textPaint.measureText(supertext);
         float string2Width = textPaint.measureText(supernumber);
         // textPaint.setStrokeWidth(10);

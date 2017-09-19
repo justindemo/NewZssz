@@ -64,6 +64,7 @@
     <string name="personreporte_success">上報成功</string>
     <string name="personreporte_fail">網絡異常</string>
     <string name="personreporte_commiting">正在上報···</string>
+    <string name="person_reproted">此處已經上報過,謝謝</string>
 
     <string name="locating">正在定位···</string>
     <string name="loading">正在加載數據···</string>
@@ -92,6 +93,7 @@
     <string name="save_success">保存成功</string>
 
     <string name="mine_score">我的積分</string>
+    <string name="for_us">關於我們</string>
     <string name="mine_update">軟件更新</string>
     <string name="mine_share">軟件分享</string>
     <string name="mine_appraise">軟件評價</string>

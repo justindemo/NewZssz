@@ -14,19 +14,21 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.activity.AppraiseActivity;
+import com.xytsz.xytsz.activity.ForUsActivity;
 import com.xytsz.xytsz.activity.MainActivity;
 import com.xytsz.xytsz.activity.MyDealedActivity;
 import com.xytsz.xytsz.activity.MyInformationActivity;
@@ -46,8 +48,6 @@ import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 import com.xytsz.xytsz.util.UpdateVersionUtil;
 
-import android.util.Base64;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -63,7 +63,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -98,6 +97,10 @@ public class MeFragment extends BaseFragment {
     LinearLayout meActivity;
     @Bind(R.id.me_appraise)
     TextView meAppraise;
+    @Bind(R.id.rl_myscore)
+    RelativeLayout rlMyscore;
+    @Bind(R.id.for_us)
+    TextView forUs;
     private ImageView mIvicon;
     private TextView mTvLogin;
     private TextView mTvData;
@@ -148,6 +151,7 @@ public class MeFragment extends BaseFragment {
         role = SpUtils.getInt(getContext(), GlobalContanstant.ROLE);
 
         issign = SpUtils.getBoolean(getContext(), GlobalContanstant.SIGN, false);
+
         error = getString(R.string.visitor_neterror);
         signed = getString(R.string.signed);
         //第一次点进去的时候获取用户名
@@ -165,11 +169,12 @@ public class MeFragment extends BaseFragment {
             meActivity.setVisibility(View.VISIBLE);
             ll_visitor_see.setVisibility(View.GONE);
             mine_tv_sign.setVisibility(View.GONE);
+            rlMyscore.setVisibility(View.GONE);
         } else {
             //获取是否签到
-           if (issign){
-               mine_tv_sign.setText(signed);
-           }
+            if (issign) {
+                mine_tv_sign.setText(signed);
+            }
         }
 
         //icon 调用图库
@@ -179,9 +184,8 @@ public class MeFragment extends BaseFragment {
         mLLDealed.setOnClickListener(listener);
         mTvData.setOnClickListener(listener);
         micSetting.setOnClickListener(listener);
+        forUs.setOnClickListener(listener);
     }
-
-
 
 
     private String getTaskCountOfReport(int personID) throws Exception {
@@ -274,6 +278,10 @@ public class MeFragment extends BaseFragment {
                     startActivityForResult(intent, 1);
                     break;
 
+                case R.id.for_us:
+                    IntentUtil.startActivity(getContext(),ForUsActivity.class);
+                    break;
+
             }
         }
     };
@@ -306,9 +314,9 @@ public class MeFragment extends BaseFragment {
             }
         }
 
-        if (requestCode == 300){
-            if (resultCode == 3){
-                userName = SpUtils.getString(getContext(),GlobalContanstant.USERNAME);
+        if (requestCode == 300) {
+            if (resultCode == 3) {
+                userName = SpUtils.getString(getContext(), GlobalContanstant.USERNAME);
                 mTvLogin.setText(userName);
             }
         }
@@ -629,6 +637,12 @@ public class MeFragment extends BaseFragment {
         mTvLogin.setText(userName);
         personID = SpUtils.getInt(getContext(), GlobalContanstant.PERSONID);
         getNumber();
+        //是否签到
+        issign = SpUtils.getBoolean(getContext(), GlobalContanstant.SIGN, false);
+        if (issign){
+            mine_tv_sign.setText(signed);
+        }
+
     }
 
     private static final int VERSIONINFO = 100211;
@@ -639,8 +653,8 @@ public class MeFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.me_information:
                 //IntentUtil.startActivity(view.getContext(), MyInformationActivity.class);
-                Intent intent  = new Intent(view.getContext(),MyInformationActivity.class);
-                startActivityForResult(intent,300);
+                Intent intent = new Intent(view.getContext(), MyInformationActivity.class);
+                startActivityForResult(intent, 300);
                 break;
             //积分
             case R.id.me_score:

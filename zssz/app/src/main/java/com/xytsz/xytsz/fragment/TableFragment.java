@@ -81,6 +81,7 @@ public class TableFragment extends BaseFragment {
                 case USERINFO:
                     infos = (List<SzUserInfo>) msg.obj;
                     if (infos != null) {
+                        mrlnoData.setVisibility(View.GONE);
                         BarData barData = getBarChartData(infos.size(), 4000);
                         //设置柱状图
                         setBarData(mBarchart, barData);
