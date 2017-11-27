@@ -2,73 +2,78 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:id="@+id/ll_check_title"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="30dp">
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
         <TextView
-            android:gravity="center"
-            android:text="@string/check_ireport"
-            android:textSize="18sp"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-        <TextView
-            android:layout_width="0.3dp"
             android:layout_height="match_parent"
-            android:background="@color/graybackground"/>
-        <TextView
-            android:gravity="center"
-            android:textSize="18sp"
-            android:text="@string/check_ireport"
-            android:layout_width="wrap_content"
             android:layout_weight="1"
-            android:layout_height="match_parent" />
+            android:gravity="center"
+            android:text="@string/check_ireport"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/cc_light_dark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/check_irepair"
+            android:textSize="18sp" />
     </LinearLayout>
+
     <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
         android:layout_below="@+id/ll_check_title"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/graybackground"/>
+        android:background="@color/cc_light_dark" />
     <!--第一段-->
     <LinearLayout
-        android:layout_below="@id/ll_check_title"
         android:id="@+id/ll_check_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_below="@id/ll_check_title"
         android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp">
+        android:layout_marginRight="3dp"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_marginTop="3dp"
-            android:scaleType="centerCrop"
             android:id="@+id/iv_check_report"
             android:layout_width="80dp"
             android:layout_height="120dp"
-            android:layout_weight="1"
-            android:layout_marginRight="2dp"/>
-        <TextView
-            android:layout_width="0.3dp"
-            android:layout_height="match_parent"
-            android:background="@color/graybackground"/>
-        <ImageView
+            android:layout_marginRight="2dp"
             android:layout_marginTop="3dp"
-            android:scaleType="centerCrop"
             android:layout_weight="1"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/cc_light_dark" />
+
+        <ImageView
             android:id="@+id/iv_check_dealed"
             android:layout_width="80dp"
             android:layout_height="120dp"
             android:layout_marginLeft="2dp"
-            />
-
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop" />
 
     </LinearLayout>
 
-  <!--  -->
+    <!--  -->
 
     <!--第三段-->
     <LinearLayout
@@ -76,19 +81,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_check_report"
-        android:orientation="vertical"
-        android:layout_marginBottom="5dp">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_marginLeft="6dp"
-            android:layout_width="wrap_content"
+            android:padding="6dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/check_report" />
+                android:text="@string/check_report"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_check_reporter"
@@ -97,64 +102,55 @@
                 android:text="张三三"
                 android:textSize="16sp" />
         </LinearLayout>
-            <!--处置规格-->
-            <LinearLayout
-                android:layout_marginLeft="6dp"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+        <!--处置规格-->
+        <LinearLayout
+            android:padding="6dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/check_dealer" />
-
-                <TextView
-                    android:id="@+id/tv_check_dealer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="王美丽"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginLeft="6dp"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
             <TextView
-                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/check_dealer"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_check_dealer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="王美丽"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="审核人："
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
+
             <TextView
-                android:visibility="gone"
                 android:id="@+id/tv_check_reviewer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="李开心"
-                android:textSize="16sp" />
-
-            </LinearLayout>
-
+                android:textSize="16sp"
+                android:visibility="gone" />
 
         </LinearLayout>
-    <TextView
-        android:id="@+id/tv_check_ispass"
-        android:text="未验收"
-        android:layout_weight="1"
-        android:visibility="gone"
-        android:padding="3dp"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:layout_alignParentBottom="true"
-        android:background="@color/cc_red"
-        android:layout_width="60dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentRight="true"
-        android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

@@ -1,44 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="210dp">
+    android:background="@drawable/shape_member_show"
+    android:layout_width="wrap_content"
+    android:layout_margin="10dp"
+    android:id="@+id/ll_membershow"
+    android:layout_height="wrap_content">
 
     <ImageView
+        android:src="@mipmap/member_nomarl"
         android:scaleType="fitXY"
         android:id="@+id/iv_membershow"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
-    <RelativeLayout
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:background="#aaFFFFFF"
             android:id="@+id/tv_membershow"
-            android:text="北京市市政协会"
-            android:layout_above="@+id/view_bottom"
-            android:maxLines="2"
-            android:padding="4dp"
-            android:ellipsize="end"
-            android:textSize="16sp"
+            android:textSize="20sp"
+            android:text="大兴市政"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="200人"
+            android:textColor="@color/cc_supervise"
+            android:layout_marginRight="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:gravity="center_vertical"
+            android:id="@+id/tv_member_loca"
+            android:drawablePadding="3dp"
+            android:text="北京市大兴区兴丰大街甲5号"
+            android:textColor="@color/cc_orage_enable"
+            android:drawableLeft="@mipmap/tv_member_left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <ImageView
-            android:id="@+id/iv_rightarrow"
-            android:layout_above="@+id/view_bottom"
-            android:layout_alignParentRight="true"
-            android:background="@mipmap/rightarrow"
-            android:layout_width="22dp"
-            android:layout_height="22dp" />
-        <View
-            android:layout_marginTop="3dp"
-            android:id="@+id/view_bottom"
-            android:layout_alignParentBottom="true"
-            android:background="@color/graybackground"
+
+        <TextView
+            android:gravity="center_vertical"
+            android:id="@+id/tv_member_phone"
+            android:layout_marginTop="6dp"
+            android:drawablePadding="3dp"
+            android:text="010-57655188"
+            android:textColor="@color/cc_orage_enable"
+            android:drawableLeft="@mipmap/tv_member_phone_left"
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-    </RelativeLayout>
+            android:layout_height="wrap_content" />
 
+    </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

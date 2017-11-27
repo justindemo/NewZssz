@@ -3,6 +3,7 @@ package com.xytsz.xytsz.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -38,35 +39,24 @@ public class ProcessDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.tv_report_time)
     TextView tvReportTime;
-
-
     @Bind(R.id.tv_review_time)
     TextView tvReviewTime;
-
     @Bind(R.id.tv_deal_time)
     TextView tvDealTime;
-
-
     @Bind(R.id.tv_send_time)
     TextView tvSendTime;
-
     @Bind(R.id.tv_post_time)
     TextView tvPostTime;
-
-
     @Bind(R.id.tv_check_time)
     TextView tvCheckTime;
-
     @Bind(R.id.predeal_photo)
     ImageView predealPhoto;
     @Bind(R.id.dealing_photo)
     ImageView dealingPhoto;
     @Bind(R.id.dealed_photo)
     ImageView dealedPhoto;
-
     @Bind(R.id.tv_report_name)
     TextView tvReportName;
-
     @Bind(R.id.tv_review_name)
     TextView tvReviewName;
 
@@ -77,6 +67,28 @@ public class ProcessDetailActivity extends AppCompatActivity {
     TextView tvCheckName;
     @Bind(R.id.tv_report_tasknuber)
     TextView tvReportTasknuber;
+    @Bind(R.id.iv_report_statu)
+    ImageView ivReportStatu;
+    @Bind(R.id.iv_report_statu1)
+    ImageView ivReportStatu1;
+    @Bind(R.id.iv_review_statu)
+    ImageView ivReviewStatu;
+    @Bind(R.id.iv_review_statu1)
+    ImageView ivReviewStatu1;
+    @Bind(R.id.iv_send_statu)
+    ImageView ivSendStatu;
+    @Bind(R.id.iv_send_statu1)
+    ImageView ivSendStatu1;
+    @Bind(R.id.iv_deal_statu)
+    ImageView ivDealStatu;
+    @Bind(R.id.iv_deal_statu1)
+    ImageView ivDealStatu1;
+    @Bind(R.id.iv_post_statu)
+    ImageView ivPostStatu;
+    @Bind(R.id.iv_post_statu1)
+    ImageView ivPostStatu1;
+    @Bind(R.id.iv_check_statu)
+    ImageView ivCheckStatu;
     private ProblemLocation.ProblemListBean detail;
 
 
@@ -88,10 +100,30 @@ public class ProcessDetailActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_processdetail);
         ButterKnife.bind(this);
+        initAcitionbar();
         initData();
     }
 
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.processdetail);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
+
     private void initData() {
+
         int phaseindication = detail.getPhaseindication();
         String uploadtime = detail.getUploadtime();
         String reviewedTime = detail.getReviewedTime();
@@ -103,53 +135,58 @@ public class ProcessDetailActivity extends AppCompatActivity {
         String upload_person_name = detail.getUpload_Person_name();
         String reviewed_person_name = detail.getReviewed_Person_Name();
         String dealed_person_name = detail.getDealed_Person_name();
-        String checked_person_name = detail.getChecked_Person_Name();
 
+        //String checked_person_name = detail.getChecked_Person_Name();
         tvReportTasknuber.setText(tasknumber);
+
         switch (phaseindication) {
             //上报完  审核中  上报为红色 其他无
             case 0:
-                tvReportTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvSendTime.setBackgroundResource(R.drawable.shape_circle_gray);
-                tvReviewTime.setBackgroundResource(R.drawable.shape_circle);
-                tvDealTime.setBackgroundResource(R.drawable.shape_circle_gray);
-                tvPostTime.setBackgroundResource(R.drawable.shape_circle_gray);
-                tvCheckTime.setBackgroundResource(R.drawable.shape_circle_gray);
+                ivReportStatu.setImageResource(R.mipmap.iv_complete);
+                ivReportStatu1.setImageResource(R.mipmap.iv_complete_nor);
                 break;
             //上报完  审核完= 红   下派中 上报为绿色 其他无
             case 1:
-                tvReviewTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvReportTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvSendTime.setBackgroundResource(R.drawable.shape_circle);
-                tvDealTime.setBackgroundResource(R.drawable.shape_circle_gray);
-                tvPostTime.setBackgroundResource(R.drawable.shape_circle_gray);
-                tvCheckTime.setBackgroundResource(R.drawable.shape_circle_gray);
+                ivReportStatu.setImageResource(R.mipmap.iv_complete);
+                ivReportStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivReviewStatu.setImageResource(R.mipmap.iv_complete);
+                ivReviewStatu1.setImageResource(R.mipmap.iv_complete_nor);
                 break;
-            //处置中了  报验是红色
+            //下派完了
             case 2:
-                tvReviewTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvReportTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvSendTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvDealTime.setBackgroundResource(R.drawable.shape_circle);
-                tvPostTime.setBackgroundResource(R.drawable.shape_circle_gray);
-                tvCheckTime.setBackgroundResource(R.drawable.shape_circle_gray);
+                ivReportStatu.setImageResource(R.mipmap.iv_complete);
+                ivReportStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivReviewStatu.setImageResource(R.mipmap.iv_complete);
+                ivReviewStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivSendStatu.setImageResource(R.mipmap.iv_complete);
+                ivSendStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                //如果没有处置时间，那么处置是红的
+                if (!dealedTime.equals("")) {
+                    if (postedTime.equals("")) {
+                       ivDealStatu.setImageResource(R.mipmap.iv_complete);
+                       ivDealStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                    } else {
+                        ivPostStatu.setImageResource(R.mipmap.iv_complete);
+                        ivPostStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                    }
+                }
                 break;
+
+            //处置和报验是一样的
             case 3:
-                tvReviewTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvReportTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvSendTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvDealTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvPostTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvCheckTime.setBackgroundResource(R.drawable.shape_circle);
+                ivReportStatu.setImageResource(R.mipmap.iv_complete);
+                ivReportStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivReviewStatu.setImageResource(R.mipmap.iv_complete);
+                ivReviewStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivSendStatu.setImageResource(R.mipmap.iv_complete);
+                ivSendStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivDealStatu.setImageResource(R.mipmap.iv_complete);
+                ivDealStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivPostStatu.setImageResource(R.mipmap.iv_complete);
+                ivPostStatu1.setImageResource(R.mipmap.iv_complete_nor);
+                ivCheckStatu.setImageResource(R.mipmap.iv_uncom);
                 break;
-            /*case 4:
-                tvReviewTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvReportTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvSendTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvDealTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvPostTime.setBackgroundResource(R.drawable.shape_circle_green);
-                tvCheckTime.setBackgroundResource(R.drawable.shape_circle_green);
-                break;*/
+
         }
 
 
@@ -163,7 +200,7 @@ public class ProcessDetailActivity extends AppCompatActivity {
         tvReportName.setText(upload_person_name);
         tvReviewName.setText(reviewed_person_name);
         tvDealName.setText(dealed_person_name);
-        tvCheckName.setText(checked_person_name);
+        //tvCheckName.setText(checked_person_name);
 
         new Thread() {
 
@@ -191,7 +228,6 @@ public class ProcessDetailActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 //严谨性判断 ：如果没有到报验那步，就显示默认图片
-
 
                                 if (preImgUrls != null && rngImgUrls != null && postImgUrls != null) {
                                     predealPhoto.setEnabled(true);

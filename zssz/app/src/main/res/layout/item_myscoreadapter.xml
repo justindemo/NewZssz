@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,8 +15,11 @@
     <TextView
         android:id="@+id/tv_myscore_num"
         android:text="+10"
+        android:textStyle="bold"
         android:gravity="center"
         android:padding="4dp"
+        android:textSize="16sp"
+        android:layout_centerInParent="true"
         android:textColor="@color/cc_orage_red"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"

@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -57,8 +58,6 @@ public class ScoreSignActivity extends AppCompatActivity {
 
     private static final int SIGN = 122222;
     private List<String> list = new ArrayList<>();
-    private RelativeLayout mrlSign;
-    private RelativeLayout mrlScore;
     private TextView mtvSign;
     private TextView mtvScore;
     private boolean isSign;
@@ -73,7 +72,7 @@ public class ScoreSignActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SUCCESS:
                     String scorenumber = (String) msg.obj;
-                    if (scorenumber != null){
+                    if (scorenumber != null) {
                         mtvScore.setText(scorenumber);
                     }
                     break;
@@ -81,13 +80,14 @@ public class ScoreSignActivity extends AppCompatActivity {
                     Bundle data = msg.getData();
                     String sign = data.getString("sign");
                     String score = data.getString("score");
-                    if (score != null){
+                    if (score != null) {
                         mtvScore.setText(score);
                     }
                     if (sign.equals("true")) {
-                        SpUtils.saveBoolean(getApplicationContext(),GlobalContanstant.SIGN,true);
+                        SpUtils.saveBoolean(getApplicationContext(), GlobalContanstant.SIGN, true);
+                        isSign = true;
                         mtvSign.setText(signed);
-                        ToastUtil.shortToast(getApplicationContext(),signSuccess);
+                        ToastUtil.shortToast(getApplicationContext(), signSuccess);
                     }
                     break;
                 case FAIL:
@@ -98,6 +98,9 @@ public class ScoreSignActivity extends AppCompatActivity {
     };
     private String phone;
     private String signSuccess;
+    private LinearLayout mrlSign;
+    private TextView mtvname;
+    private ImageView mIvMe;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,9 +132,9 @@ public class ScoreSignActivity extends AppCompatActivity {
         scoresignRecycleview.setLayoutManager(manager);
 
         list.clear();
-        list.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
-        list.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
-        list.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
+        list.add("会员积分300以上");
+        list.add("会员积分500以上");
+        list.add("会员积分1000以上");
 
 
         //
@@ -148,16 +151,15 @@ public class ScoreSignActivity extends AppCompatActivity {
 
         View headView = getLayoutInflater().inflate(R.layout.scoresign_headview, scoresignRecycleview, false);
 
-        mrlSign = (RelativeLayout) headView.findViewById(R.id.rl_headview_sign);
-        mrlScore = (RelativeLayout) headView.findViewById(R.id.rl_headview_score);
-
+        mrlSign = (LinearLayout) headView.findViewById(R.id.rl_headview_sign);
+        //头像
+        mIvMe = (ImageView) headView.findViewById(R.id.score_myicon);
         mtvSign = (TextView) headView.findViewById(R.id.tv_headview_sign);
+        mtvname = (TextView) headView.findViewById(R.id.tv_headview_myname);
         mtvScore = (TextView) headView.findViewById(R.id.tv_headview_myscorenum);
 
-        if (isSign) {
-            mtvSign.setText(signed);
-        }
         if (hour == 0 && minute == 0) {
+            SpUtils.saveBoolean(getApplicationContext(), GlobalContanstant.SIGN, false);
             mtvSign.setText(R.string.sign);
             mtvSign.setEnabled(true);
             mtvSign.setFocusable(true);
@@ -171,43 +173,42 @@ public class ScoreSignActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            String sign = signed();
-                            String score = getintegal(phone);
-                            Message message = Message.obtain();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("sign",sign);
-                            bundle.putString("score",score);
-                            message.setData(bundle);
-                            message.what = SIGN;
-                            handler.sendMessage(message);
-                        } catch (Exception e) {
-                            Message message = Message.obtain();
-                            message.what = FAIL;
-                            handler.sendMessage(message);
+                if (!isSign) {
 
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                String sign = signed();
+                                String score = getintegal(phone);
+                                Message message = Message.obtain();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("sign", sign);
+                                bundle.putString("score", score);
+                                message.setData(bundle);
+                                message.what = SIGN;
+                                handler.sendMessage(message);
+                            } catch (Exception e) {
+                                Message message = Message.obtain();
+                                message.what = FAIL;
+                                handler.sendMessage(message);
+
+                            }
                         }
-                    }
-                }.start();
+                    }.start();
 
-                SpUtils.saveBoolean(getApplicationContext(), GlobalContanstant.SIGN, true);
-                if (TextUtils.equals(mtvSign.getText().toString(), signed)) {
-                    ToastUtil.shortToast(ScoreSignActivity.this, tip);
-                    mtvSign.setEnabled(false);
-                    mtvSign.setFocusable(false);
                 }
 
+                if (TextUtils.equals(mtvSign.getText().toString(), signed)) {
+                    ToastUtil.shortToast(ScoreSignActivity.this, tip);
+                }
                 mtvSign.setText(signed);
-                Intent intent = getIntent();
-                setResult(200, intent);
+
             }
         });
 
 
-        mrlScore.setOnClickListener(new View.OnClickListener() {
+        mrlSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentUtil.startActivity(v.getContext(), MyScoreActivity.class);
@@ -215,16 +216,13 @@ public class ScoreSignActivity extends AppCompatActivity {
             }
         });
 
-
         LinearLayout mline = (LinearLayout) headView.findViewById(R.id.ll_line);
         LineView lineView = new LineView(getApplicationContext(), 200);
 
         lineView.updateX();
 
-
         mline.removeAllViews();
         mline.addView(lineView);
-
 
         adapter.addHeaderView(headView);
 
@@ -233,16 +231,16 @@ public class ScoreSignActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
-                try{
+                try {
                     String score = getintegal(phone);
                     Message message = Message.obtain();
-                    message.obj  = score;
+                    message.obj = score;
                     message.what = SUCCESS;
                     handler.sendMessage(message);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                     Message s = Message.obtain();
                     s.what = FAIL;
@@ -274,7 +272,7 @@ public class ScoreSignActivity extends AppCompatActivity {
 
     private String signed() throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.isSignMethodname);
-        soapObject.addProperty("tel",phone);
+        soapObject.addProperty("tel", phone);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.dotNet = true;

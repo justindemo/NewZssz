@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,16 +57,20 @@ public class MyReporteActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case GlobalContanstant.CHECKFAIL:
+                    tvFail.setVisibility(View.VISIBLE);
+
+                    myreportProgressbar.setVisibility(View.GONE);
+                    tvFail.setText("未获取数据，请稍后");
+                    break;
+
                 case REPORTE:
 
                     final List<ForMyDis> details = (List<ForMyDis>) msg.obj;
                     if (details.size() != 0) {
-                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists);
-                        if (adapter != null) {
-
-                            myreportProgressbar.setVisibility(View.GONE);
-                            lvReprote.setAdapter(adapter);
-                        }
+                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists,audioUrls);
+                        myreportProgressbar.setVisibility(View.GONE);
+                        lvReprote.setAdapter(adapter);
 
 
                         lvReprote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,6 +78,8 @@ public class MyReporteActivity extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(MyReporteActivity.this, MyReporteDetailActivity.class);
                                 intent.putExtra("detail", details.get(position));
+                                intent.putExtra("audioUrl",audioUrls.get(position));
+                                intent.putExtra("flag",1);
                                 intent.putExtra("imageUrlReport", (Serializable) imageUrlLists.get(position));
                                 startActivity(intent);
                             }
@@ -89,7 +96,7 @@ public class MyReporteActivity extends AppCompatActivity {
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
     private String nodata;
-
+    private List<String> audioUrls = new ArrayList<>();
     @Override
     protected void
     onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +107,8 @@ public class MyReporteActivity extends AppCompatActivity {
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
 
         nodata = getString(R.string.myreported_nodata);
+
+        initAcitionbar();
         initData();
 
 
@@ -111,6 +120,8 @@ public class MyReporteActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
+
+                try {
                 String data = getData();
                 if (data != null) {
                     List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
@@ -121,7 +132,7 @@ public class MyReporteActivity extends AppCompatActivity {
                         String taskNumber = forMyDis.getTaskNumber();
 
                         String json = null;
-                        try {
+
                             json = MyApplication.getAllImagUrl(taskNumber, GlobalContanstant.GETREVIEW);
 
                             if (json != null) {
@@ -131,18 +142,25 @@ public class MyReporteActivity extends AppCompatActivity {
 
                                 imageUrlLists.add(imageUrlList);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
+
+                        String audioUrl = RoadActivity.getAudio(taskNumber);
+
+                        audioUrls.add(audioUrl);
 
 
                     }
-
-
                     Message message = Message.obtain();
                     message.obj = details;
                     message.what = REPORTE;
                     handler.sendMessage(message);
+
+                    }
+                } catch (Exception e) {
+                    Message message = Message.obtain();
+                    message.what = GlobalContanstant.CHECKFAIL;
+                    handler.sendMessage(message);
+
                 }
 
             }
@@ -171,5 +189,21 @@ public class MyReporteActivity extends AppCompatActivity {
         SoapObject object = (SoapObject) envelope.bodyIn;
         String result = object.getProperty(0).toString();
         return result;
+    }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.myreported);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

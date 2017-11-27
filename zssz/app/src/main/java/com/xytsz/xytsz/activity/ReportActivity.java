@@ -3,16 +3,18 @@ package com.xytsz.xytsz.activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -20,36 +22,42 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.bean.Deal;
 
 import com.xytsz.xytsz.bean.DiseaseInformation;
-import com.xytsz.xytsz.bean.Road;
 import com.xytsz.xytsz.global.Data;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 
 import com.xytsz.xytsz.receive.CustomBroadCast;
-import com.xytsz.xytsz.util.JsonUtil;
+import com.xytsz.xytsz.util.FileBase64Util;
+import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
+import com.xytsz.xytsz.util.SoundUtil;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
@@ -67,11 +75,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -80,6 +88,10 @@ import java.util.List;
  */
 public class ReportActivity extends AppCompatActivity  {
 
+    private static final int AUDIO_SUCCESS = 500;
+    private static final int FAIL = 404;
+    private static final int VIDEO_SUCCESS = 200;
+    private static final int VIDEO_FAIL = 303;
     private LocationClient locationClient;
     public BDLocationListener myListener = new MyListener();
     private ImageView mIvphoto1;
@@ -92,6 +104,7 @@ public class ReportActivity extends AppCompatActivity  {
     //图片的存储位置
     //private static final String iconPath = "/sdcard/Zssz/Image/";//图片的存储目录
     private static final String iconPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/Image/";//图片的存储目录
+    private static final String audioPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/Audio/";
     private Spinner spGrades;
     private Spinner spPbName;
     private Spinner spDep;
@@ -132,13 +145,51 @@ public class ReportActivity extends AppCompatActivity  {
     private String notifa;
     private String notifatitle;
     private String error;
+    private ImageView mIvInput;
+    private TextView mtvPressAudio;
+    private TextView mtvAudio;
+    private TextView mtvReset;
+    private LinearLayout mllAudio;
 
+    private boolean btn_vocie = false;
+    private boolean btn_road = false;
+    private boolean videoflg = false;
+    private static long startTime;
+    private SoundUtil soundUtil;
+    private String deleteTitle;
+    private String deleteContent;
+    private String deleteOk;
+    private String deleteCancle;
+    private String recordLittle;
+    private String recordMax;
+    private String audiosuccess;
+    private String videosuccess;
+    private String audioFail;
+    private String disrecord;
+    private String reportMore;
+    private String reportLocation;
+    private ImageView mIvReplace;
+    private TextView mEtRoad;
+    private ImageView mIvAdd;
+    private ImageView mIvPlay;
+    private ImageView mIvVideoDelete;
+    private ImageView mIvAddVideo;
+    private FrameLayout mFlvideo;
+    private RelativeLayout mllplay;
+    private LinearLayout mllAddVideo;
+    private String videopath;
+    private String videoFail;
+    private String videoName;
+    private String deletevideoContent;
+    private String deleteVideoTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_report);
+
+        initAcitionbar();
 
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
         dialogtitle = this.getString(R.string.report_dialog_title);
@@ -148,11 +199,30 @@ public class ReportActivity extends AppCompatActivity  {
         upimg = this.getString(R.string.report_upimg);
         imgsuccess = this.getString(R.string.report_imgsuccess);
         request =this.getString(R.string.report_request);
+        deleteTitle = getString(R.string.report_delete_title);
+        deleteVideoTitle = getString(R.string.report_delete_video_title);
+        deleteContent = getString(R.string.report_delete_content);
+        deletevideoContent = getString(R.string.report_delete_video_content);
+        deleteOk = getString(R.string.report_delete_ok);
+        deleteCancle = getString(R.string.report_delete_cancle);
+        recordLittle = getString(R.string.report_record_little);
+        recordMax = getString(R.string.report_record_max);
+
 
         notifa = this.getString(R.string.report_notifica);
         notifatitle = this.getString(R.string.report_notifica_title);
         error = this.getString(R.string.report_error);
 
+        audiosuccess = getString(R.string.audio_success);
+        videosuccess = getString(R.string.video_success);
+        audioFail = getString(R.string.audio_fail);
+        videoFail = getString(R.string.video_fail);
+
+        disrecord = getString(R.string.disrecord);
+
+        reportMore = getString(R.string.reportmore);
+
+        reportLocation = getString(R.string.reportlocation);
         CustomBroadCast.getInstance().registerAction(getApplicationContext());
         initView();
         initData();
@@ -176,12 +246,34 @@ public class ReportActivity extends AppCompatActivity  {
         mEtlocation = (EditText) findViewById(R.id.locationDesc);
         mbtReport = (Button) findViewById(R.id.report);
 
+        //语音录入
+        mIvInput = (ImageView) findViewById(R.id.iv_input_style);
+        mtvPressAudio = (TextView) findViewById(R.id.tv_press_audio);
+        mtvAudio = (TextView) findViewById(R.id.tv_audio);
+        mtvReset = (TextView) findViewById(R.id.tv_re_record);
+        mllAudio = (LinearLayout) findViewById(R.id.ll_audio);
+
+        mIvReplace = (ImageView) findViewById(R.id.iv_replace);
+        mEtRoad = (TextView) findViewById(R.id.et_road_name);
+
+
+        //視頻输入
+        mIvAdd = (ImageView) findViewById(R.id.iv_add_video);
+        mIvPlay = (ImageView) findViewById(R.id.iv_play_video);
+        mIvVideoDelete = (ImageView) findViewById(R.id.iv_delete);
+        mIvAddVideo = (ImageView) findViewById(R.id.iv_video_des);
+        mFlvideo = (FrameLayout) findViewById(R.id.fl_video);
+
+        mllAddVideo = (LinearLayout) findViewById(R.id.ll_add_video);
+        mllplay = (RelativeLayout) findViewById(R.id.ll_play_video);
+
+
     }
 
 
     private void initData() {
+        soundUtil = new SoundUtil();
         diseaseInformation = new DiseaseInformation();
-
         //初始化上传图片列表
         taskNumber = getTaskNumber();
         diseaseInformation.taskNumber = taskNumber;
@@ -189,18 +281,31 @@ public class ReportActivity extends AppCompatActivity  {
         PermissionUtils.requestPermission(this,PermissionUtils.CODE_ACCESS_FINE_LOCATION,mPermissionGrant);
         PermissionUtils.requestPermission(this,PermissionUtils.CODE_READ_EXTERNAL_STORAGE,mPermissionGrant);
         PermissionUtils.requestPermission(this,PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE,mPermissionGrant);
+        PermissionUtils.requestPermission(this,PermissionUtils.CODE_RECORD_AUDIO,mPermissionGrant);
+
         //locat();
 
         //病害名称
         pbnameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, Data.pbname);
         pbnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spPbName.setAdapter(pbnameAdapter);
-        String pbname = spPbName.getSelectedItem().toString();
-        for (int i = 0; i < Data.pbname.length; i++) {
-            if (Data.pbname[i].equals(pbname)) {
-                diseaseInformation.level = i;
+        spPbName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String pbname = spPbName.getSelectedItem().toString();
+                for (int i = 0; i < Data.pbname.length; i++) {
+                    if (Data.pbname[i].equals(pbname)) {
+                        diseaseInformation.level = i;
+                    }
+                }
             }
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         //处置等级
         gradesAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, Data.grades);
         gradesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -374,6 +479,17 @@ public class ReportActivity extends AppCompatActivity  {
             mIvphoto3.setOnClickListener(listener);
             mbtReport.setOnClickListener(listener);
 
+
+            mIvInput.setOnClickListener(listener);
+            mIvReplace.setOnClickListener(listener);
+
+            mIvAdd.setOnClickListener(listener);
+            mIvAddVideo.setOnClickListener(listener);
+            mIvVideoDelete.setOnClickListener(listener);
+            mIvPlay.setOnClickListener(listener);
+
+
+
             spPbtype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -416,7 +532,199 @@ public class ReportActivity extends AppCompatActivity  {
             });
         }
 
+
+        mEtRoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReportActivity.this,SearchRoadActivity.class);
+                startActivityForResult(intent,200);
+            }
+        });
+
+
+        mtvPressAudio.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                PermissionUtils.requestPermission(ReportActivity.this,PermissionUtils.CODE_RECORD_AUDIO,mPermissionGrant);
+
+                if (!Environment.getExternalStorageDirectory().exists()) {
+                    ToastUtil.shortToast(getApplicationContext(),"No SDcard");
+                    return false;
+                }
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        mtvPressAudio.setBackgroundResource(R.drawable.shape_tv_audio_press);
+                        //开始录音，开始倒计时计时
+                        audioName = createAudioName();
+                        audioNamepath  = audioPath + audioName;
+                        start(audioName);
+                        startTime = System.currentTimeMillis();
+                        startTimer.start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mtvPressAudio.setBackgroundResource(R.drawable.shape_tv_audio);
+                        //先判断录音是否小于一秒,
+                        //不小于：让重录显示出来，。
+                        // 点击重录的时候。弹窗确定后time为0，删除文件
+                        //
+                        startTimer.cancel();
+                        long endtime = System.currentTimeMillis();
+                        if( endtime- startTime <= MAX_TIME){
+                            finishRecord(endtime);
+                        }else {  //当手指向上滑，会cancel
+                            cancelRecord();
+                        }
+
+                        if (endtime-startTime < MIN_INTERVAL_TIME){
+                            mtvPressAudio.setEnabled(true);
+                            mtvPressAudio.setFocusable(true);
+
+                            mtvAudio.setVisibility(View.GONE);
+                        }else {
+                            mtvPressAudio.setEnabled(false);
+                            mtvPressAudio.setFocusable(false);
+                            mtvAudio.setVisibility(View.VISIBLE);
+                        }
+
+
+
+                        break;
+
+                }
+
+                return true;
+            }
+        });
+
+        //点击播放按钮
+        mtvAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (audioNamepath == null) {
+                    ToastUtil.shortToast(getApplicationContext(), disrecord);
+                    return;
+                }else {
+
+                final Drawable drawableleft  = getResources().getDrawable(R.mipmap.iv_audio_play);
+                final Drawable drawable = getResources().getDrawable(R.mipmap.iv_audio_pause);
+                mtvAudio.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
+
+                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                    @Override
+                    public void onFinish() {
+                        mtvAudio.setCompoundDrawablesWithIntrinsicBounds(drawableleft,null,null,null);
+                    }
+
+                    @Override
+                    public void onError() {
+                        ToastUtil.shortToast(getApplicationContext(),reportMore);
+                        mtvAudio.setCompoundDrawablesWithIntrinsicBounds(drawableleft, null, null, null);
+                    }
+                });
+
+                paly(audioNamepath);
+             }
+            }
+        });
+
+        mtvReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(ReportActivity.this).setTitle(deleteTitle).setMessage(deleteContent).setPositiveButton(deleteOk, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        File file = new File(audioNamepath);
+                        if(file.isFile() && file.exists()){
+                            file.delete();
+                        }
+
+                        mtvReset.setVisibility(View.GONE);
+                        mtvAudio.setText("");
+                        mtvPressAudio.setEnabled(true);
+                        mtvPressAudio.setFocusable(true);
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton(deleteCancle, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+            }
+        });
+
     }
+
+    private void paly(String name) {
+
+        soundUtil.play(name);
+    }
+
+    private void cancelRecord() {
+        stopRecording();
+        File file = new File(audioNamepath);
+
+        if (file.isFile()&& file.exists()){
+            file.delete();
+        }
+    }
+    private String audioName;
+    private String audioNamepath;
+
+    private static final int MIN_INTERVAL_TIME = 1500;// 1s 最短
+    public final static int MAX_TIME = 60*1000 + 500;// 1分钟，最长
+
+    /**
+     * 录音开始计时器，允许的最大时长进入倒计时
+     */
+    private CountDownTimer startTimer = new CountDownTimer(MAX_TIME - 500, 1000) { // 50秒后开始倒计时
+        @Override
+        public void onFinish() {
+            ToastUtil.shortToast(getApplicationContext(),recordMax);
+            long endtime = System.currentTimeMillis();
+            finishRecord(endtime);
+        }
+        @Override
+        public void onTick(long millisUntilFinished) {
+        }};
+
+    private void finishRecord(long endtime) {
+        long intervalTime = endtime - startTime;
+        if (intervalTime < MIN_INTERVAL_TIME) {
+            ToastUtil.shortToast(getApplicationContext(),recordLittle);
+            stopRecording();
+            File file = new File(audioNamepath);
+            if (file.isFile() && file.exists()) {
+                file.delete();
+            }
+            return;
+        }else{
+            int time = (int) (intervalTime/1000);
+            mtvAudio.setText(time +"s");
+            mtvReset.setVisibility(View.VISIBLE);
+            stopRecording();
+        }
+    }
+
+    private void stopRecording() {
+        soundUtil.stop();
+    }
+
+
+    private String createAudioName() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+        String name = simpleDateFormat.format(new Date())+".aac";
+        return name;
+    }
+
+    private void start(String name) {
+        soundUtil = new SoundUtil();
+        soundUtil.start(name);
+    }
+
 
     private void locat() {
         //进入上报页面的 时候 开始定位
@@ -435,6 +743,7 @@ public class ReportActivity extends AppCompatActivity  {
         option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
         locationClient.setLocOption(option);
     }
+
     private String person_id;
 
     private String[] items = new String[]{"拍照","照片"};
@@ -472,6 +781,7 @@ public class ReportActivity extends AppCompatActivity  {
                 case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
                     locat();
                     break;
+
             }
         }
     };
@@ -483,13 +793,95 @@ public class ReportActivity extends AppCompatActivity  {
         PermissionUtils.requestPermissionsResult(this,requestCode,permissions,grantResults,mPermissionGrant);
     }
 
+    private boolean isVideo;
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+
+                case R.id.iv_replace:
+                    if (btn_road){
+                        spRoadName.setVisibility(View.GONE);
+                        mEtRoad.setVisibility(View.VISIBLE);
+
+                        btn_road = false;
+                    }else {
+
+                        spRoadName.setVisibility(View.VISIBLE);
+                        mEtRoad.setVisibility(View.GONE);
+                        btn_road = true;
+                    }
+                    diseaseInformation.streetAddress_ID = 0;
+                    break;
+                case R.id.iv_add_video:
+                    //加号
+                    if (videoflg){
+                        mFlvideo.setVisibility(View.GONE);
+                        videoflg = false;
+                    }else {
+                        mFlvideo.setVisibility(View.VISIBLE);
+                        //是否有视频
+                        if (isVideo){
+                            mllplay.setVisibility(View.VISIBLE);
+                            mllAddVideo.setVisibility(View.GONE);
+                        }else {
+                            mllAddVideo.setVisibility(View.VISIBLE);
+                            mllplay.setVisibility(View.GONE);
+                        }
+                        videoflg = true;
+                    }
+                    break;
+
+                //添加视频
+                case R.id.iv_video_des:
+                    Intent intent1 = new Intent(ReportActivity.this,RecordVideoActivity.class);
+                    startActivityForResult(intent1,300);
+                    break;
+                //删除
+                case R.id.iv_delete:
+
+                    new AlertDialog.Builder(ReportActivity.this).setTitle(deleteVideoTitle).setMessage(deletevideoContent).setPositiveButton(deleteOk, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            File file = new File(videopath);
+                            file.delete();
+                            videopath = null;
+                            mllAddVideo.setVisibility(View.VISIBLE);
+                            mllplay.setVisibility(View.GONE);
+
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton(deleteCancle, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+
+                    break;
+                //播放
+                case R.id.iv_play_video:
+                    Intent intent = new Intent(ReportActivity.this,PlayVideoActivity.class);
+                    intent.putExtra("videoPath",videopath);
+                    startActivity(intent);
+                    break;
+
+                case R.id.iv_input_style:
+                    if (btn_vocie){
+                        mllAudio.setVisibility(View.GONE);
+                        mEtlocation.setVisibility(View.VISIBLE);
+                        mIvInput.setImageResource(R.mipmap.iv_audio);
+                        btn_vocie = false;
+                    }else {
+                        mIvInput.setImageResource(R.mipmap.iv_normal_text);
+                        mllAudio.setVisibility(View.VISIBLE);
+                        mEtlocation.setVisibility(View.GONE);
+                        btn_vocie = true;
+                    }
+
+                    break;
                 case R.id.iv_report_icon1:
                     //拍照
-
                     PermissionUtils.requestPermission(ReportActivity.this,PermissionUtils.CODE_CAMERA,mPermissionGrant);
                     //PermissionUtils.requestMultiPermissions(ReportActivity.this,mPermissionGrant);
                     break;
@@ -515,9 +907,6 @@ public class ReportActivity extends AppCompatActivity  {
                             }
                         }
                     }).create().show();
-
-
-
 
 
                     break;
@@ -550,32 +939,49 @@ public class ReportActivity extends AppCompatActivity  {
                     break;
                 case R.id.report:
 
-
                     diseaseInformation.diseaseDescription = mEtDesc.getText().toString();
                     //保存到服务器  弹吐司
-                    diseaseInformation.locationDesc = mEtlocation.getText().toString();
+                    if (mEtlocation != null){
+                        diseaseInformation.locationDesc = mEtlocation.getText().toString();
+
+                        if (diseaseInformation.locationDesc.isEmpty() && audioNamepath == null){
+
+                            ToastUtil.shortToast(getApplicationContext(),reportLocation);
+                            return;
+                        }
+
+                    }
+
+
                     diseaseInformation.uploadTime = getCurrentTime();
                     diseaseInformation.photoName = createPhotoName();
 
                     diseaseInformation.upload_Person_ID = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
 
                     person_id = diseaseInformation.upload_Person_ID+"";
+
+
+                    PermissionUtils.requestPermission(ReportActivity.this,PermissionUtils.CODE_ACCESS_COARSE_LOCATION,mPermissionGrant);
+
                     /**
                      * 上报信息
                      */
                     if (imageBase64Strings.size() != 0) {
-
-                        try {
-                            reportTask.execute(diseaseInformation);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            ToastUtil.shortToast(getApplicationContext(), error);
+                        if (audioNamepath != null) {
+                            diseaseInformation.locationDesc = "";
                         }
-                        ToastUtil.shortToast(getApplicationContext(), uploading);
-                    } else {
-                        ToastUtil.shortToast(getApplicationContext(), request);
-                        return;
-                    }
+                            try {
+                                reportTask.execute(diseaseInformation);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                ToastUtil.shortToast(getApplicationContext(), error);
+                            }
+                            ToastUtil.shortToast(getApplicationContext(), uploading);
+                        } else {
+                            ToastUtil.shortToast(getApplicationContext(), request);
+                            return;
+                        }
+
 
                     break;
             }
@@ -608,7 +1014,6 @@ public class ReportActivity extends AppCompatActivity  {
         soapObject.addProperty("Department_ID", diseaseInformation.department_ID);
         soapObject.addProperty("Longitude", diseaseInformation.longitude);
         soapObject.addProperty("Latitude", diseaseInformation.latitude);
-
         soapObject.addProperty("AddressDescription", diseaseInformation.locationDesc);
 
         //创建SoapSerializationEnvelope 对象，同时指定soap版本号(之前在wsdl中看到的)
@@ -636,7 +1041,7 @@ public class ReportActivity extends AppCompatActivity  {
         @Override
         protected String doInBackground(DiseaseInformation... params) {
             try {
-                Log.i("tag", params[0] + "");
+                //Log.i("tag", params[0] + "");
                 reportResult = getRemoteInfo(params[0]);
 
             } catch (Exception e) {
@@ -662,6 +1067,56 @@ public class ReportActivity extends AppCompatActivity  {
                     new Thread() {
                         @Override
                         public void run() {
+
+                            if (audioNamepath != null) {
+                                diseaseInformation.locationDesc ="";
+                                File file = new File(audioNamepath);
+                                //如果文件存在
+                                if (file.exists()) {
+                                    try {
+                                        String encodeBase64File = FileBase64Util.encodeBase64File(audioNamepath);
+                                        diseaseInformation.taskNumber = taskNumber;
+                                        diseaseInformation.encodeBase64File = encodeBase64File;
+                                        diseaseInformation.audioName = audioName;
+                                        String result = updateAudio(diseaseInformation);
+                                        Message message = Message.obtain();
+                                        message.what = AUDIO_SUCCESS;
+                                        message.obj = result;
+                                        handler.sendMessage(message);
+                                    } catch (Exception e) {
+                                        Message message = Message.obtain();
+                                        message.what = FAIL;
+                                        handler.sendMessage(message);
+                                    }
+
+
+                                }
+                            }
+
+                            if(videopath != null){
+
+                                File file = new File(videopath);
+                                if (file.exists()){
+                                    try {
+                                        String encodeBase64File = FileBase64Util.encodeBase64File(videopath);
+
+                                        diseaseInformation.taskNumber = taskNumber;
+                                        diseaseInformation.encodeBase64File = encodeBase64File;
+                                        diseaseInformation.videoName = videoName;
+                                        String result = updateVideo(diseaseInformation);
+                                        Message message = Message.obtain();
+                                        message.what = VIDEO_SUCCESS;
+                                        message.obj = result;
+                                        handler.sendMessage(message);
+                                    } catch (Exception e) {
+                                        Message message = Message.obtain();
+                                        message.what = VIDEO_FAIL;
+                                        handler.sendMessage(message);
+                                    }
+                                }
+                            }
+
+
                             for (int i = 0; i < fileNames.size(); i++) {
                                 diseaseInformation.photoName = fileNames.get(i);
                                 diseaseInformation.encode = imageBase64Strings.get(i);
@@ -673,7 +1128,6 @@ public class ReportActivity extends AppCompatActivity  {
                                     e.printStackTrace();
                                     return;
                                 }
-
 
                             }
 
@@ -691,8 +1145,56 @@ public class ReportActivity extends AppCompatActivity  {
 
             }
 
-            finish();
+
         }
+    }
+
+    private String updateAudio(DiseaseInformation diseaseInformation) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.audiomethodName);
+        //传递的参数
+        soapObject.addProperty("TaskNumber", diseaseInformation.taskNumber);
+        soapObject.addProperty("FileName", diseaseInformation.audioName);  //文件类型
+        soapObject.addProperty("AudioBase64", diseaseInformation.encodeBase64File);   //参数2  图片字符串
+
+        Log.i("soapo", soapObject.toString());
+        //设置访问地址 和 超时时间
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+
+
+        HttpTransportSE httpTranstation = new HttpTransportSE(NetUrl.SERVERURL);
+        //链接后执行的回调
+        httpTranstation.call(null, envelope);
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        String isphotoSuccess = object.getProperty(0).toString();
+        return isphotoSuccess;
+
+    }
+    private String updateVideo(DiseaseInformation diseaseInformation) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.videomethodName);
+        //传递的参数
+        soapObject.addProperty("TaskNumber", diseaseInformation.taskNumber);
+        soapObject.addProperty("FileName", diseaseInformation.videoName);  //文件类型
+        soapObject.addProperty("Mp4Base64", diseaseInformation.encodeBase64File);   //参数2  图片字符串
+        Log.i("soap", soapObject.toString());
+        //设置访问地址 和 超时时间
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+
+
+        HttpTransportSE httpTranstation = new HttpTransportSE(NetUrl.SERVERURL);
+        //链接后执行的回调
+        httpTranstation.call(null, envelope);
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        String isphotoSuccess = object.getProperty(0).toString();
+        return isphotoSuccess;
+
     }
 
 
@@ -799,6 +1301,34 @@ public class ReportActivity extends AppCompatActivity  {
 
             return;
         }
+        if (requestCode == 300){
+            if (resultCode == 301){
+                videopath = data.getStringExtra("videoPath");
+                if (videopath != null){
+                    mllplay.setVisibility(View.VISIBLE);
+                    mllAddVideo.setVisibility(View.GONE);
+                }else {
+                    mllplay.setVisibility(View.GONE);
+                    mllAddVideo.setVisibility(View.VISIBLE);
+                }
+                videoName = data.getStringExtra("videoName");
+            }
+        }
+
+
+
+        if (requestCode == 200){
+            if (resultCode == 500){
+                String roadname = data.getStringExtra("roadname");
+                mEtRoad.setText(roadname);
+                for (int i = 0; i < Deal.roadS.length; i++) {
+                    if (roadname == Deal.roadS[i]){
+                        diseaseInformation.streetAddress_ID = ++i;
+                    }
+                }
+            }
+        }
+
 
 
         Bitmap bitmap = null;
@@ -813,7 +1343,7 @@ public class ReportActivity extends AppCompatActivity  {
                     String fileName1 = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
                     mIvphoto1.setImageBitmap(bitmap);
-                    mIvphoto1.setFocusable(false);
+                    mIvphoto1.setClickable(false);
                     String encode1 = photo2Base64(path);
                     fileNames.add(fileName1);
                     imageBase64Strings.add(encode1);
@@ -825,7 +1355,7 @@ public class ReportActivity extends AppCompatActivity  {
                     String fileName2 = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
                     mIvphoto2.setImageBitmap(bitmap);
-                    mIvphoto2.setFocusable(false);
+                    mIvphoto2.setClickable(false);
 
                     String encode2 = photo2Base64(path);
 
@@ -840,7 +1370,7 @@ public class ReportActivity extends AppCompatActivity  {
                     String fileName3 = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
                     mIvphoto3.setImageBitmap(bitmap);
-                    mIvphoto3.setFocusable(false);
+                    mIvphoto3.setClickable(false);
 
                     String encode3 = photo2Base64(path);
                     fileNames.add(fileName3);
@@ -865,10 +1395,14 @@ public class ReportActivity extends AppCompatActivity  {
 
 
             bitmap = getBitmap(mIvphoto1, picturePath);
+            if (bitmap == null){
+                ToastUtil.shortToast(getApplicationContext(),"此照片为空,重新选择");
+                return;
+            }
             String fileName4 = saveToSDCard(bitmap);
             //将选择的图片设置到控件上
             mIvphoto1.setImageBitmap(bitmap);
-            mIvphoto1.setFocusable(false);
+            mIvphoto1.setClickable(false);
 
             String encode4 = photo2Base64(path);
             fileNames.add(fileName4);
@@ -889,10 +1423,14 @@ public class ReportActivity extends AppCompatActivity  {
             cursor.close();
 
             bitmap = getBitmap(mIvphoto2,picturePath);
+            if (bitmap == null){
+                ToastUtil.shortToast(getApplicationContext(),"此照片为空,重新选择");
+                return;
+            }
             String fileName5 = saveToSDCard(bitmap);
             //将选择的图片设置到控件上
             mIvphoto2.setImageBitmap(bitmap);
-            mIvphoto2.setFocusable(false);
+            mIvphoto2.setClickable(false);
 
             String encode5 = photo2Base64(path);
             fileNames.add(fileName5);
@@ -911,10 +1449,14 @@ public class ReportActivity extends AppCompatActivity  {
             cursor.close();
 
             bitmap = getBitmap(mIvphoto3,picturePath);
+            if (bitmap == null){
+                ToastUtil.shortToast(getApplicationContext(),"此照片为空,重新选择");
+                return;
+            }
             String fileName6 = saveToSDCard(bitmap);
             //将选择的图片设置到控件上
             mIvphoto3.setImageBitmap(bitmap);
-            mIvphoto3.setFocusable(false);
+            mIvphoto3.setClickable(false);
 
             String encode6 = photo2Base64(path);
             fileNames.add(fileName6);
@@ -950,8 +1492,59 @@ public class ReportActivity extends AppCompatActivity  {
 
         bitmap = BitmapFactory.decodeFile(path,
                 factoryOptions);
-        return bitmap;
+
+        int bitmapDegree = getBitmapDegree(path);
+        Bitmap rotateBitmap = rotateBitmap(bitmap, bitmapDegree);
+        return rotateBitmap;
     }
+
+    private int getBitmapDegree(String path) {
+        int degree = 0;
+        try {
+            //从指定路径读取图片，获取exif信息
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation){
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+
+            return degree;
+
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+
+        return degree;
+    }
+
+
+    private Bitmap rotateBitmap(Bitmap bm,float orientationDegree) {
+        Matrix m = new Matrix();
+        m.setRotate(orientationDegree, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+
+        try {
+
+            Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
+            return bm1;
+        } catch (OutOfMemoryError ex) {
+
+        }
+
+        return null;
+    }
+
+
+
 
     private Bitmap largeBitmap = null;
     private String photo2Base64(String path) {
@@ -986,6 +1579,26 @@ public class ReportActivity extends AppCompatActivity  {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case FAIL:
+                    ToastUtil.shortToast(getApplicationContext(),audioFail);
+                    break;
+                case VIDEO_FAIL:
+                    ToastUtil.shortToast(getApplicationContext(),videoFail);
+                    break;
+                case AUDIO_SUCCESS:
+                    String audioSuccess = (String) msg.obj;
+                    if (audioSuccess.equals("true")){
+                        ToastUtil.shortToast(getApplicationContext(), audiosuccess);
+                    }
+                    break;
+                case VIDEO_SUCCESS:
+                    String videoSuccess = (String) msg.obj;
+                    if (videoSuccess.equals("true")){
+                        ToastUtil.shortToast(getApplicationContext(), videosuccess);
+                    }
+                    break;
+
+
                 case IS_PHOTO_SUCCESS1:
                     String isPhotoSuccess = (String) msg.obj;
                     if (isPhotoSuccess != null) {
@@ -1027,6 +1640,8 @@ public class ReportActivity extends AppCompatActivity  {
                         } else {
                             ToastUtil.shortToast(getApplicationContext(), error);
                         }
+
+                        finish();
                     }
                     break;
 
@@ -1094,5 +1709,21 @@ public class ReportActivity extends AppCompatActivity  {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.reprote);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

@@ -18,8 +18,8 @@ android {
         applicationId "com.xytsz.xytsz"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 16
-        versionName "掌上市政-2.2.6"
+        versionCode 19
+        versionName "v2.2.7.5"
 
         ndk {
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
@@ -118,4 +118,5 @@ dependencies {
     compile name:'SMSSDK-3.0.0',ext:'aar'
     compile name:'SMSSDKGUI-3.0.0',ext:'aar'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.yqritc:android-scalablevideoview:1.0.1'
 }

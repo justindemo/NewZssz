@@ -10,6 +10,7 @@ public class NetUrl {
 
     //public static final String SERVERURL = "http://hr.xytgps.com:10001/SZWEBSERVICE/newxytszServices.asmx";
     public static final String SERVERURL = "http://sz.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
+    //public static final String SERVERURL = "http://my.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
     //public static final String SERVERURL = "http://mtg.xytgps.com:10004/SZWEBSERVICE/newxytszServices.asmx";
 
     /**
@@ -67,6 +68,7 @@ public class NetUrl {
      */
     public static final String getTaskCountOfReport ="GetTaskCountOfReport";
     public static final String getTaskCountOfDeal ="GetTaskCountOfDeal";
+    public static final String getTaskCountOfReview ="GetTaskCountOfReview";
 
 
     /**
@@ -127,6 +129,7 @@ public class NetUrl {
 
     public static final String getTaskCountOfReport_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfReport";
     public static final String getTaskCountOfDeal_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfDeal";
+    public static final String getTaskCountOfReview_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfReview";
 
     public static final String getAllImageURL_SOAP_ACTION = "http://xytsz.org/getAllImgUrl";
 
@@ -173,4 +176,12 @@ public class NetUrl {
     public static final String getScoreDetail_SOAP_ACTION ="http://xytsz.org/GetIntegralInfo";
     public static final String getScoreMethodname ="GetIntegral";
     public static final String getScore_SOAP_ACTION ="http://xytsz.org/GetIntegral";
+    public static final String audiomethodName = "toReportAudio";
+
+    public static final String getAudioMethodName ="GetAudioByTNum";
+    public static final String getVideoMethodName ="GetMp4ByTNum";
+    public static final String getAudio_SOAP_ACTION ="http://xytsz.org/GetAudioByTNum";
+    public static final String appraisemethodName = "ToFeedBack";
+    public static final String appraise_SOAP_ACTION = "http://xytsz.org/ToFeedBack";
+    public static final String videomethodName ="toReportMp4";
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.text.TextUtils;
@@ -78,7 +79,9 @@ public class MemberLocationActivity extends AppCompatActivity implements BaiduMa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memberloaction);
-        ToastUtil.shortToast(getApplicationContext(), "正在定位...");
+        String loading = getString(R.string.locating);
+        ToastUtil.shortToast(getApplicationContext(), loading);
+        initAcitionbar();
         initView();
         initData();
     }
@@ -160,7 +163,7 @@ public class MemberLocationActivity extends AppCompatActivity implements BaiduMa
             LatLng latLng = new LatLng(latitude, longitude);
             //经纬度
             option.position(latLng).icon(bitmap).title(personList.get(i).getID()+"");
-            baiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(15));
+            baiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(9));
             baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(latLng));
             baiduMap.addOverlay(option);
         }
@@ -247,4 +250,21 @@ public class MemberLocationActivity extends AppCompatActivity implements BaiduMa
         return true;
     }
 
+
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.personloca);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
 }

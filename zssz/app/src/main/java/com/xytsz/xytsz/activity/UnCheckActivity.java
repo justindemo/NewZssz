@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +30,7 @@ import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.Review;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
+import com.xytsz.xytsz.util.BitmapUtil;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
@@ -101,6 +105,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
+                case GlobalContanstant.CHECKFAIL:
+                    ToastUtil.shortToast(getApplicationContext(),"未获取数据");
+                    break;
                 case ISPOST:
                     String isPost = (String) msg.obj;
                     if (isPost.equals("true")) {
@@ -112,10 +119,8 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     String isphotoSuccess = (String) msg.obj;
                     if (isphotoSuccess.equals("true")) {
                         ToastUtil.shortToast(getApplicationContext(), "处置前照片上报成功");
-                        btUncheckPredeal.setEnabled(false);
-                        btUncheckPredeal.setBackgroundColor(Color.parseColor("#e7e7e7"));
+                        btUncheckPredeal.setVisibility(View.GONE);
                         isPostFirst = true;
-                        SpUtils.saveBoolean(getApplicationContext(),GlobalContanstant.ISPOSTFIRST,isPostFirst);
 
                     }
                     break;
@@ -123,12 +128,8 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     String isphotoSuccess1 = (String) msg.obj;
                     if (isphotoSuccess1.equals("true")) {
                         ToastUtil.shortToast(getApplicationContext(), "处置中照片上报成功");
-                        btUncheckDealing.setEnabled(false);
-                        btUncheckDealing.setBackgroundColor(Color.parseColor("#e7e7e7"));
-                        isPostFirst = true;
+                        btUncheckDealing.setVisibility(View.GONE);
                         isPostSecond = true;
-                        SpUtils.saveBoolean(getApplicationContext(),GlobalContanstant.ISPOSTFIRST1,isPostFirst);
-                        SpUtils.saveBoolean(getApplicationContext(),GlobalContanstant.ISPOSTSecond,isPostSecond);
                     }
                     break;
                 case IS_PHOTO_SUCCESS3:
@@ -160,6 +161,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
         setContentView(R.layout.activity_uncheck);
         ButterKnife.bind(this);
+
+        initAcitionbar();
+
         initData();
     }
 
@@ -211,6 +215,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                         ivPredealIcon3.setVisibility(View.INVISIBLE);
                                         break;
                                     case 2:
+                                        isPostFirst = true;
                                         btUncheckDealed.setFocusable(false);
                                         btUncheckPredeal.setVisibility(View.INVISIBLE);
                                         Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(ivPredealIcon1);
@@ -221,6 +226,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                         ivPredealIcon3.setVisibility(View.INVISIBLE);
                                         break;
                                     case 3:
+                                        isPostFirst = true;
                                         btUncheckDealed.setEnabled(false);
                                         btUncheckPredeal.setVisibility(View.INVISIBLE);
                                         Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(ivPredealIcon1);
@@ -250,8 +256,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void run() {
 
-
-
                                 switch (imageIngUrlList.size()) {
                                     case 0:
                                         btUncheckDealing.setEnabled(false);
@@ -270,6 +274,8 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                         isPostSecond = true;
                                         break;
                                     case 2:
+                                        isPostFirst = true;
+                                        isPostSecond = true;
                                         btUncheckDealing.setVisibility(View.INVISIBLE);
                                         btUncheckDealed.setEnabled(false);
                                         Glide.with(getApplicationContext()).load(imageIngUrlList.get(0).getImgurl()).into(ivDealingIcon1);
@@ -281,6 +287,8 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
                                         break;
                                     case 3:
+                                        isPostFirst = true;
+                                        isPostSecond = true;
                                         btUncheckDealing.setVisibility(View.INVISIBLE);
                                         btUncheckDealed.setEnabled(false);
                                         Glide.with(getApplicationContext()).load(imageIngUrlList.get(0).getImgurl()).into(ivDealingIcon1);
@@ -298,7 +306,10 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Message message = Message.obtain();
+                    message.what = GlobalContanstant.CHECKFAIL;
+                    handler.sendMessage(message);
+
                 }
 
             }
@@ -486,11 +497,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.iv_predeal_icon1:
                 Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
-
                 File file = new File(getPhotopath(1));
                 fileUri = Uri.fromFile(file);
                 intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
                 startActivityForResult(intent1, 9001);
                 break;
             case R.id.iv_predeal_icon2:
@@ -498,7 +507,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 File file1 = new File(getPhotopath(2));
                 fileUri = Uri.fromFile(file1);
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
                 startActivityForResult(intent2, 9002);
                 break;
             case R.id.iv_predeal_icon3:
@@ -526,7 +534,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                             try {
                                 isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETSEND);
                             } catch (Exception e) {
-                                e.printStackTrace();
+
                                 return;
                             }
 
@@ -546,7 +554,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 File file3 = new File(getPhotopath(4));
                 fileUri = Uri.fromFile(file3);
                 intent4.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
                 startActivityForResult(intent4, 9004);
                 break;
             case R.id.iv_dealing_icon2:
@@ -562,16 +569,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 File file5 = new File(getPhotopath(6));
                 fileUri = Uri.fromFile(file5);
                 intent6.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-
                 startActivityForResult(intent6, 9006);
                 break;
             //点击上报正在处置图片
             case R.id.bt_uncheck_dealing:
                 //点击上报ing的图片的时候先判断是否有上报处置前的照片
                 //是否有处置前的照片
-                boolean ispostFirst = SpUtils.getBoolean(view.getContext(), GlobalContanstant.ISPOSTFIRST, false);
-                if (ispostFirst) {
+
+                if (isPostFirst) {
                     ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
                     new Thread() {
                         @Override
@@ -585,7 +590,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 try {
                                     isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETDEAL);
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+
                                     return;
                                 }
 
@@ -630,10 +635,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 btUncheckDealed.setFocusable(true);
                 break;
             case R.id.bt_uncheck_dealed:
-                boolean postFirst = SpUtils.getBoolean(view.getContext(), GlobalContanstant.ISPOSTFIRST1, false);
-                boolean postSecond = SpUtils.getBoolean(view.getContext(), GlobalContanstant.ISPOSTSecond, false);
-                if (postFirst) {
-                    if (postSecond) {
+
+                if (isPostFirst) {
+                    if (isPostSecond) {
 
                         personID = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
                         //维修说明
@@ -677,7 +681,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                     try {
                                         isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETCHECK);
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+
                                         return;
                                     }
 
@@ -757,14 +761,23 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
         bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
                 factoryOptions);
-        return bitmap;
+
+        int bitmapDegree = BitmapUtil.getBitmapDegree(fileUri.getPath());
+        Bitmap rotateBitmap = BitmapUtil.rotateBitmap(bitmap, bitmapDegree);
+        return rotateBitmap;
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if (resultCode == RESULT_CANCELED) {
+            return;
+        }
+
         if (data == null) {
-            /*ToastUtil.shortToast(getApplicationContext(), "请重新选择");
-        } else {*/
             Bitmap bitmap;
             String fileName;
             String encode;
@@ -772,7 +785,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 // 有的手机data 为空
                 //bitmap = (Bitmap) data.getExtras().get("data");
                 bitmap = getBitmap(ivPredealIcon1);
-
                 fileName = saveToSDCard(bitmap);
                 //将选择的图片设置到控件上
                 ivPredealIcon1.setImageBitmap(bitmap);
@@ -781,10 +793,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNames.add(fileName);
                 imageBase64Strings.add(encode);
                 btUncheckPredeal.setEnabled(true);
-                btUncheckPredeal.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
             } else if (requestCode == 9002) {
                 // bitmap = (Bitmap) data.getExtras().get("data");
-
                 bitmap = getBitmap(ivPredealIcon2);
                 fileName = saveToSDCard(bitmap);
                 //将选择的图片设置到控件上
@@ -794,7 +805,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNames.add(fileName);
                 imageBase64Strings.add(encode);
                 btUncheckPredeal.setEnabled(true);
-                btUncheckPredeal.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
             } else if (requestCode == 9003) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
                 bitmap = getBitmap(ivPredealIcon3);
@@ -806,7 +817,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNames.add(fileName);
                 imageBase64Strings.add(encode);
                 btUncheckPredeal.setEnabled(true);
-                btUncheckPredeal.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
             } else if (requestCode == 9004) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
                 bitmap = getBitmap(ivDealingIcon1);
@@ -818,7 +829,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNamess.add(fileName);
                 imageBase64Stringss.add(encode);
                 btUncheckDealing.setEnabled(true);
-                btUncheckDealing.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
             } else if (requestCode == 9005) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
 
@@ -831,7 +842,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNamess.add(fileName);
                 imageBase64Stringss.add(encode);
                 btUncheckDealing.setEnabled(true);
-                btUncheckDealing.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
             } else if (requestCode == 9006) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
 
@@ -845,7 +856,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 imageBase64Stringss.add(encode);
 
                 btUncheckDealing.setEnabled(true);
-                btUncheckDealing.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
             } else if (requestCode == 9007) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
                 bitmap = getBitmap(ivDealedIcon1);
@@ -857,7 +868,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNamesss.add(fileName);
                 imageBase64Stringsss.add(encode);
                 btUncheckDealed.setEnabled(true);
-                btUncheckDealed.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
             } else if (requestCode == 9008) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
                 bitmap = getBitmap(ivDealedIcon2);
@@ -869,7 +880,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 fileNamesss.add(fileName);
                 imageBase64Stringsss.add(encode);
                 btUncheckDealed.setEnabled(true);
-                btUncheckDealed.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
             } else if (requestCode == 9009) {
                 //bitmap = (Bitmap) data.getExtras().get("data");
 
@@ -883,7 +894,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 imageBase64Stringsss.add(encode);
 
                 btUncheckDealed.setEnabled(true);
-                btUncheckDealed.setBackgroundColor(Color.parseColor("#72bcdf"));
+                btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
             }
         }
     }
@@ -896,6 +907,24 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(intent);
         finish();
     }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.post);
+        }
+    }
+
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
 }
 
 

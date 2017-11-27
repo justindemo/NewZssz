@@ -28,9 +28,11 @@ public class SplashAcitvity extends AppCompatActivity {
         LinearLayout mroot = (LinearLayout) findViewById(R.id.ll_splash_root);
         //动画效果参数直接定义
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f, 1.0f);
-        alphaAnimation.setDuration(3000);
+        alphaAnimation.setDuration(2000);
 
         mroot.setAnimation(alphaAnimation);
+
+
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

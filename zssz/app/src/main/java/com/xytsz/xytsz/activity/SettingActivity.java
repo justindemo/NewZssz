@@ -66,7 +66,7 @@ public class SettingActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
-                                                UpdateVersionUtil.showDialog(getApplicationContext(),versionInfo);
+                                                UpdateVersionUtil.showDialog(SettingActivity.this,versionInfo);
                                             }
                                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             @Override

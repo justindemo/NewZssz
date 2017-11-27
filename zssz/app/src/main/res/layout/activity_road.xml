@@ -6,8 +6,8 @@
         android:id="@+id/road_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="0.6dp"
-        android:divider="@color/cc_text_blank"/>
+        android:dividerHeight="1dp"
+        android:divider="@color/graybackground"/>
 
     <ProgressBar
         android:id="@+id/review_progressbar"

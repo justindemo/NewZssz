@@ -7,8 +7,8 @@
         android:id="@+id/lv_checkroad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="0.5dp"
-        android:divider="@color/cc_orage_red"/>
+        android:dividerHeight="1dp"
+        android:divider="@color/graybackground"/>
 
     <ProgressBar
         android:id="@+id/review_progressbar"

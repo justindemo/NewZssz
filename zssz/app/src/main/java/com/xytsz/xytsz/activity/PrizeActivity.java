@@ -1,6 +1,5 @@
 package com.xytsz.xytsz.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -9,7 +8,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.xytsz.xytsz.R;
 
 import butterknife.Bind;
@@ -24,16 +22,16 @@ public class PrizeActivity extends AppCompatActivity {
 
     @Bind(R.id.iv_prize)
     ImageView ivPrize;
-    @Bind(R.id.tv_prize)
-    TextView tvPrize;
     @Bind(R.id.tv_prize_apply)
     TextView tvPrizeApply;
+    @Bind(R.id.tv_prize_des)
+    TextView tvPrizeDes;
     private int position;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent() != null){
+        if (getIntent() != null) {
             position = getIntent().getIntExtra("position", -1);
 
         }
@@ -49,11 +47,9 @@ public class PrizeActivity extends AppCompatActivity {
         }
 
 
-
-        Glide.with(getApplicationContext()).load("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg").into(ivPrize);
-        tvPrize.setMovementMethod(ScrollingMovementMethod.getInstance());
+        //Glide.with(getApplicationContext()).load("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg").into(ivPrize);
+        tvPrizeDes.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
-
 
 
     @OnClick(R.id.tv_prize_apply)

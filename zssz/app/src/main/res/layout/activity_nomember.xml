@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/shape_exit"
+            android:background="@drawable/shape_btn_refresh"
             android:focusable="false"
             android:focusableInTouchMode="false">
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/shape_exit">
+            android:background="@drawable/shape_btn_refresh">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/shape_exit">
+            android:background="@drawable/shape_btn_refresh">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
                 android:layout_marginRight="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/cc_green"
+                android:background="@color/cc_supervise"
                 android:gravity="center"
                 android:padding="3dp"
                 android:text="查看详细位置"
@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/shape_exit">
+            android:background="@drawable/shape_btn_refresh">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,7 +122,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_marginTop="6dp"
-            android:background="@drawable/shape_exit"
+            android:background="@drawable/shape_btn_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -191,7 +191,7 @@
             android:textSize="18sp"
             android:textColor="@color/cc_white"
             android:id="@+id/btn_getcotent"
-            android:background="@drawable/btn_positive"
+            android:background="@drawable/shape_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

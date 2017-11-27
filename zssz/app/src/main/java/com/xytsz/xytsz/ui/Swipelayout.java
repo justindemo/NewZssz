@@ -43,7 +43,6 @@ public class Swipelayout extends FrameLayout {
     }
 
     private void init() {
-
         helper = ViewDragHelper.create(this, callback);
     }
 
@@ -143,7 +142,6 @@ public class Swipelayout extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 //
                 //判断有没有条目被打开,如果有,则关闭那个条目,自身不能被滑动
                 //1,记住那个被打开的条目

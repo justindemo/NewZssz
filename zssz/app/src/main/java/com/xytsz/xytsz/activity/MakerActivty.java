@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,11 +39,13 @@ import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.NativeDialog;
 import com.xytsz.xytsz.util.SpUtils;
+import com.xytsz.xytsz.util.ToastUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -80,15 +83,22 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
 
                     break;
 
+                case GlobalContanstant.SENDFAIL:
+                    ToastUtil.shortToast(getApplicationContext(),"未获取数据,请稍后");
+                    break;
+
             }
         }
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
+    private HashMap<String,String> audioUrls = new HashMap<>();
     private int position;
     private LatLng latlngNow;
     private double mylongitude;
     private double mylatitude;
     private int personID;
+    private ImageView mIvDealIcon2;
+    private ImageView mIvDealIcon3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,8 +109,8 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
 
         setContentView(R.layout.activity_deal_maker);
 
-
         personID = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
+        initAcitionbar();
         initView();
         initData();
 
@@ -146,6 +156,9 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                         message.what = ISMAKER;
                         message.obj = list;
                         handler.sendMessage(message);
+
+
+                        audioUrls.clear();
                         //遍历list
                         for (Review.ReviewRoad.ReviewRoadDetail detail : list) {
                             String taskNumber = detail.getTaskNumber();
@@ -164,6 +177,11 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                                 imageUrlLists.add(imageUrlList);
                             }
 
+                            String audioUrl = RoadActivity.getAudio(taskNumber);
+
+                            audioUrls.put(taskNumber,audioUrl);
+
+
                         }
 
 
@@ -171,7 +189,11 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
 
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Message message = Message.obtain();
+
+                    message.what = GlobalContanstant.SENDFAIL;
+                    handler.sendMessage(message);
+
                 }
 
             }
@@ -227,7 +249,9 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
         pop = View.inflate(this, R.layout.maker_pop, null);
         mReportName = (TextView) pop.findViewById(R.id.report_name);
         mTvStatu = (TextView) pop.findViewById(R.id.tv_statu);
-        mIvDealIcon = (ImageView) pop.findViewById(R.id.iv_deal_icon);
+        mIvDealIcon = (ImageView) pop.findViewById(R.id.iv_deal_icon1);
+        mIvDealIcon2 = (ImageView) pop.findViewById(R.id.iv_deal_icon2);
+        mIvDealIcon3 = (ImageView) pop.findViewById(R.id.iv_deal_icon3);
         mIvReportIcon = (ImageView) pop.findViewById(R.id.marker_reporter_icon);
         mBtNavi = (Button) pop.findViewById(R.id.bt_navi);
         mBtDetail = (Button) pop.findViewById(R.id.bt_mark_detail);
@@ -264,8 +288,11 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
 
     @Override
     public void onPause() {
-        super.onPause();
         mMV.onPause();
+        super.onPause();
+        if (locationClient != null){
+            locationClient.stop();
+        }
     }
 
     @Override
@@ -309,8 +336,26 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                 //病害头像
                 if (imageUrlLists.size() != 0) {
                     for (List<ImageUrl> imageUrlList : imageUrlLists) {
-                        if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
-                            Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                        if (imageUrlList.size() != 0 ) {
+
+                            if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
+                                if (imageUrlList.size() == 1) {
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                                }
+                                if (imageUrlList.size() == 2) {
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
+                                }
+                                if (imageUrlList.size() == 3) {
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(2).getImgurl()).into(mIvDealIcon3);
+                                }
+                            }
+                        }else {
+                            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon);
+                            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon2);
+                            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon3);
                         }
                     }
                 }
@@ -344,13 +389,16 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                     public void onClick(View v) {
                         Intent intent = new Intent(v.getContext(), DiseaseDetailActivity.class);
                         intent.putExtra("detail", detail);
-//                        for (final Review.ReviewRoad.ReviewRoadDetail detail : list) {
-//                            if (TextUtils.equals(detail.getTaskNumber(), marker.getTitle())) {
-//                                intent.putExtra("ReviewRoadDetail",detail);
-//                            }
-//                        }
+
+                        for (Map.Entry<String,String> entry: audioUrls.entrySet()){
+                           if( entry.getKey() == detail.getTaskNumber()){
+                               intent.putExtra("audioUrl",entry.getValue());
+                           }
+
+                        }
 
                         for (List<ImageUrl> imageUrlList : imageUrlLists) {
+
                             if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
                                 intent.putExtra("imageUrls", (Serializable) imageUrlList);
                             }
@@ -394,7 +442,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
         option.setIgnoreKillProcess(false);// 可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
         locationClient.setLocOption(option);
-
+        locationClient.start();
     }
 
     private class MyListener implements BDLocationListener {
@@ -409,6 +457,23 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
 
         }
 
+    }
+
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.deal);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 
 }

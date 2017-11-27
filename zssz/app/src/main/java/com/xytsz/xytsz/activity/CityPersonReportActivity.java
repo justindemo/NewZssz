@@ -28,8 +28,6 @@ import butterknife.OnClick;
  */
 public class CityPersonReportActivity extends AppCompatActivity {
 
-    @Bind(R.id.citypersonreport_imageview)
-    ImageView citypersonreportImageview;
     @Bind(R.id.tv_person_report)
     TextView tvPersonReport;
     @Bind(R.id.tv_person_history)
@@ -62,8 +60,6 @@ public class CityPersonReportActivity extends AppCompatActivity {
         tvMarqueeview.requestFocus();
         tvMarqueeview.sepX = 2;
         tvMarqueeview.startScroll();
-
-        Glide.with(getApplicationContext()).load("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg").into(citypersonreportImageview);
 
     }
 

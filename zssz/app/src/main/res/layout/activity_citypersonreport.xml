@@ -9,27 +9,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <ImageView
-            android:scaleType="fitXY"
-            android:id="@+id/citypersonreport_imageview"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
-
         <com.dalong.marqueeview.MarqueeView
             android:id="@+id/tv_marqueeview"
-            android:gravity="center"
-            android:background="@color/greenbackground"
-            app:direction="left"
-            app:speed="50"
-            app:textcolor="@color/cc_white"
-            app:isRepeat="true"
-            app:startPoint="end"
-            app:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            />
-
+            android:background="#FFE5D7"
+            android:gravity="center"
+            app:direction="left"
+            app:isRepeat="true"
+            app:speed="50"
+            app:startPoint="end"
+            app:textSize="16sp"
+            app:textcolor="@color/cc_supervise" />
 
 
         <LinearLayout
@@ -73,59 +64,60 @@
         </LinearLayout>
 
         <View
-            android:background="@color/graybackground"
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="10dp"
+            android:background="@color/graybackground" />
         <!--帮助-->
 
         <LinearLayout
-            android:background="@color/white"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
             <LinearLayout
-                android:gravity="center"
-                android:layout_margin="6dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <View
-
-                    android:background="@color/colorPrimary"
-                    android:layout_width="4dp"
-                    android:layout_height="20dp"/>
-
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/howtoreport"
-                    android:textSize="15sp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/personreport_dblf"
+                    android:drawablePadding="8dp"
+                    android:text="@string/howtoreport"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <View
-                android:background="@color/graybackground"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"/>
+                android:layout_height="0.5dp"
+                android:background="@color/graybackground" />
 
 
             <LinearLayout
-                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:text="@string/howreportetitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                android:orientation="vertical">
+
                 <ImageView
-                    android:background="@mipmap/iv_help"
+                    android:padding="6dp"
+                    android:src="@mipmap/iv_citypersonreport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:padding="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@string/howreportetitle" />
 
             </LinearLayout>
 

@@ -5,82 +5,83 @@
     android:layout_height="match_parent"
     android:background="@color/graybackground">
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:padding="6dp"
+        android:background="@color/cc_white"
         android:focusableInTouchMode="false"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/shape_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <TextView
+            android:layout_centerVertical="true"
             android:text="@string/information_name"
             android:textSize="18sp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
+            android:layout_alignParentRight="true"
             android:textSize="18sp"
             android:id="@+id/my_name"
+            android:gravity="right"
             android:hint="@string/hint_name"
-            android:padding="10dp"
+            android:padding="6dp"
             android:background="@null"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shape_exit"
+    <RelativeLayout
+        android:layout_marginTop="1dp"
+        android:padding="6dp"
+        android:background="@color/cc_white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <TextView
+            android:layout_centerVertical="true"
             android:text="@string/information_phone"
             android:textSize="18sp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
+            android:layout_alignParentRight="true"
             android:focusableInTouchMode="false"
             android:focusable="false"
             android:textSize="18sp"
             android:id="@+id/my_telephone"
-            android:padding="10dp"
+            android:padding="6dp"
             android:background="@null"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+
+
+    <RelativeLayout
+        android:layout_marginTop="1dp"
+        android:background="@color/cc_white"
+        android:padding="6dp"
         android:id="@+id/my_ll_activite"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shape_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
+            android:layout_centerVertical="true"
             android:text="@string/information_department"
             android:textSize="18sp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
+            android:layout_alignParentRight="true"
             android:focusableInTouchMode="false"
             android:focusable="false"
             android:textSize="18sp"
             android:id="@+id/my_department"
-            android:padding="10dp"
+            android:padding="6dp"
             android:background="@null"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <Button
@@ -95,7 +96,7 @@
         android:gravity="center"
         android:padding="6dp"
         android:text="@string/information_save"
-        android:textColor="@color/cc_text_darklight"
+        android:textColor="@color/cc_white"
         android:textSize="20sp" />
 
 

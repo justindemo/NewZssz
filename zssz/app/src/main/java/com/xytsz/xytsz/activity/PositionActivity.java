@@ -49,7 +49,7 @@ public class PositionActivity extends AppCompatActivity {
     private void marke(double latitude, double longitude) {
        //拿到要maker的图片
 
-        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.icon_position);
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.icon_en);
         ArrayList<BitmapDescriptor> bitmaps = new ArrayList<>();
         bitmaps.add(BitmapDescriptorFactory.fromResource(R.mipmap.icon_twinkle));
         bitmaps.add(bitmapDescriptor);

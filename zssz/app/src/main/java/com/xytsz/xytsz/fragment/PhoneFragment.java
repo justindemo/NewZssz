@@ -152,25 +152,25 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                if (isNetworkAvailable(getActivity())){
-                //判断字符是否是13个
-                phone = login_phone.getText().toString();
-                if (TextUtils.isEmpty(phone)) {
-                    ToastUtil.shortToast(getContext(), nodata);
-                    return;
-                }
-                if (phone.length() == 11) {
-                    boolean mobileTrue = isMobileNO(phone);
-                    if (mobileTrue) {
+                if (isNetworkAvailable(getActivity())) {
+                    //判断字符是否是13个
+                    phone = login_phone.getText().toString();
+                    if (TextUtils.isEmpty(phone)) {
+                        ToastUtil.shortToast(getContext(), nodata);
+                        return;
+                    }
+                    if (phone.length() == 11) {
+                        boolean mobileTrue = isMobileNO(phone);
+                        if (mobileTrue) {
 
-                        SMSSDK.getVerificationCode("86", phone);
+                            SMSSDK.getVerificationCode("86", phone);
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (TIME == 0) {
-                                    TIME = 60;
-                                }
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (TIME == 0) {
+                                        TIME = 60;
+                                    }
                                     for (int i = 60; i > 0; i--) {
                                         handler.sendEmptyMessage(CODE_ING);
                                         if (i <= 0) {
@@ -185,21 +185,21 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                                     }
                                     handler.sendEmptyMessage(CODE_REPEAT);
 
-                            }
-                        }).start();
+                                }
+                            }).start();
 
+
+                        } else {
+                            ToastUtil.shortToast(getContext(), error);
+                        }
+                        // 拿权限 获取验证码，字体变灰色，然后变成60秒倒计时
 
                     } else {
                         ToastUtil.shortToast(getContext(), error);
                     }
-                    // 拿权限 获取验证码，字体变灰色，然后变成60秒倒计时
 
                 } else {
-                    ToastUtil.shortToast(getContext(), error);
-                }
-
-            }else {
-                    ToastUtil.shortToast(getContext(),checknet);
+                    ToastUtil.shortToast(getContext(), checknet);
                 }
 
 
@@ -213,10 +213,8 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                 //验证是否成功
                 phone = login_phone.getText().toString();
                 String pwd = passWord.getText().toString();
-
                 if (!TextUtils.isEmpty(pwd)) {
-
-                    ToastUtil.shortToast(getActivity(),logining);
+                    ToastUtil.shortToast(getActivity(), logining);
                     SMSSDK.submitVerificationCode("86", phone, pwd);
                 } else {
                     ToastUtil.shortToast(getContext(), nopwd);
@@ -244,7 +242,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case FAIL:
-                    ToastUtil.shortToast(getContext(),neterror);
+                    ToastUtil.shortToast(getContext(), neterror);
                     break;
                 case SMSDDK_HANDLER:
                     int event = msg.arg1;
@@ -255,9 +253,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                         //验证码验证成功
                         if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
 
-
-                            ToastUtil.shortToast(getActivity(),success);
-
+                            ToastUtil.shortToast(getActivity(), success);
 
                             new Thread() {
                                 @Override
@@ -279,7 +275,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                                             SpUtils.saveString(getActivity().getApplicationContext(), GlobalContanstant.USERNAME, name);
                                             SpUtils.saveInt(getActivity().getApplicationContext(), GlobalContanstant.ROLE, role_id);
 
-                                            SpUtils.saveInt(getActivity().getApplicationContext(),GlobalContanstant.INERGRAL,integral);
+                                            SpUtils.saveInt(getActivity().getApplicationContext(), GlobalContanstant.INERGRAL, integral);
 
 
                                             getActivity().runOnUiThread(new Runnable() {
@@ -296,7 +292,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
 
 
                                     } catch (Exception e) {
-                                        Message message =Message.obtain();
+                                        Message message = Message.obtain();
                                         message.what = FAIL;
                                         handler.sendMessage(message);
                                     }

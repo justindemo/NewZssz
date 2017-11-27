@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,14 +33,23 @@ import java.util.List;
 public class CheckActivity extends AppCompatActivity {
 
     private static final int ISCHECK = 6003;
+    public static final int FAIL = 500;
     private ListView mLv;
     private Handler handler = new Handler() {
+
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case ISCHECK:
-                    //ToastUtil.shortToast(getApplicationContext(), "没有已审核的数据，请稍后重试");
+                    mProgressBar.setVisibility(View.GONE);
+                    mtvfail.setText(nodata);
+                    mtvfail.setVisibility(View.VISIBLE);
+                    break;
+                case FAIL:
+                    mProgressBar.setVisibility(View.GONE);
+                    ToastUtil.shortToast(getApplicationContext(), "未获取数据,请稍后");
                     break;
             }
         }
@@ -57,6 +67,7 @@ public class CheckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
         nodata = getString(R.string.check_nodata);
+        initAcitionbar();
         initView();
         initData();
     }
@@ -73,7 +84,6 @@ public class CheckActivity extends AppCompatActivity {
 
         mProgressBar.setVisibility(View.VISIBLE);
 
-        //ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
         new Thread() {
             @Override
             public void run() {
@@ -86,39 +96,29 @@ public class CheckActivity extends AppCompatActivity {
                         Review review = JsonUtil.jsonToBean(checkData, Review.class);
                         list = review.getReviewRoadList();
 
-                        int checkSum = 0;
-                        for (Review.ReviewRoad reviewRoad : list) {
-                            checkSum += reviewRoad.getList().size();
-                        }
-                        SpUtils.saveInt(getApplicationContext(), GlobalContanstant.CHECKSUM, checkSum);
 
+                        if (list.size() == 0) {
+                            Message message = Message.obtain();
+                            message.what = ISCHECK;
+                            handler.sendMessage(message);
 
-                        adapter = new CheckAdapter(list);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (adapter != null) {
+                        } else {
+                            adapter = new CheckAdapter(list);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
                                     mLv.setAdapter(adapter);
-                                    if (list.size() == 0){
-                                        mtvfail.setText(nodata);
-                                        mtvfail.setVisibility(View.VISIBLE);
-                                        ToastUtil.shortToast(getApplicationContext(),nodata);
-                                    }
                                     mProgressBar.setVisibility(View.GONE);
                                 }
-                            }
-                        });
+                            });
 
-
-                    } else {
-                        Message message = Message.obtain();
-                        message.what = ISCHECK;
-                        handler.sendMessage(message);
-
-
+                        }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Message message = Message.obtain();
+                    message.what = FAIL;
+                    handler.sendMessage(message);
+
                 }
             }
         }.start();
@@ -141,11 +141,9 @@ public class CheckActivity extends AppCompatActivity {
             case GlobalContanstant.CHECKROADPASS:
                 int passposition = data.getIntExtra("passposition", -1);
                 position = data.getIntExtra("position", -1);
+                list.get(position).getList().remove(passposition);
                 size = list.get(position).getList().size();
-                if (size != 0) {
-
-                    list.get(position).getList().remove(passposition);
-                } else {
+                if (size == 0) {
                     list.remove(position);
                 }
                 adapter.notifyDataSetChanged();
@@ -153,12 +151,10 @@ public class CheckActivity extends AppCompatActivity {
 
             case GlobalContanstant.CHECKROADFAIL:
                 int failposition = data.getIntExtra("failposition", -1);
-                position = data.getIntExtra("position",-1);
+                position = data.getIntExtra("position", -1);
+                list.get(position).getList().remove(failposition);
                 size = list.get(position).getList().size();
-                if (size != 0) {
-
-                    list.get(position).getList().remove(failposition);
-                } else {
+                if (size == 0) {
                     list.remove(position);
                 }
                 adapter.notifyDataSetChanged();
@@ -167,5 +163,22 @@ public class CheckActivity extends AppCompatActivity {
 
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.check);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

@@ -109,36 +109,40 @@ public class LineView extends View {
     protected void onDraw(Canvas canvas) {
         //初始线
         Paint originalPaint = new Paint();
-        originalPaint.setColor(Color.parseColor("#55000000"));
+        originalPaint.setColor(context.getResources().getColor(R.color.graybackground));
         originalPaint.setStrokeWidth(5);
         originalPaint.setStyle(Paint.Style.FILL);
         canvas.drawLine(y * 2, y, halfWidth - y, y, originalPaint);
         canvas.drawLine(halfWidth + y, y, endWidth - 2 * y, y, originalPaint);
 
+
         //画原点
         Paint circlePaint = new Paint();
-        circlePaint.setColor(Color.parseColor("#fa8072"));
+        circlePaint.setColor(context.getResources().getColor(R.color.cc_supervise));
         circlePaint.setStrokeWidth(5);
         canvas.drawCircle(y, y, 7, circlePaint);
         canvas.drawCircle(halfWidth, y, 7, circlePaint);
         canvas.drawCircle(endWidth - y, y, 7, circlePaint);
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.parseColor("#fa8072"));
+        textPaint.setColor(context.getResources().getColor(R.color.cc_supervise));
         textPaint.setTextSize(30);
+        Paint textPaint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint1.setColor(context.getResources().getColor(R.color.cc_dark_fade));
+        textPaint1.setTextSize(30);
         float stringWidth = textPaint.measureText(supertext);
         float string2Width = textPaint.measureText(supernumber);
         // textPaint.setStrokeWidth(10);
-        canvas.drawText(simpletext, 0, 6 * y, textPaint);
-        canvas.drawText(simple, 0, 12 * y, textPaint);
-        canvas.drawText(experttext, halfWidth - stringWidth / 2, 6 * y, textPaint);
-        canvas.drawText(expert, halfWidth - stringWidth / 1.5f, 12 * y, textPaint);
-        canvas.drawText(supertext, endWidth - stringWidth, 6 * y, textPaint);
-        canvas.drawText(supernumber, endWidth - string2Width, 12 * y, textPaint);
+        canvas.drawText(simpletext, 0, 7 * y, textPaint);
+        canvas.drawText(simple, 0, 13 * y, textPaint1);
+        canvas.drawText(experttext, halfWidth - stringWidth / 2, 7 * y, textPaint);
+        canvas.drawText(expert, halfWidth - stringWidth/2, 13 * y, textPaint1);
+        canvas.drawText(supertext, endWidth - stringWidth, 7 * y, textPaint);
+        canvas.drawText(supernumber, endWidth - string2Width, 13 * y, textPaint1);
 
 
         Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#fa8072"));
+        paint.setColor(context.getResources().getColor(R.color.cc_supervise));
         paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         canvas.drawLine(y, y, mEndX, y, paint);

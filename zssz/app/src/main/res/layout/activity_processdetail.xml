@@ -1,398 +1,455 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
-
-<LinearLayout
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginTop="10dp">
-
-        <TextView
-            android:textSize="16sp"
-            android:background="@drawable/shape_circle_gray"
-            android:id="@+id/tv_report_time"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:text="2017-3-15 10:00" />
-
-        <TextView
-            android:id="@+id/tv_report_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/tv_report_time"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:text="@string/reprote"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/iv_report_right"
-            android:layout_width="70dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/tv_report_title"
-            android:background="@mipmap/right_arrow" />
-        <TextView
-            android:textSize="16sp"
-            android:background="@drawable/shape_circle_gray"
-            android:id="@+id/tv_review_time"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:layout_toRightOf="@id/iv_report_right"
-            android:text="2017-3-15 10:00"
-            />
-        <TextView
-            android:padding="3dp"
-            android:id="@+id/tv_review_title"
-            android:layout_toRightOf="@id/tv_review_time"
-            android:text="@string/review"
-            android:textSize="18sp"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_marginRight="75dp"
-            android:background="@mipmap/down_arrow"
-            android:layout_width="40dp"
-            android:layout_height="70dp"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:background="@drawable/shape_circle_gray"
-            android:id="@+id/tv_deal_time"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:text="2017-3-15 10:00" />
-
-        <TextView
-            android:id="@+id/tv_deal_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/tv_deal_time"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:text="@string/deal"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/iv_send_right"
-            android:layout_width="70dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/tv_deal_title"
-            android:background="@mipmap/lift_arrow" />
-        <TextView
-            android:textSize="16sp"
-            android:background="@drawable/shape_circle_gray"
-            android:id="@+id/tv_send_time"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:layout_toRightOf="@id/iv_send_right"
-            android:text="2017-3-15 10:00"
-            />
-        <TextView
-            android:padding="3dp"
-            android:id="@+id/tv_send_title"
-            android:layout_toRightOf="@id/tv_send_time"
-            android:text="@string/send"
-            android:textSize="18sp"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_marginLeft="25dp"
-            android:background="@mipmap/down_arrow"
-            android:layout_width="40dp"
-            android:layout_height="70dp"
-            />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="16sp"
-            android:background="@drawable/shape_circle_gray"
-            android:id="@+id/tv_post_time"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:text="2017-3-15 10:00" />
-
-        <TextView
-            android:id="@+id/tv_post_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/tv_post_time"
-            android:layout_marginRight="3dp"
-            android:layout_marginLeft="3dp"
-            android:text="@string/post"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/iv_post_right"
-            android:layout_width="70dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_toRightOf="@id/tv_post_title"
-            android:background="@mipmap/right_arrow" />
-        <TextView
-            android:textSize="16sp"
-            android:background="@drawable/shape_circle_gray"
-            android:id="@+id/tv_check_time"
-            android:layout_width="100dp"
-            android:layout_height="70dp"
-            android:gravity="center"
-            android:layout_toRightOf="@id/iv_post_right"
-            />
-        <TextView
-            android:padding="3dp"
-            android:id="@+id/tv_check_title"
-            android:layout_toRightOf="@id/tv_check_time"
-            android:text="@string/check"
-            android:textSize="18sp"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-
-    <View
-        android:layout_marginTop="6dp"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="@color/gray"/>
+    android:background="@color/white">
 
     <LinearLayout
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="6dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <TextView
-        android:text="@string/process_tasknumer"
-        android:textSize="19sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/tv_report_tasknuber"
-            android:textSize="19sp"
-            android:text="20171123"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <View
-        android:layout_marginRight="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="@color/gray"/>
-
-    <LinearLayout
-        android:layout_marginLeft="6dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:orientation="vertical">
+
         <View
-            android:layout_width="0.1dp"
-            android:layout_height="match_parent"
-            android:background="@color/gray"/>
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/grayground" />
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp">
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_marginTop="6dp"
-                android:gravity="center"
-                android:text="@string/process_redeal"
-                android:textSize="16sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/predeal_photo"
-                android:layout_marginTop="6dp"
-                android:layout_marginLeft="8dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
+                <ImageView
+                    android:id="@+id/iv_report_statu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/iv_uncom" />
+
+                <ImageView
+                    android:id="@+id/iv_report_statu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/iv_uncom_nor" />
+
+                <ImageView
+                    android:id="@+id/iv_review_statu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/iv_uncom" />
+
+                <ImageView
+                    android:id="@+id/iv_review_statu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:src="@mipmap/iv_uncom_nor" />
+
+                <ImageView
+                    android:id="@+id/iv_send_statu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/iv_uncom" />
+
+                <ImageView
+                    android:id="@+id/iv_send_statu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:src="@mipmap/iv_uncom_nor" />
+
+                <ImageView
+                    android:id="@+id/iv_deal_statu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/iv_uncom" />
+
+                <ImageView
+                    android:id="@+id/iv_deal_statu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/iv_uncom_nor" />
+
+                <ImageView
+                    android:id="@+id/iv_post_statu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/iv_uncom" />
+
+                <ImageView
+                    android:id="@+id/iv_post_statu1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/iv_uncom_nor" />
+
+                <ImageView
+                    android:id="@+id/iv_check_statu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/iv_uncom" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:text="@string/reprote"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_report_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/graybackground" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:text="@string/review"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_review_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/graybackground" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:text="@string/send"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_send_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/graybackground" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:text="@string/deal"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_deal_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/graybackground" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:text="@string/post"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_post_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/graybackground" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:text="@string/check"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_check_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/graybackground" />
+
+            </LinearLayout>
+
         </LinearLayout>
+
         <View
-            android:layout_marginLeft="6dp"
-            android:layout_width="0.1dp"
-            android:layout_height="match_parent"
-            android:background="@color/gray"/>
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/grayground" />
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
-                android:layout_marginTop="6dp"
-                android:gravity="center"
-                android:text="@string/process_dealing"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/process_tasknumer"
+                android:textSize="18sp" />
 
-            <ImageView
-
-                android:id="@+id/dealing_photo"
-                android:layout_marginTop="6dp"
-                android:layout_marginLeft="8dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
+            <TextView
+                android:id="@+id/tv_report_tasknuber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20171123"
+                android:textSize="18sp" />
         </LinearLayout>
+
         <View
-            android:layout_marginLeft="6dp"
-            android:layout_width="0.1dp"
-            android:layout_height="match_parent"
-            android:background="@color/gray"/>
+            android:layout_margin="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/graybackground"/>
+
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_marginTop="6dp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/process_dealed"
-                android:textSize="16sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/predeal_photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="fitXY" />
 
-            <ImageView
-                android:id="@+id/dealed_photo"
-                android:layout_marginTop="6dp"
-                android:layout_marginLeft="8dp"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="@string/process_redeal"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/dealing_photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="fitXY" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="@string/process_dealing"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/dealed_photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+
+                    android:scaleType="fitXY" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:text="@string/process_dealed"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
         </LinearLayout>
         <View
-            android:layout_marginLeft="10dp"
-            android:layout_width="0.1dp"
-            android:layout_height="match_parent"
-            android:background="@color/gray"/>
+            android:layout_margin="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/graybackground"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp">
+
+            <TextView
+                android:id="@+id/tv_report_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/process_report"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_report_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/tv_report_name_title"
+                android:text="中国"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_review_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_review_name"
+                android:text="@string/process_review"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_review_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="6dp"
+                android:text="sdad"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_deal_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/process_deal"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_deal_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/tv_deal_name_title"
+                android:text="中国"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_check_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_check_name"
+                android:text="@string/process_check"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_check_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="6dp"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
     </LinearLayout>
-    <View
-        android:layout_marginLeft="6dp"
-       android:layout_marginRight="6dp"
-        android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="@color/gray"/>
-
-    <RelativeLayout
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tv_report_name_title"
-            android:text="@string/process_report"
-            android:textSize="19sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_report_name"
-            android:text="中国"
-            android:textSize="17sp"
-            android:layout_toRightOf="@id/tv_report_name_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_review_name_title"
-            android:text="@string/process_review"
-            android:textSize="19sp"
-            android:layout_toLeftOf="@+id/tv_review_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_review_name"
-            android:text="sdad"
-            android:textSize="17sp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tv_deal_name_title"
-            android:text="@string/process_deal"
-            android:textSize="19sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_deal_name"
-            android:text="中国"
-            android:textSize="17sp"
-            android:layout_toRightOf="@id/tv_deal_name_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_check_name_title"
-            android:text="@string/process_check"
-            android:textSize="19sp"
-            android:layout_toLeftOf="@+id/tv_check_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_check_name"
-            android:text="sdad"
-            android:textSize="17sp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-</LinearLayout>
 </ScrollView>

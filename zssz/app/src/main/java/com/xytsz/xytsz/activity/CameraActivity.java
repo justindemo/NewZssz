@@ -121,7 +121,10 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         switch (view.getId()) {
             case R.id.btn_take_photo:
                 //点击拍照
-                camera.autoFocus(CameraActivity.this);
+                //camera.autoFocus(CameraActivity.this);
+                //PermissionUtils.requestPermission(CameraActivity.this,PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE,mPermissionGrant);
+
+                camera.takePicture(null,null,CameraActivity.this);
                 break;
 
             case R.id.title_btn_ok:
@@ -250,7 +253,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         }
 
-        camera.cancelAutoFocus();
+
 
         camera.setDisplayOrientation(90);
 
@@ -294,14 +297,27 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (camera != null) {
+            if(surfaceView != null && surfaceView.getHolder() != null ){
+                surfaceView.getHolder().removeCallback(this);
+            }
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.lock();
+            camera.release();
+            camera = null;
+        }
+    }
+
     private int num;
 
 
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         //ToastUtil.shortToast(getApplicationContext(),"正在拍照");
-
-
         if (num < 3) {
             FileOutputStream bos = null;
             Bitmap bm = null;
@@ -430,7 +446,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         try {
 
             Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-
             return bm1;
         } catch (OutOfMemoryError ex) {
         }

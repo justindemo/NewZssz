@@ -84,6 +84,8 @@ public class MyApplication extends MobApplication {
 
     }
 
+
+
     public static String getAllImagUrl(String taskNumber, int phaseIndication) throws Exception {
 
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getAllImageURLmethodName);

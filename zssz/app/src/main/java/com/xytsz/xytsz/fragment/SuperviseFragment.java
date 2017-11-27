@@ -5,17 +5,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dalong.marqueeview.MarqueeView;
 import com.xytsz.xytsz.R;
-import com.xytsz.xytsz.activity.BridgeNumberActivity;
+import com.xytsz.xytsz.activity.FacilityManageActivity;
 import com.xytsz.xytsz.activity.FloodActivity;
-import com.xytsz.xytsz.activity.LibActivity;
 import com.xytsz.xytsz.activity.MakerProblemActivty;
 import com.xytsz.xytsz.activity.MemberLocationActivity;
-import com.xytsz.xytsz.activity.RoadNumberActivity;
 import com.xytsz.xytsz.adapter.SuperviseAdapter;
 import com.xytsz.xytsz.base.BaseFragment;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -31,17 +29,18 @@ import java.util.List;
  *
  *  监管界面
  */
-public class SuperviseFragment extends BaseFragment implements View.OnClickListener {
+public class SuperviseFragment extends BaseFragment  {
 
     private RecyclerView recycleView;
     private int role;
     private static final int PERSON = 0;
     private static final int PROBLEM = 1;
-    private static final int LIB = 3;
+    private static final int FACILITY = 3;
     private static final int FLOOD = 4;
     private static final int CAROIL = 2;
     private MarqueeView mheadMarquee;
     private int alluser;
+    private TextView mActionbartext;
 
 
     @Override
@@ -49,7 +48,7 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
 
         View view = View.inflate(getActivity(), R.layout.fragment_supervise, null);
         recycleView = (RecyclerView) view.findViewById(R.id.recycle_view);
-
+        mActionbartext = (TextView) view.findViewById(R.id.actionbar_text);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),3);
 
@@ -69,7 +68,7 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
         titles.add("设施管理");
         titles.add("防汛警告");
 
-
+        mActionbartext.setText(R.string.supervise);
         SuperviseAdapter adapter = new SuperviseAdapter(titles,role);
         recycleView.setAdapter(adapter);
 
@@ -95,8 +94,8 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
                         //IntentUtil.startActivity(parent.getContext(), MakerProblemActivty.class);
 
                         break;
-                    case LIB:
-                        IntentUtil.startActivity(getContext(), LibActivity.class);
+                    case FACILITY:
+                        IntentUtil.startActivity(getContext(), FacilityManageActivity.class);
                         //井盖
                         break;
                     case CAROIL:
@@ -113,8 +112,6 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
 
 
         View headview = inflateView(R.layout.supervise_header, recycleView);
-        RelativeLayout mroad = (RelativeLayout) headview.findViewById(R.id.head_road);
-        RelativeLayout mbridge = (RelativeLayout) headview.findViewById(R.id.head_bridge);
 
         mheadMarquee = (MarqueeView) headview.findViewById(R.id.tv_headmarquee);
 
@@ -127,8 +124,7 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
 
         adapter.addHeaderView(headview);
 
-        mroad.setOnClickListener(this);
-        mbridge.setOnClickListener(this);
+
 
     }
 
@@ -139,19 +135,7 @@ public class SuperviseFragment extends BaseFragment implements View.OnClickListe
         return inflater.inflate(layoutId,rv,false);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.head_bridge:
-                //桥梁
-                IntentUtil.startActivity(getContext(),BridgeNumberActivity.class);
-                break;
-            case R.id.head_road:
-                //道路
-                IntentUtil.startActivity(getContext(), RoadNumberActivity.class);
-                break;
-        }
-    }
+
 
 
     @Override

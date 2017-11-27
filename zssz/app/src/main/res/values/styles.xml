@@ -6,7 +6,7 @@
         <!--actionbar 的颜色-->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <!--时间格 的颜色-->
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionBarSize">40dp</item>
 
@@ -26,10 +26,6 @@
     </style>-->
 
 
-    <style name="ratingbar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/ratingbar</item>
-    </style>
-
 
     <!-- Navigation Header -->
     <style name="NavPage">
@@ -42,16 +38,15 @@
     </style>
 
 
-
     <style name="HomeActivityRadioButtonStyle">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
         <item name="android:padding">5dp</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
         <item name="android:drawablePadding">3dp</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@drawable/selector_homeactivity_rbtn_text_color</item>
     </style>
 
@@ -87,6 +82,11 @@
 
     <style name="TabLayoutTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ThemeHome" parent="Theme.AppCompat.Light.NoActionBar">
+         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+         <item name="android:windowNoTitle">true</item>
     </style>
 
 

@@ -186,7 +186,7 @@ public class ScrollViewPager extends ViewPager {
             case MotionEvent.ACTION_DOWN:
 
                 // getParent : 获取父控件
-                getParent().requestDisallowInterceptTouchEvent(true);// 请求父控件是否传递事件,true:不拦截吗,false:拦截事件,这里的事件指的是下一个事件
+                getParent().requestDisallowInterceptTouchEvent(true);// 请求父控件是否传递事件,true:不拦截,false:拦截事件,这里的事件指的是下一个事件
 
                 downX = (int) ev.getX();
                 downY = (int) ev.getY();

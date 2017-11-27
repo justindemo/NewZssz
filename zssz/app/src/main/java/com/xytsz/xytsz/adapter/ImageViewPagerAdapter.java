@@ -29,10 +29,13 @@ public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        ImageUrl imageUrl = list.get(position);
-        String imgurl = imageUrl.getImgurl();
-        ImageFragment fragment = ImageFragment.newInstance(imgurl);
-        return fragment;
+        if (list.size() != 0 ){
+            ImageUrl imageUrl = list.get(position);
+            String imgurl = imageUrl.getImgurl();
+            ImageFragment fragment = ImageFragment.newInstance(imgurl);
+            return fragment;
+        }
+        return null;
     }
 
     @Override

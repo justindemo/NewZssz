@@ -65,9 +65,6 @@ public class GuideActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
-
-
                 //保存不是第一次进入的状态
                 SpUtils.saveBoolean(GuideActivity.this, GlobalContanstant.ISFIRSTENTER, false);
                 //跳转到首页,并且将当前页面移出
@@ -160,7 +157,7 @@ public class GuideActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         //设置点与点之间的距离
-        params.rightMargin=DensityUtil.dip2px(this, 10);
+        params.rightMargin=DensityUtil.dip2px(this, 20);
         //将属性设置给点,让属性生效
         ponit.setLayoutParams(params);//通过代码设置点的属性
         //将点存放到布局文件的linearlayout中显示

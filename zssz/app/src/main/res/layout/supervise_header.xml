@@ -7,10 +7,10 @@
 
     <com.dalong.marqueeview.MarqueeView
         android:id="@+id/tv_headmarquee"
-        android:background="#aa909bed"
+        android:background="#FFE5D7"
         app:direction="left"
         app:speed="50"
-        app:textcolor="@color/cc_white"
+        app:textcolor="@color/cc_supervise"
         app:isRepeat="true"
         app:startPoint="end"
         app:textSize="16sp"
@@ -18,95 +18,30 @@
         android:layout_height="26dp"
         />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-
-        <RelativeLayout
-            android:id="@+id/head_road"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:background="@color/cc_blue">
-
-            <TextView
-                android:id="@+id/road_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:padding="10dp"
-                android:text="道路"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/road_title"
-                android:layout_centerHorizontal="true"
-                android:text="共200条3000公里"
-                android:textColor="@color/cc_white"
-                android:textSize="18sp" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/cc_white" />
-
-        <RelativeLayout
-            android:id="@+id/head_bridge"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:background="@color/cc_blue">
-
-            <TextView
-                android:id="@+id/bridge_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:padding="10dp"
-                android:text="桥梁"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bridge_title"
-                android:layout_centerHorizontal="true"
-                android:text="共100条3000公里"
-                android:textColor="@color/cc_white"
-                android:textSize="18sp" />
-        </RelativeLayout>
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:background="@color/graybackground" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cc_blue"
             android:padding="6dp"
-            android:text="养护管理"
-            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:drawablePadding="6dp"
+            android:drawableLeft="@mipmap/supervias_tv_left"
+            android:text="@string/supervise_first"
             android:textSize="18sp" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:background="@color/white" />
+            android:layout_height="1dp"
+            android:layout_margin="6dp"
+            android:background="@color/graybackground"
+            />
+
     </LinearLayout>
 
 

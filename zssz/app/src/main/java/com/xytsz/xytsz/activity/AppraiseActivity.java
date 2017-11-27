@@ -12,7 +12,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.net.NetUrl;
+import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
+
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +60,8 @@ public class AppraiseActivity extends AppCompatActivity {
         }
     };
     private String appraise;
+    private String barText;
+    private int role;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,28 +113,63 @@ public class AppraiseActivity extends AppCompatActivity {
 
     @OnClick(R.id.appraise_btn)
     public void onViewClicked() {
+        role = SpUtils.getInt(getApplicationContext(), GlobalContanstant.ROLE);
+        barText = tvRatingbarResult.getText().toString();
         appraise = etAppraise.getText().toString();
-        String result = uptoserver();
-        if (result != null) {
-            if (result.equals("true")) {
-                Message message = Message.obtain();
-                message.what = SUCCESS;
-                handler.sendMessage(message);
-            } else {
-                Message message = Message.obtain();
 
-                message.what = FAIL;
-                handler.sendMessage(message);
+
+        new Thread(){
+            @Override
+            public void run() {
+                try{
+
+                    String result = uptoserver(appraise, role, barText);
+                    if (result != null) {
+                        if (result.equals("true")) {
+                            Message message = Message.obtain();
+                            message.what = SUCCESS;
+                            handler.sendMessage(message);
+                        } else {
+                            Message message = Message.obtain();
+                            message.what = FAIL;
+                            handler.sendMessage(message);
+                        }
+
+                    }
+
+
+                }catch (Exception e){
+                    Message message = Message.obtain();
+                    message.what = FAIL;
+                    handler.sendMessage(message);
+                }
             }
+        }.start();
 
-        }
+
         finish();
     }
 
-    private String uptoserver() {
 
-        String string = "true";
-        return string;
+
+    private String uptoserver(String appraise, int role, String barText)throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.appraisemethodName);
+//        soapObject.addProperty("tel", phone);
+//        soapObject.addProperty("name", visitor);
+//        soapObject.addProperty("bir", "1989-01-10");
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.setOutputSoapObject(soapObject);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(NetUrl.appraise_SOAP_ACTION, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+        return result;
+
 
     }
 

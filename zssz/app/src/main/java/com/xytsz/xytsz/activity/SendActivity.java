@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,14 +38,21 @@ import java.util.List;
 public class SendActivity extends AppCompatActivity {
 
     private static final int ISSEND = 2003;
+    private static final int FAIL = 500;
     private ListView mLv;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case ISSEND:
-                    ToastUtil.shortToast(getApplicationContext(), "没有已审核的数据，请稍后重试");
+                    mProgressBar.setVisibility(View.GONE);
+                    mtvfail.setText(nodata);
+                    mtvfail.setVisibility(View.VISIBLE);
+                    break;
+                case FAIL:
+                    mProgressBar.setVisibility(View.GONE);
+                    ToastUtil.shortToast(getApplicationContext(), "未数据获取,请稍后");
                     break;
             }
         }
@@ -62,6 +71,7 @@ public class SendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_send);
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
         nodata = getString(R.string.send_nodata);
+        initAcitionbar();
         initView();
         initData();
 
@@ -75,56 +85,39 @@ public class SendActivity extends AppCompatActivity {
 
     private void initData() {
         mProgressBar.setVisibility(View.VISIBLE);
-        //ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
         new Thread() {
             @Override
             public void run() {
-
                 try {
                     //获取json
                     String reviewData = getReviewData(GlobalContanstant.GETSEND);
 
                     if (reviewData != null) {
-
                         Review review = JsonUtil.jsonToBean(reviewData, Review.class);
                         list = review.getReviewRoadList();
+                        if (list.size() == 0) {
+                            Message message = Message.obtain();
+                            message.what = ISSEND;
+                            handler.sendMessage(message);
 
-                        int sendSum = 0;
-                        for (Review.ReviewRoad reviewRoad : list){
-                            sendSum += reviewRoad.getList().size();
-                        }
-                        SpUtils.saveInt(getApplicationContext(),GlobalContanstant.SENDSUM,sendSum);
-
-
-                        adapter = new SendAdapter(list);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (adapter != null) {
-
+                        } else {
+                            adapter = new SendAdapter(list);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
                                     mLv.setAdapter(adapter);
-                                    if (list.size() == 0){
-                                        mtvfail.setText(nodata);
-                                        mtvfail.setVisibility(View.VISIBLE);
-                                        ToastUtil.shortToast(getApplicationContext(),nodata);
-                                    }
                                     mProgressBar.setVisibility(View.GONE);
+
                                 }
-                            }
-                        });
+                            });
 
 
-                    }else {
-
-                        Message message = Message.obtain();
-                        message.what = ISSEND;
-                        handler.sendMessage(message);
-
-
+                        }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-
+                    Message message = Message.obtain();
+                    message.what = FAIL;
+                    handler.sendMessage(message);
                 }
             }
         }.start();
@@ -135,7 +128,7 @@ public class SendActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SendActivity.this, SendRoadActivity.class);
                 intent.putExtra("position", position);
-                startActivityForResult(intent,600);
+                startActivityForResult(intent, 600);
             }
         });
     }
@@ -164,19 +157,16 @@ public class SendActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (resultCode){
+        switch (resultCode) {
             case 505:
                 position = data.getIntExtra("position", -1);
                 int passposition = data.getIntExtra("passposition", -1);
-                //list.get(position).getList().remove(passposition);
+                list.get(position).getList().remove(passposition);
 
                 int size = list.get(position).getList().size();
-                if (size == 0 ){
+                if (size == 0) {
                     list.remove(position);
-                }else {
-                    list.get(position).getList().remove(passposition);
                 }
-
 
                 adapter.notifyDataSetChanged();
 
@@ -185,20 +175,33 @@ public class SendActivity extends AppCompatActivity {
             case 605:
                 position = data.getIntExtra("position", -1);
                 int failposition = data.getIntExtra("failposition", -1);
-                //list.get(position).getList().remove(failposition);
-
-                size = list.get(position).getList().size();
-                if (size == 0 ){
+                list.get(position).getList().remove(failposition);
+                int size1 = list.get(position).getList().size();
+                if (size1 == 0) {
                     list.remove(position);
-                }else {
-                    list.get(position).getList().remove(failposition);
                 }
                 adapter.notifyDataSetChanged();
                 break;
         }
 
 
-
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.send);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

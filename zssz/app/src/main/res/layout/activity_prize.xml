@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/greenbackground1"
     android:layout_height="match_parent">
 
-
-    <ImageView
-        android:scaleType="fitXY"
-        android:id="@+id/iv_prize"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
-    <TextView
-        android:id="@+id/tv_prize"
-        android:textColor="@color/cc_text_blank"
-        android:maxLines="10"
-        android:textSize="18sp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:scrollbars="vertical"
-        android:text="
+        android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="fitXY"
+            android:src="@mipmap/iv_prize"
+            android:id="@+id/iv_prize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_prize_des"
+            android:textColor="@color/cc_text_blank"
+            android:maxLines="10"
+            android:textSize="18sp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:scrollbars="vertical"
+            android:text="
         北京向阳天科技助力中国智慧城市的发展，
         为中国城市里的市政养护行业提供“规划设计北京向阳天科技助力中国智慧城市的发展，
         为中国城市里的市政养护行业提供“规划设计北京向阳天科技助力中国智慧城市的发展，
@@ -31,19 +34,21 @@
 国智慧城市的发展，为中国城市里的市政养
 护行业提供“规划设计+软件开发+系统集
 成+行内专业术语规范+运营维护+定期培训考核”的一体化解决方案。"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 
     <TextView
+        android:layout_alignParentBottom="true"
         android:id="@+id/tv_prize_apply"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
         android:text="@string/prize_commit"
         android:padding="10dp"
         android:textSize="20sp"
         android:gravity="center"
+        android:textColor="@color/cc_white"
         android:background="@drawable/shape_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-</LinearLayout>
+</RelativeLayout>

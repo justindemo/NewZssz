@@ -103,17 +103,12 @@ public class MeFragment extends BaseFragment {
     TextView forUs;
     private ImageView mIvicon;
     private TextView mTvLogin;
-    private TextView mTvData;
     private LinearLayout mLLDealed;
     private LinearLayout mLLReported;
-    private EditText mEtName;
-    private EditText mEtDepartment;
-    private EditText mEtPhone;
+    private LinearLayout mLLReview;
     public static final String ARGUMENT = "argument";
     private int personID;
     private List<String> numberlist;
-    private ImageView micSetting;
-    private LinearLayout ll_visitor_see;
     private boolean isvisitor;
     private TextView mine_tv_sign;
     private int role;
@@ -121,22 +116,24 @@ public class MeFragment extends BaseFragment {
     private String signed;
     private boolean issign;
     private String userName;
+    private TextView mActionbartext;
+    private TextView tvReviewNum;
 
 
     @Override
     public View initView() {
         View view = View.inflate(getActivity(), R.layout.fragment_me, null);
+        mActionbartext = (TextView) view.findViewById(R.id.actionbar_text);
+
         mIvicon = (ImageView) view.findViewById(R.id.iv_my_icon);
         mTvLogin = (TextView) view.findViewById(R.id.tv_my_login);
-        mTvData = (TextView) view.findViewById(R.id.tv_data);
 
-        ll_visitor_see = (LinearLayout) view.findViewById(R.id.ll_visitor_see);
-
-        micSetting = (ImageView) view.findViewById(R.id.ic_setting);
         mLLReported = (LinearLayout) view.findViewById(R.id.ll_my_reporte);
+        mLLReview = (LinearLayout) view.findViewById(R.id.ll_my_review);
         mLLDealed = (LinearLayout) view.findViewById(R.id.ll_my_deal);
 
         mine_tv_sign = (TextView) view.findViewById(R.id.mine_tv_sign);
+        tvReviewNum = (TextView) view.findViewById(R.id.tv_review_nume);
 
         return view;
     }
@@ -156,7 +153,7 @@ public class MeFragment extends BaseFragment {
         signed = getString(R.string.signed);
         //第一次点进去的时候获取用户名
         userName = SpUtils.getString(getContext(), GlobalContanstant.USERNAME);
-
+        mActionbartext.setText(R.string.me);
         if (!TextUtils.isEmpty(userName)) {
             mTvLogin.setText(userName);
             mTvLogin.setClickable(false);
@@ -165,9 +162,8 @@ public class MeFragment extends BaseFragment {
         //服务器保存到本地的登陆属性：  是否是游客
 
         if (role != 0) {
-            mTvData.setVisibility(View.VISIBLE);
             meActivity.setVisibility(View.VISIBLE);
-            ll_visitor_see.setVisibility(View.GONE);
+            getNumber();
             mine_tv_sign.setVisibility(View.GONE);
             rlMyscore.setVisibility(View.GONE);
         } else {
@@ -182,8 +178,8 @@ public class MeFragment extends BaseFragment {
         mine_tv_sign.setOnClickListener(listener);
         mLLReported.setOnClickListener(listener);
         mLLDealed.setOnClickListener(listener);
-        mTvData.setOnClickListener(listener);
-        micSetting.setOnClickListener(listener);
+        mLLReview.setOnClickListener(listener);
+        //mTvData.setOnClickListener(listener);
         forUs.setOnClickListener(listener);
     }
 
@@ -199,6 +195,25 @@ public class MeFragment extends BaseFragment {
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
         httpTransportSE.call(NetUrl.getTaskCountOfReport_SOAP_ACTION, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        String number = object.getProperty(0).toString();
+
+
+        return number;
+    }
+    private String getTaskCountOfReview(int personID) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getTaskCountOfReview);
+        soapObject.addProperty("personId", personID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.bodyOut = soapObject;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(NetUrl.getTaskCountOfReview_SOAP_ACTION, envelope);
 
         SoapObject object = (SoapObject) envelope.bodyIn;
 
@@ -224,7 +239,6 @@ public class MeFragment extends BaseFragment {
 
         String number = object.getProperty(0).toString();
 
-
         return number;
 
 
@@ -239,7 +253,6 @@ public class MeFragment extends BaseFragment {
                 bitmap = BitmapFactory.decodeFile(pathString);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return bitmap;
@@ -266,13 +279,10 @@ public class MeFragment extends BaseFragment {
                     IntentUtil.startActivity(v.getContext(), MyDealedActivity.class);
                     break;
 
-                case R.id.tv_data:
+                case R.id.ll_my_review:
                     IntentUtil.startActivity(v.getContext(), MyReviewedActivity.class);
                     break;
 
-                case R.id.ic_setting:
-                    IntentUtil.startActivity(v.getContext(), SettingActivity.class);
-                    break;
                 case R.id.mine_tv_sign:
                     Intent intent = new Intent(getContext(), ScoreSignActivity.class);
                     startActivityForResult(intent, 1);
@@ -345,10 +355,8 @@ public class MeFragment extends BaseFragment {
                 //保存到本地
                 String photoName = saveToSDCard(photo);
                 String encode = photo2Base64(path);
-
-
                 upload(photoName, encode);
-                mIvicon.setImageBitmap(photo);
+               //mIvicon.setImageBitmap(photo);
 
 
             }
@@ -475,7 +483,7 @@ public class MeFragment extends BaseFragment {
                     message.what = RESULT;
                     handler.sendMessage(message);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
 
 
@@ -484,7 +492,6 @@ public class MeFragment extends BaseFragment {
 
 
     }
-
 
     private String createFileName() {
         Date date = new Date(System.currentTimeMillis());
@@ -499,7 +506,6 @@ public class MeFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
 
-        getNumber();
         Bitmap bitmap = getdiskbitmap(pathString);
         if (bitmap != null) {
             mIvicon.setImageBitmap(bitmap);
@@ -514,13 +520,14 @@ public class MeFragment extends BaseFragment {
             public void run() {
 
                 try {
-
                     String taskCountOfDealNumber = getTaskCountOfDeal(personID);
                     String taskCountOfReportNumber = getTaskCountOfReport(personID);
+                    //String taskCountOfReviewNumber = getTaskCountOfReview(personID);
                     numbers.clear();
 
                     numbers.add(taskCountOfDealNumber);
                     numbers.add(taskCountOfReportNumber);
+                    //numbers.add(taskCountOfReviewNumber);
 
 
                     Message message = Message.obtain();
@@ -563,14 +570,20 @@ public class MeFragment extends BaseFragment {
                     if (tvReportNume != null && tvDealNumber != null) {
                         tvDealNumber.setText(numberlist.get(0));
                         tvReportNume.setText(numberlist.get(1));
+                        //tvReviewNum.setText(numberlist.get(2));
                     }
                     break;
 
                 case RESULT:
                     String result = (String) msg.obj;
                     if (result != null) {
-                        if (result.equals("ture")) {
+                        if (result.equals("true")) {
                             ToastUtil.shortToast(getContext(), "头像设置完成");
+
+                            Bitmap bitmap = getdiskbitmap(pathString);
+                            if (bitmap != null) {
+                                mIvicon.setImageBitmap(bitmap);
+                            }
                         }
                     }
                     break;

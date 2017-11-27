@@ -1,298 +1,390 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
-<RelativeLayout
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp">
-    <TextView
-        android:id="@+id/tv_detail_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="6dp"
-        android:text="病害明细"
-        android:textColor="@color/cc_red"
-        android:textSize="26sp" />
+    android:background="@color/white">
 
-    <TextView
-        android:id="@+id/tv_detail_reporter_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_name"
-        android:layout_marginTop="6dp"
-        android:text="上报人："
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_reporter"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_name"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_reporter_title"
-        android:text="张谋面"
-        android:textSize="20sp" />
+        android:layout_height="match_parent"
+        android:padding="4dp">
 
-    <TextView
-        android:id="@+id/tv_detail_name_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_detail_reporter_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_dealgrade"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="6dp"
+            android:text="病害明细"
+            android:textColor="@color/cc_red"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_diseasename"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_detail_reporter_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_name_title"
-        android:text="一级病害"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_reporter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_name"
+            android:layout_marginTop="6dp"
+            android:text="@string/allreporter"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_grade_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_name_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_dealcategory"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_reporter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_name"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_reporter_title"
+            android:text="张谋面"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_grade"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_name_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_grade_title"
-        android:text="违章施工"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_name_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_reporter_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_dealgrade"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_dealtype_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_grade_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_facategory"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_diseasename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_reporter_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_name_title"
+            android:text="一级病害"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_dealtype"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_grade_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_dealtype_title"
-        android:text="违章施工"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_grade_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_name_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_dealcategory"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_detail_grade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_name_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_grade_title"
+            android:text="违章施工"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_fatype_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_dealtype_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_faname"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_dealtype_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_grade_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_facategory"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_fatype"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_dealtype_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_fatype_title"
-        android:text="步道"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_pbtype_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_fatype_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_pbtype"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_pbtype"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_fatype_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_grade_title"
-        android:text="塌陷"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_reporteplace_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_pbtype_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_roadname"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_reporteplace"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_pbtype_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_grade_title"
-        android:text="西环路"
-        android:maxLines="2"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_faname_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_reporteplace"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_facility"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_faname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_reporteplace"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_grade_title"
-        android:text="彩砖"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_fasize_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_faname_title"
-        android:layout_marginTop="6dp"
-        android:text="@string/report_fasize"
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_fasize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_faname_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_grade_title"
-        android:text="250*250*60"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_reportetime_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_fasize_title"
-        android:layout_marginTop="6dp"
-        android:text="上报时间："
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/tv_detail_reportetime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_fasize_title"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_grade_title"
-        android:text="2017年3月2日16:45:06"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_dealtype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_grade_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_dealtype_title"
+            android:text="违章施工"
+            android:textSize="18sp" />
 
 
-    <TextView
-        android:id="@+id/tv_detail_requesttime_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_reportetime_title"
-        android:layout_marginTop="6dp"
-        android:text="要求完成时间："
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_fatype_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_dealtype_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_faname"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/tv_detail_requesttime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_reportetime"
-        android:layout_marginTop="6dp"
-        android:layout_toRightOf="@id/tv_detail_requesttime_title"
-        android:text="2017年3月2日16:45:06"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_fatype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_dealtype_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_fatype_title"
+            android:text="步道"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_detail_pbtype_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_fatype_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_pbtype"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_detail_pbtype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_fatype_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_grade_title"
+            android:text="塌陷"
+            android:textSize="18sp" />
 
 
-    <TextView
-        android:id="@+id/tv_detail_reporteiamg_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_requesttime"
-        android:layout_marginTop="6dp"
-        android:text="上报图片："
-        android:textColor="@color/cc_text_blank"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_detail_faname_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_pbtype"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_facility"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-    <LinearLayout
-        android:id="@+id/ll_iv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_detail_reporteiamg_title"
-        android:padding="6dp"
-        android:background="@drawable/shape_uncheck_information"
-        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_detail_faname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_pbtype"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_grade_title"
+            android:text="彩砖"
+            android:textSize="18sp" />
 
-        <ImageView
-            android:scaleType="fitXY"
-            android:id="@+id/iv_detail_photo1"
-            android:layout_width="100dp"
-            android:layout_height="120dp" />
 
-        <ImageView
-            android:scaleType="fitXY"
-            android:id="@+id/iv_detail_photo2"
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:layout_marginLeft="8dp" />
+        <TextView
+            android:id="@+id/tv_detail_reporteplace_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_faname_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_roadname"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-        <ImageView
-            android:scaleType="fitXY"
-            android:id="@+id/iv_detail_photo3"
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:layout_marginLeft="8dp" />
+        <TextView
+            android:id="@+id/tv_detail_reporteplace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_faname_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_grade_title"
+            android:maxLines="2"
+            android:text="西环路"
+            android:textSize="18sp" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_detail_fasize_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_reporteplace"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_fasize"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/bt_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="6dp"
-        android:layout_below="@+id/ll_iv"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/btn_positive"
-        android:text="返回"
-        android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/tv_detail_fasize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_reporteplace"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_grade_title"
+            android:text="250*250*60"
+            android:textSize="18sp" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_detail_reportetime_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_fasize_title"
+            android:layout_marginTop="6dp"
+            android:text="上报时间："
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_detail_reportetime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_fasize_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_grade_title"
+            android:text="2017年3月2日16:45:06"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/tv_detail_requesttime_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_reportetime_title"
+            android:layout_marginTop="6dp"
+            android:text="要求完成时间："
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_detail_requesttime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_detail_reportetime"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@id/tv_detail_requesttime_title"
+            android:text="2017年3月2日16:45:06"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_detail_loca_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_requesttime"
+            android:layout_marginTop="6dp"
+            android:text="@string/problemlocation"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+
+        <FrameLayout
+            android:id="@+id/tv_detail_problem_loca1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_requesttime"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/tv_detail_loca_title">
+
+            <TextView
+                android:id="@+id/tv_detail_problem_audio"
+                android:layout_width="120dp"
+                android:layout_height="28dp"
+                android:background="@drawable/selector_tv_audio"
+                android:drawableRight="@mipmap/play"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/tv_detail_problem_loca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="位置描述"
+                android:textSize="18sp" />
+
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/tv_detail_problem_loca1"
+            android:id="@+id/tv_detail_diseasedestitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/cc_text_blank"
+            android:text="@string/report_problemdes"/>
+
+        <TextView
+            android:layout_marginTop="6dp"
+            android:id="@+id/tv_detail_diseasedes"
+            android:textSize="18sp"
+            android:text="miaoshu"
+            android:layout_below="@+id/tv_detail_problem_loca1"
+            android:layout_toRightOf="@+id/tv_detail_diseasedestitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_detail_reporteiamg_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_diseasedes"
+            android:layout_marginTop="6dp"
+            android:text="@string/reportimg"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_iv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_detail_reporteiamg_title"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/shape_uncheck_information"
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/iv_detail_photo1"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/iv_detail_photo2"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="8dp"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/iv_detail_photo3"
+                android:layout_width="100dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="8dp"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_detail_back"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/ll_iv"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/btn_positive"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ll_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_iv"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/report_problemdes"
+                android:textColor="@color/cc_text_blank"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/iv_play_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:src="@mipmap/iv_video" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
 </ScrollView>

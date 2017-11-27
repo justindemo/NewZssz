@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,8 +49,6 @@ public class MemberShowActivity extends AppCompatActivity {
     @Bind(R.id.membershow_progressbar)
     ProgressBar membershowProgressbar;
 
-    private List<String> list = new ArrayList<>();
-    private List<String> footerList = new ArrayList<>();
     private String position;
     private static final int ASSIATION = 12213;
     private static final int BUSINESSSTR = 12214;
@@ -74,19 +73,16 @@ public class MemberShowActivity extends AppCompatActivity {
 
                             if (TextUtils.isEmpty(assiationList.get(position).getUrl())) {
                                 Intent intent = new Intent(MemberShowActivity.this, NoMemberActivity.class);
-
                                 intent.putExtra("dataList", (Serializable) assiationList);
                                 intent.putExtra("position", position);
                                 startActivity(intent);
 
                             } else {
                                 Intent intent = new Intent(MemberShowActivity.this, MemberShowContentActivity.class);
-
                                 intent.putExtra("url", assiationList.get(position).getUrl());
                                 startActivity(intent);
 
                             }
-
 
                         }
                     });
@@ -258,7 +254,7 @@ public class MemberShowActivity extends AppCompatActivity {
         View actionbarview = View.inflate(this, R.layout.actionbar_layout, null);
         LinearLayout mllView = (LinearLayout) actionbarview.findViewById(R.id.ll_back);
         TextView mtitle = (TextView) actionbarview.findViewById(R.id.actionbar_title);
-        TextView mJoin = (TextView) actionbarview.findViewById(R.id.actionbar_join);
+        ImageView mJoin = (ImageView) actionbarview.findViewById(R.id.actionbar_join);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -267,6 +263,7 @@ public class MemberShowActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setHomeButtonEnabled(true);
             mtitle.setText("会员展示");
+
 
             mJoin.setOnClickListener(new View.OnClickListener() {
                 @Override

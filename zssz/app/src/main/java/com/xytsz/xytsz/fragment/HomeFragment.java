@@ -52,11 +52,9 @@ import java.util.List;
 
 /**
  * Created by admin on 2017/1/4.
- *  首页
- *
+ * 首页
  */
-public class HomeFragment extends BaseFragment implements ActivityCompat.OnRequestPermissionsResultCallback
-,CustomBroadCast.OnCustomBroadCastListener{
+public class HomeFragment extends BaseFragment implements ActivityCompat.OnRequestPermissionsResultCallback{
 
 
     private static final int FAIL = 404;
@@ -87,7 +85,6 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         @Override
         public void onPermissionGranted(int requestCode) {
             switch (requestCode) {
-
                 case PermissionUtils.CODE_ACCESS_COARSE_LOCATION:
                     locat();
                     break;
@@ -113,13 +110,14 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     private int dealNumber;
 
     private List<Integer> manageNumbers = new ArrayList<>();
-
-
+    private String loading;
+    private TextView mActionbartext;
 
 
     @Override
     public View initView() {
         View view = View.inflate(getActivity(), R.layout.fragment_home, null);
+        mActionbartext = (TextView) view.findViewById(R.id.actionbar_text);
         mtvMarquee = (MarqueeView) view.findViewById(R.id.tv_marquee);
         mapview = (TextureMapView) view.findViewById(R.id.home_mv);
         mllReport = view.findViewById(R.id.ll_home_report);
@@ -140,11 +138,10 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
     @Override
     public void initData() {
-        //注册广播
-        CustomBroadCast.getInstance().registerAction(getContext());
 
         String alltitle = getString(R.string.alltitle);
         noreport = getString(R.string.home_noreporte);
+        loading = getString(R.string.home_loading);
         noreview = getString(R.string.home_noreview);
         nosend = getString(R.string.home_nosend);
         nodeal = getString(R.string.home_nodeal);
@@ -159,6 +156,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         mtvMarquee.sepX = 2;
         mtvMarquee.startScroll();
 
+        mActionbartext.setText(R.string.app_name);
 
         //获取当前登陆人的ID
         personId = SpUtils.getInt(getContext(), GlobalContanstant.PERSONID);
@@ -187,15 +185,13 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     }
 
 
-
     private void getData() {
 
         manageNumbers.clear();
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
-
                     // 做判断 根据权限。
                     //上报没有
                     // 如果是管理者，
@@ -204,7 +200,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                     // 如果是处置者就显示第一行，
                     // 如果是下派领导，显示下拍和验收  先不做处理
 
-                    if (role  == 1){
+                    if (role == 1) {
 
                         String reviewData = getManageData(GlobalContanstant.GETREVIEW);
                         String sendData = getManageData(GlobalContanstant.GETSEND);
@@ -217,15 +213,15 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                         sendList = send.getReviewRoadList();
                         checkList = check.getReviewRoadList();
 
-                        for (Review.ReviewRoad reviewRoad : reviewList){
-                           reviewNumber += reviewRoad.getList().size();
+                        for (Review.ReviewRoad reviewRoad : reviewList) {
+                            reviewNumber += reviewRoad.getList().size();
                         }
                         manageNumbers.add(reviewNumber);
-                        for (Review.ReviewRoad reviewRoad : sendList){
+                        for (Review.ReviewRoad reviewRoad : sendList) {
                             sendNumber += reviewRoad.getList().size();
                         }
                         manageNumbers.add(sendNumber);
-                        for (Review.ReviewRoad reviewRoad : checkList){
+                        for (Review.ReviewRoad reviewRoad : checkList) {
                             checkNumber += reviewRoad.getList().size();
                         }
                         manageNumbers.add(checkNumber);
@@ -237,13 +233,16 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                         handler.sendMessage(message);
 
 
-                    }else if (role == 2){
+                    }
+
+                    if (role == 1 || role == 2) {
                         String simpleData = getSimpleData(GlobalContanstant.GETDEAL, personId);
                         Review review = JsonUtil.jsonToBean(simpleData, Review.class);
                         List<Review.ReviewRoad> reviewRoadList = review.getReviewRoadList();
-                        for (Review.ReviewRoad reviewRoad:reviewRoadList){
+                        for (Review.ReviewRoad reviewRoad : reviewRoadList) {
                             dealNumber += reviewRoad.getList().size();
                         }
+
                         Message message = Message.obtain();
                         message.what = SIMPLER;
                         message.obj = dealNumber;
@@ -251,7 +250,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                     }
 
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     Message message = Message.obtain();
                     message.what = FAIL;
                     handler.sendMessage(message);
@@ -281,10 +280,10 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     }
 
     //根据personId 去获取
-    private String getManageData(int state) throws Exception{
+    private String getManageData(int state) throws Exception {
 
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace,NetUrl.getTaskList);
-        soapObject.addProperty("PhaseIndication",state);
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getTaskList);
+        soapObject.addProperty("PhaseIndication", state);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapSerializationEnvelope.VER12);
         envelope.bodyOut = soapObject;//由于是发送请求，所以是设置bodyOut
@@ -292,7 +291,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         envelope.setOutputSoapObject(soapObject);
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        httpTransportSE.call(NetUrl.getTasklist_SOAP_ACTION,envelope);
+        httpTransportSE.call(NetUrl.getTasklist_SOAP_ACTION, envelope);
 
         SoapObject object = (SoapObject) envelope.bodyIn;
         String json = object.getProperty(0).toString();
@@ -308,13 +307,15 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);// 可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");// 可选，默认gcj02，设置返回的定位结果坐标系
         int span = 3600 * 1000;
-        option.setScanSpan(5000);// 可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setScanSpan(10000);// 可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);// 可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);// 可选，默认false,设置是否使用gps
         option.setLocationNotify(false);// 可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
         option.setIgnoreKillProcess(true);// 可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
         locationClient.setLocOption(option);
+
+        locationClient.start();
 
     }
 
@@ -371,9 +372,8 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mapview.onDestroy();
-        CustomBroadCast.getInstance().unRegister(getContext());
+        super.onDestroy();
     }
 
     private static final int ISLOAD = 33301;
@@ -383,23 +383,21 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
             switch (msg.what) {
                 case MANAGER:
-
                     mtvreviewNumber.setVisibility(View.VISIBLE);
                     mtvsendNumber.setVisibility(View.VISIBLE);
                     mtvcheckNumber.setVisibility(View.VISIBLE);
 
-
                     List<Integer> list = (List<Integer>) msg.obj;
                     for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i) == 0){
-                            if (i == 0){
+                        if (list.get(i) == 0) {
+                            if (i == 0) {
                                 mtvreviewNumber.setVisibility(View.GONE);
-                            }else if (i == 1){
+                            } else if (i == 1) {
                                 mtvsendNumber.setVisibility(View.GONE);
-                            }else if (i == 2){
+                            } else if (i == 2) {
                                 mtvcheckNumber.setVisibility(View.GONE);
                             }
-                        }else {
+                        } else {
                             mtvreviewNumber.setText(String.valueOf(list.get(0)));
                             mtvsendNumber.setText(String.valueOf(list.get(1)));
                             mtvcheckNumber.setText(String.valueOf(list.get(2)));
@@ -409,15 +407,16 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                     reviewNumber = 0;
                     sendNumber = 0;
                     checkNumber = 0;
+
                     break;
                 case SIMPLER:
                     mtvuncheckNumber.setVisibility(View.VISIBLE);
                     mtvdealNumber.setVisibility(View.VISIBLE);
                     int number = (int) msg.obj;
-                    if (number == 0 ){
+                    if (number == 0) {
                         mtvdealNumber.setVisibility(View.GONE);
                         mtvuncheckNumber.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         mtvdealNumber.setText(String.valueOf(number));
                         mtvuncheckNumber.setText(String.valueOf(number));
                     }
@@ -425,7 +424,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                     break;
 
                 case FAIL:
-                    ToastUtil.shortToast(getContext(),noData);
+                    ToastUtil.shortToast(getContext(), noData);
                     break;
                 case ISLOAD:
                     String isload = (String) msg.obj;
@@ -437,12 +436,6 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         }
     };
 
-    //得到消息
-    @Override
-    public void onIntentListener(Intent intent) {
-
-
-    }
 
     private class MyListener implements BDLocationListener, View.OnClickListener {
         @Override
@@ -490,11 +483,14 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ll_home_report:
+
                     if (role == 0) {
-                        ToastUtil.shortToast(getContext(),noreport);
+                        ToastUtil.shortToast(getContext(), noreport);
                     } else {
                         IntentUtil.startActivity(getContext(), ReportActivity.class);
                     }
+
+
                     break;
                 case R.id.ll_home_review:
                     if (role == 1) {
@@ -560,8 +556,6 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         String result = object.getProperty(0).toString();
         return result;
     }
-
-
 
 
 }

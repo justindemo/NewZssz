@@ -11,6 +11,7 @@
     <color name="white">#FFFFFF</color>
     <color name="settingButton">#aa00957E</color>
     <color name="graybackground">#e7e7e7</color>
+    <color name="grayground">#f1eeee</color>
     <color name="gray">#464646</color>
     <color name="greenbackground1">#cde6c7</color>
     <color name="greenbackground">#add7a5</color>
@@ -25,6 +26,8 @@
     <color name="cc_orage_hint">#22f08519</color><!-- 不透明#fff0e6dc -->
     <color name="cc_orage_red">#fff86851</color>
     <color name="cc_orage_dark">#ffde7b17</color>
+    <color name="cc_supervise">#ff762c</color>
+
     <color name="cc_orage_head">#fff08519</color>
     <color name="cc_blue">#909bed</color>
     <color name="cc_blue_hot">#ff00557f</color>
@@ -34,7 +37,7 @@
     <color name="cc_lay_pressed_untran_dark">#fff5f5f5</color>
     <color name="cc_lay_pressed_white">#44ffffff</color>
     <color name="cc_lay_selected">#11000000</color>
-    <color name="cc_light">#10000000</color>
+    <color name="cc_light_dark">#d38c8888</color>
     <color name="cc_cyan">#fac9efd7</color>
     <color name="cc_dark">#ff555555</color>
     <color name="cc_dark_fade">#33000000</color>

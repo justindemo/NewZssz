@@ -5,6 +5,8 @@
     android:orientation="vertical">
 
     <ListView
+        android:dividerHeight="1dp"
+        android:divider="@color/graybackground"
         android:id="@+id/lv_postRoad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

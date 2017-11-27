@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/ll_appraise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusableInTouchMode="true"
@@ -12,24 +13,26 @@
         android:padding="2dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="6dp"
             android:text="软件整体评价:"
             android:textSize="16sp" />
 
         <LinearLayout
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_marginTop="6dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RatingBar
-
                 android:id="@+id/ratingbar"
-                style="@style/ratingbar"
+                android:progressDrawable="@drawable/ratingbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 android:numStars="5"
                 android:rating="3" />
 
@@ -37,7 +40,6 @@
                 android:id="@+id/tv_ratingbar_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginLeft="6dp"
                 android:text="好"
                 android:textColor="@color/cc_dark_fade"
@@ -49,7 +51,7 @@
             android:id="@+id/et_appraise"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="5dp"
+            android:layout_margin="5dp"
             android:background="@drawable/shape_uncheck_information"
             android:gravity="start"
             android:hint="对软件提出的意见"
@@ -65,9 +67,12 @@
 
     <Button
         android:id="@+id/appraise_btn"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_below="@+id/ll_appraise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/selector_cityperon_btn"
         android:text="提交评价"
         android:textColor="@color/white"

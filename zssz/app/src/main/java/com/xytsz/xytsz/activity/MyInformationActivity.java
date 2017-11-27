@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -51,7 +52,7 @@ public class MyInformationActivity extends AppCompatActivity {
     @Bind(R.id.my_department)
     EditText myDepartment;
     @Bind(R.id.my_ll_activite)
-    LinearLayout myLlActivite;
+    RelativeLayout myLlActivite;
     @Bind(R.id.mine_compelet)
     Button mineCompelet;
 

@@ -5,6 +5,8 @@
 
     <ListView
         android:id="@+id/review_lv"
+        android:dividerHeight="1dp"
+        android:divider="@color/graybackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <ProgressBar

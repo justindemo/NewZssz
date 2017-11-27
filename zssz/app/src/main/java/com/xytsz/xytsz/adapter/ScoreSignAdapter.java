@@ -20,7 +20,7 @@ import java.util.List;
  *
  * 签到及领奖
  */
-public class ScoreSignAdapter extends BaseQuickAdapter{
+public class ScoreSignAdapter extends BaseQuickAdapter<String>{
 
     public ScoreSignAdapter(List data, Context context) {
         super(R.layout.item_scroesignadapter, data);
@@ -28,7 +28,7 @@ public class ScoreSignAdapter extends BaseQuickAdapter{
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, Object item) {
+    protected void convert(BaseViewHolder helper, String item) {
         //
         View convertView = helper.getConvertView();
         ImageView mImageView = (ImageView) convertView.findViewById(R.id.item_iv_scoresign);
@@ -36,7 +36,8 @@ public class ScoreSignAdapter extends BaseQuickAdapter{
         TextView mtvprize = (TextView) convertView.findViewById(R.id.tv_scoresign_prize);
 
         final int layoutPosition = helper.getLayoutPosition() -1;
-        Glide.with(mContext).load(item.toString()).into(mImageView);
+        mtvTitle.setText(item);
+        //Glide.with(mContext).load(item.toString()).into(mImageView);
         mtvprize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

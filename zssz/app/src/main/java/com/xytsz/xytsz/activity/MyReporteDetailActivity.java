@@ -1,6 +1,7 @@
 package com.xytsz.xytsz.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -16,6 +17,7 @@ import com.xytsz.xytsz.bean.ForMyDis;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.global.Data;
 import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.util.SoundUtil;
 import com.xytsz.xytsz.util.SpUtils;
 
 import java.io.Serializable;
@@ -26,6 +28,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/5/31.
+ *
  *
  */
 public class MyReporteDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -61,9 +64,16 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
     ImageView ivDetailPhoto3;
     @Bind(R.id.ll_iv)
     LinearLayout llIv;
+    @Bind(R.id.tv_my_problem_audio)
+    TextView tvMyProblemAudio;
+    @Bind(R.id.tv_my_detail_address)
+    TextView tvMyDetailAddress;
     private ForMyDis detail;
     private List<ImageUrl> imageUrlReport;
     private int id;
+    private String audioUrl;
+    private SoundUtil soundUtil;
+    private int flag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +83,9 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
             detail = (ForMyDis) getIntent().getSerializableExtra("detail");
 
             imageUrlReport = (List<ImageUrl>) getIntent().getSerializableExtra("imageUrlReport");
+            audioUrl = getIntent().getStringExtra("audioUrl");
+
+            flag = getIntent().getIntExtra("flag", -1);
         }
 
 
@@ -80,11 +93,21 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         ButterKnife.bind(this);
 
 
+        String reporte = getString(R.string.myreported);
+        String review = getString(R.string.myreviewed);
+
+        switch (flag){
+            case 1:
+                initAcitionbar(reporte);
+                break;
+            case 2:
+                initAcitionbar(review);
+                break;
+        }
         initData();
 
 
     }
-
 
 
     private void initData() {
@@ -128,20 +151,24 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         tvMydetailReportetime.setText(uploadTime);
         if (imageUrlReport.size() != 0) {
             if (imageUrlReport.size() == 1) {
-                ivDetailPhoto1.setVisibility(View.VISIBLE);
                 Glide.with(getApplicationContext()).load(imageUrlReport.get(0).getImgurl()).into(ivDetailPhoto1);
                 ivDetailPhoto2.setVisibility(View.INVISIBLE);
                 ivDetailPhoto3.setVisibility(View.INVISIBLE);
             } else if (imageUrlReport.size() == 2) {
-                ivDetailPhoto2.setVisibility(View.VISIBLE);
+                Glide.with(getApplicationContext()).load(imageUrlReport.get(0).getImgurl()).into(ivDetailPhoto1);
                 Glide.with(getApplicationContext()).load(imageUrlReport.get(1).getImgurl()).into(ivDetailPhoto2);
                 ivDetailPhoto3.setVisibility(View.INVISIBLE);
             } else if (imageUrlReport.size() == 3) {
-                ivDetailPhoto1.setVisibility(View.VISIBLE);
-                ivDetailPhoto2.setVisibility(View.VISIBLE);
-                ivDetailPhoto3.setVisibility(View.VISIBLE);
+                Glide.with(getApplicationContext()).load(imageUrlReport.get(0).getImgurl()).into(ivDetailPhoto1);
+                Glide.with(getApplicationContext()).load(imageUrlReport.get(1).getImgurl()).into(ivDetailPhoto2);
                 Glide.with(getApplicationContext()).load(imageUrlReport.get(2).getImgurl()).into(ivDetailPhoto3);
             }
+        } else {
+
+            ivDetailPhoto1.setVisibility(View.VISIBLE);
+            ivDetailPhoto2.setVisibility(View.INVISIBLE);
+            ivDetailPhoto3.setVisibility(View.INVISIBLE);
+            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(ivDetailPhoto1);
 
         }
 
@@ -149,6 +176,46 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         ivDetailPhoto1.setOnClickListener(this);
         ivDetailPhoto2.setOnClickListener(this);
         ivDetailPhoto3.setOnClickListener(this);
+
+        if (detail.getAddressDescription().isEmpty()) {
+            tvMyDetailAddress.setVisibility(View.GONE);
+            tvMyProblemAudio.setVisibility(View.VISIBLE);
+            soundUtil = new SoundUtil();
+            int time = soundUtil.getTime(audioUrl);
+            if (time != 0) {
+                tvMyProblemAudio.setText(time + "″");
+            }
+            tvMyProblemAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+
+                    tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+
+
+                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                        @Override
+                        public void onFinish() {
+                            tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+
+                    soundUtil.play(audioUrl);
+                }
+            });
+
+        } else {
+            tvMyDetailAddress.setVisibility(View.VISIBLE);
+            tvMyProblemAudio.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -158,6 +225,22 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         Intent intent = new Intent(MyReporteDetailActivity.this, BigPictureActivity.class);
         intent.putExtra("imageUrls", (Serializable) imageUrlReport);
         startActivity(intent);
+    }
+
+    private void initAcitionbar(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(title);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 
 }

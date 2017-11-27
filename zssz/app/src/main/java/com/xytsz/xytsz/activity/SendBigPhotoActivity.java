@@ -21,7 +21,6 @@ public class SendBigPhotoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
          if (getIntent() != null){
             imageurl = getIntent().getStringExtra("imageurl");
         }

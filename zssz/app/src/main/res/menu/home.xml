@@ -5,7 +5,6 @@
     >
 
     <item
-        android:icon="@mipmap/actionbar_purchase"
         android:id="@+id/action_purchase"
         android:title="市政装备采购平台"
          />

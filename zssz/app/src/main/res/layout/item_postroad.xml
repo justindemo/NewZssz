@@ -6,88 +6,110 @@
    >
 
     <LinearLayout
+        android:padding="6dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/iv_send_icon"
         android:scaleType="fitXY"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_weight="1"
+
          />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="4dp"
-        android:layout_weight="2">
-
-        <TextView
-            android:id="@+id/tv_sendroad_vname"
+        <RelativeLayout
+            android:id="@+id/rl_post"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/report_dealgrade"
-            android:textSize="16sp" />
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            >
 
-        <TextView
-            android:id="@+id/tv_send_Vname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tv_sendroad_vname"
-            android:text="一级病害"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_sendroad_vname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/allreporter"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_send_Pname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_send_Vname"
-            android:layout_marginTop="6dp"
-            android:layout_toRightOf="@+id/tv_sendroad_Pname"
-            android:text="张三三"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_send_Vname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_sendroad_vname"
+                android:text="一级病害"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_sendroad_Pname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_send_Vname"
-            android:layout_marginTop="6dp"
-            android:text="@string/allreporter"
-            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_send_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_send_Pname"
-            android:layout_marginTop="6dp"
-            android:layout_toRightOf="@+id/tv_sendroad_date"
-            android:text="2017年3月8日11:09"
-            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_sendroad_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_send_Pname"
-            android:layout_marginTop="6dp"
-            android:text="@string/reportertime"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_sendroad_Pname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_send_Vname"
+                android:layout_marginTop="6dp"
+                android:text="@string/problemlocation"
+                android:textSize="16sp" />
 
-    </RelativeLayout>
+            <FrameLayout
+                android:id="@+id/tv_send_Pname1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_send_Vname"
+                android:layout_toRightOf="@+id/tv_sendroad_Pname">
+
+                <TextView
+                    android:id="@+id/tv_post_audio"
+                    android:layout_width="120dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/selector_tv_audio"
+                    android:drawableRight="@mipmap/play"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/tv_send_Pname"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="位置描述"
+                    android:textSize="16sp" />
+
+            </FrameLayout>
+
+
+
+            <TextView
+                android:id="@+id/tv_send_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_send_Pname1"
+                android:layout_marginTop="6dp"
+                android:layout_toRightOf="@+id/tv_sendroad_date"
+                android:text="2017年3月8日11:09"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_sendroad_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_send_Pname1"
+                android:layout_marginTop="6dp"
+                android:text="@string/reportertime"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
     </LinearLayout>
     <RelativeLayout
-        android:layout_margin="5dp"
+        android:layout_margin="3dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
-
         <Button
             android:id="@+id/bt_post_send"
             android:layout_width="match_parent"

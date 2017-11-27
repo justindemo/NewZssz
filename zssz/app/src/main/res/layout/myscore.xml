@@ -1,105 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:background="@color/greenbackground"
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
         <RelativeLayout
-            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_marginTop="20dp">
 
             <TextView
-                android:text="@string/socre_title_left"
-                android:textSize="14sp"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/score"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="@string/socre_title_left"
+                android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/tv_myscore_help"
-                android:text="@string/socre_title_right"
-
-                android:drawablePadding="4dp"
-                android:textSize="14sp"
-                android:drawableLeft="@mipmap/question"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@mipmap/question"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="@string/socre_title_right"
+                android:textSize="16sp" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true">
+
             <TextView
                 android:id="@+id/tv_myscore"
-                android:textColor="@color/white"
-                android:textSize="65sp"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:text="134"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="134"
+                android:textColor="@color/cc_supervise"
+                android:textSize="50sp" />
 
             <TextView
                 android:id="@+id/tv_sign"
-                android:background="@drawable/shape_rect_score_off"
-                android:layout_centerInParent="true"
-                android:layout_alignParentBottom="true"
-                android:text="@string/socre_title_sign"
-                android:textSize="14sp"
-                android:paddingLeft="6dp"
-                android:gravity="center"
-                android:layout_marginBottom="30dp"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="40dp"
+                android:layout_below="@+id/tv_myscore"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/selector_get_prize"
+                android:gravity="center"
+                android:text="@string/socre_title_sign"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </RelativeLayout>
-
 
 
     </RelativeLayout>
 
-        <TextView
-            android:padding="10dp"
-            android:text="@string/socre_detail"
-            android:background="@color/graybackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/graybackground"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/score_detail"
+        android:drawablePadding="6dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/socre_detail"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/graybackground"/>
 
     <FrameLayout
+        android:padding="6dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/myscore_recycleview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
+
         <ProgressBar
             android:id="@+id/myscore_progressbar"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:indeterminateDrawable="@drawable/progress_loading"
-            />
-        <TextView
-            android:textSize="18sp"
-            android:padding="5dp"
-            android:id="@+id/tv_myscore_zero"
             android:layout_gravity="center"
-            android:visibility="gone"
-            android:text="你还没有任何积分，赶紧去签到或举报病害"
+            android:indeterminateDrawable="@drawable/progress_loading"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_myscore_zero"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:text="你还没有任何积分，赶紧去签到或举报病害"
+            android:textSize="18sp"
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

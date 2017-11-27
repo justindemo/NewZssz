@@ -94,11 +94,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity"
+            android:theme="@style/ThemeHome"/>
         <activity
             android:name=".activity.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/ThemeHome" />
         <activity android:name=".activity.ReportActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.RoadActivity" />
@@ -109,7 +110,7 @@
         <activity android:name=".activity.SendActivity" />
         <activity android:name=".activity.UnCheckActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            />
         <activity android:name=".activity.CheckActivity" />
         <activity android:name=".activity.CheckRoadActivity" />
         <activity android:name=".activity.PostActivity" />
@@ -160,7 +161,18 @@
         <activity android:name=".activity.AllPayActivity"/>
         <activity android:name=".activity.AppraiseActivity"/>
         <activity android:name=".activity.ForUsActivity"/>
+        <activity android:name=".activity.FacilityManageActivity"/>
         <activity android:name=".activity.PersonReportPhotoShowActivity"/>
+        <activity android:name=".activity.RecordVideoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".activity.PlayVideoActivity"
+            />
+
+
+
+
+        <activity android:name=".activity.SearchRoadActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
 
         <activity android:name=".activity.CameraActivity"
@@ -186,7 +198,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.ProcessDetailActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            />
         <activity
             android:name=".activity.MarkerReportPhotoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

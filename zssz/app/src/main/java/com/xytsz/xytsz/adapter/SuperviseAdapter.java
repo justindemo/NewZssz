@@ -30,7 +30,6 @@ public class SuperviseAdapter extends BaseQuickAdapter<String> {
         super(R.layout.item_more, data);
         this.role = role;
 
-
     }
 
 

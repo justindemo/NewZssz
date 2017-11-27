@@ -1,6 +1,6 @@
 package com.xytsz.xytsz.adapter;
 
-import android.view.View;
+
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -27,13 +27,13 @@ public class MemberShowAdapter extends BaseQuickAdapter<MemberShow> {
 
     @Override
     protected void convert(BaseViewHolder helper, MemberShow item) {
-        Glide.with(mContext).load(item.getImgurl()).asBitmap().into((ImageView) helper.getView(R.id.iv_membershow));
+        //Glide.with(mContext).load(item.getImgurl()).asBitmap().into((ImageView) helper.getView(R.id.iv_membershow));
 
         helper.setText(R.id.tv_membershow,item.getEnname());
 
-        helper.setOnClickListener(R.id.iv_membershow,new OnItemChildClickListener());
-        helper.setOnClickListener(R.id.iv_rightarrow,new OnItemChildClickListener());
-        helper.setOnClickListener(R.id.tv_membershow,new OnItemChildClickListener());
+
+        helper.setOnClickListener(R.id.ll_membershow,new OnItemChildClickListener());
+
 
 
     }

@@ -1,6 +1,7 @@
 package com.xytsz.xytsz.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -16,6 +17,7 @@ import com.xytsz.xytsz.bean.ForMyDis;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.global.Data;
 import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.util.SoundUtil;
 import com.xytsz.xytsz.util.SpUtils;
 
 import java.io.Serializable;
@@ -26,11 +28,10 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/5/31.
- *
+ * <p>
  * 我的的处置
  */
 public class MyDealedDetailActivity extends AppCompatActivity implements View.OnClickListener {
-
 
     @Bind(R.id.tv_mycheck_name)
     TextView tvMycheckName;
@@ -74,6 +75,12 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
     ImageView ivMycheckDetailDealed;
     @Bind(R.id.ll_mycheck_detail_photo)
     LinearLayout llMycheckDetailPhoto;
+    @Bind(R.id.tv_check_problem_audio)
+    TextView tvCheckProblemAudio;
+    @Bind(R.id.tv_check_problem_loca)
+    TextView tvCheckProblemLoca;
+    @Bind(R.id.tv_check_detail_faname)
+    TextView tvCheckDetailFaname;
     private ForMyDis detail;
     private List<ImageUrl> imageUrlReport;
     private List<ImageUrl> imageUrlPost;
@@ -81,6 +88,8 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
     //实际完成人
     private int acid;
     private int reviewid;
+    private SoundUtil soundUtil;
+    private String audioUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,12 +102,12 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
 
             imageUrlReport = (List<ImageUrl>) getIntent().getSerializableExtra("imageUrlreport");
             imageUrlPost = (List<ImageUrl>) getIntent().getSerializableExtra("imageUrlpost");
+            audioUrl = getIntent().getStringExtra("audioUrl");
 
         }
 
         setContentView(R.layout.activity_mypostdetail);
         ButterKnife.bind(this);
-
 
 
         initAcitionbar();
@@ -111,7 +120,7 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
 
     private void initAcitionbar() {
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             String actionstr = getString(R.string.mydealed);
@@ -130,7 +139,7 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
         String upload_person_id = detail.getUpload_Person_ID() + "";
         //detail.getr
         String actualCompletion_person_id = detail.getActualCompletion_Person_ID() + "";
-        String issued_person_id = detail.getIssued_Person_ID() + "";
+        String issued_person_id = detail.getReviewed_Person_ID()+"";
         //通过上报人的ID 拿到上报人的名字
         //获取到所有人的列表 把对应的 id 找出名字
         List<String> personNamelist = SpUtils.getStrListValue(getApplicationContext(), GlobalContanstant.PERSONNAMELIST);
@@ -188,18 +197,62 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
         String actualCompletionTime = detail.getActualCompletionTime();
         tvMycheckResulttime.setText(actualCompletionTime);
 
-        if (imageUrlReport != null) {
-
+        if (imageUrlReport.size() != 0) {
             String imgurl = imageUrlReport.get(0).getImgurl();
             Glide.with(getApplicationContext()).load(imgurl).into(ivMycheckDetailReport);
-        }
-        if (imageUrlPost != null) {
+        }else {
 
+            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(ivMycheckDetailReport);
+        }
+        if (imageUrlPost.size() != 0) {
             String imgurlpost = imageUrlPost.get(0).getImgurl();
             Glide.with(getApplicationContext()).load(imgurlpost).into(ivMycheckDetailDealed);
+        }else {
+            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(ivMycheckDetailDealed);
         }
         ivMycheckDetailDealed.setOnClickListener(this);
         ivMycheckDetailReport.setOnClickListener(this);
+        tvCheckDetailFaname.setText(detail.getFacilityName_Name());
+
+        if (detail.getAddressDescription().isEmpty()) {
+            tvCheckProblemLoca.setVisibility(View.GONE);
+            tvCheckProblemAudio.setVisibility(View.VISIBLE);
+            soundUtil = new SoundUtil();
+            int time = soundUtil.getTime(audioUrl);
+            if (time != 0) {
+                tvCheckProblemAudio.setText(time + "″");
+            }
+
+            tvCheckProblemAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+
+                    tvCheckProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+
+                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                        @Override
+                        public void onFinish() {
+                            tvCheckProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+
+                    soundUtil.play(audioUrl);
+                }
+            });
+
+        } else {
+            tvCheckProblemLoca.setVisibility(View.VISIBLE);
+            tvCheckProblemLoca.setText(detail.getAddressDescription());
+            tvCheckProblemAudio.setVisibility(View.GONE);
+        }
 
 
     }
@@ -220,5 +273,6 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
                 break;
         }
     }
+
 }
 

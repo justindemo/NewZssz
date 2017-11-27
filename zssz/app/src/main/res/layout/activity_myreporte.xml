@@ -18,7 +18,7 @@
         android:indeterminateDrawable="@drawable/progress_loading"
         />
     <TextView
-        android:text="@string/myreport_title"
+
         android:id="@+id/tv_fail"
         android:textSize="18sp"
         android:visibility="gone"

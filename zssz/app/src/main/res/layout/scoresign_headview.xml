@@ -1,104 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="185dp">
+    android:layout_height="180dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View
-            android:layout_width="10dp"
-            android:layout_height="match_parent"/>
-        <RelativeLayout
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/score_myicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/my_icon" />
+
+        <LinearLayout
             android:id="@+id/rl_headview_sign"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="100dp"
-            >
-
-            <TextView
-                android:id="@+id/tv_headview_sign"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/mine_sign"
-                android:clickable="true"
-                android:background="@drawable/selector_tv_sign"
-                android:textColor="@color/white"
-                android:textSize="25sp" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="20dp"
-            android:layout_height="match_parent"/>
-        <RelativeLayout
-            android:id="@+id/rl_headview_score"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            >
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
-                android:id="@+id/tv_headview_myscore"
+                android:id="@+id/tv_headview_myname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableRight="@mipmap/me_arrow"
-                android:text="@string/socre_title_left"
-                android:textSize="18sp" />
+                android:text="游客"
+                android:textSize="18sp"
+
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_headview_myscore"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/socre_title_left"
+                    android:textSize="16sp" />
+
+                <TextView
+
                     android:id="@+id/tv_headview_myscorenum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="2dp"
+                    android:layout_marginLeft="6dp"
                     android:text="56"
-                    android:textColor="#fa8072"
-                    android:textSize="23sp"
+                    android:textColor="@color/cc_supervise"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sign_socre_title"
-                    android:textColor="#fa8072"
-                    android:textSize="16sp" />
+
             </LinearLayout>
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
+
+        <TextView
+            android:padding="3dp"
+            android:id="@+id/tv_headview_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/tv_headviewsign"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@mipmap/tv_headviewsign_left"
+            android:text="@string/mine_sign"
+            android:textColor="@color/cc_supervise"
+            android:textSize="16sp" />
 
     </LinearLayout>
-
 
 
     <!--托管自定义view-->
     <LinearLayout
         android:id="@+id/ll_line"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
         <View
-            android:background="@color/graybackground"
             android:layout_width="match_parent"
-            android:layout_height="5dp"/>
+            android:layout_height="5dp"
+            android:background="@color/graybackground" />
     </LinearLayout>
 
 </LinearLayout>

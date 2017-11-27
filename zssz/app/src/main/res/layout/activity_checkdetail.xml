@@ -18,7 +18,7 @@
             android:layout_marginBottom="6dp"
             android:text="@string/check_detail_title"
             android:textColor="@color/cc_red"
-            android:textSize="26sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_check_reporter_title"
@@ -26,9 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_check_name"
             android:layout_marginTop="6dp"
-            android:text="上报人员："
+            android:text="@string/allreporter"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reporter"
@@ -38,9 +38,10 @@
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@id/tv_check_reporter_title"
             android:text="张谋面"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
+
             android:id="@+id/tv_check_name_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,37 +49,40 @@
             android:layout_marginTop="6dp"
             android:text="@string/report_dealgrade"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
+
             android:id="@+id/tv_check_diseasename"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_check_reporter_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_name_title"
+            android:layout_toRightOf="@+id/tv_check_name_title"
             android:text="一类病害"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
+
             android:id="@+id/tv_check_grade_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_name_title"
+            android:layout_below="@+id/tv_check_name_title"
             android:layout_marginTop="6dp"
             android:text="@string/report_dealcategory"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
+
             android:id="@+id/tv_check_grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_name_title"
+            android:layout_below="@+id/tv_check_name_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_grade_title"
+            android:layout_toRightOf="@+id/tv_check_grade_title"
             android:text="违章施工"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
 
 
@@ -86,162 +90,186 @@
             android:id="@+id/tv_check_dealtype_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_grade_title"
+            android:layout_below="@+id/tv_check_grade_title"
             android:layout_marginTop="6dp"
             android:text="@string/report_facategory"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
+
             android:id="@+id/tv_check_dealtype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_grade_title"
+            android:layout_below="@+id/tv_check_grade_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_dealtype_title"
+            android:layout_toRightOf="@+id/tv_check_dealtype_title"
             android:text="违章施工"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_fatype_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_dealtype_title"
+            android:layout_below="@+id/tv_check_dealtype_title"
             android:layout_marginTop="6dp"
             android:text="@string/report_faname"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_fatype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_dealtype_title"
+            android:layout_below="@+id/tv_check_dealtype_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_fatype_title"
+            android:layout_toRightOf="@+id/tv_check_fatype_title"
             android:text="步道"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_pbtype_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_fatype_title"
+            android:layout_below="@+id/tv_check_fatype_title"
             android:layout_marginTop="6dp"
             android:text="@string/report_pbtype"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_pbtype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_fatype_title"
+            android:layout_below="@+id/tv_check_fatype_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_grade_title"
+            android:layout_toRightOf="@+id/tv_check_pbtype_title"
             android:text="塌陷"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/tv_check_detail_faname_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_check_pbtype_title"
+            android:layout_marginTop="6dp"
+            android:text="@string/report_facility"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_check_detail_faname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_check_pbtype_title"
+            android:layout_marginTop="6dp"
+            android:layout_toRightOf="@+id/tv_check_detail_faname_title"
+            android:text="彩砖"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reporteplace_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_pbtype_title"
+            android:layout_below="@+id/tv_check_detail_faname"
             android:layout_marginTop="6dp"
             android:text="@string/report_roadname"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reporteplace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_pbtype_title"
+            android:layout_below="@+id/tv_check_detail_faname"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_grade_title"
+            android:layout_toRightOf="@+id/tv_check_reporteplace_title"
             android:text="西环路"
             android:maxLines="2"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+
+
 
         <TextView
             android:id="@+id/tv_check_reviewer_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reporteplace"
+            android:layout_below="@+id/tv_check_reporteplace"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_reviewer"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reviewer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reporteplace"
+            android:layout_below="@+id/tv_check_reporteplace"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_reviewer_title"
+            android:layout_toRightOf="@+id/tv_check_reviewer_title"
             android:text="张三三"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_dealer_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reviewer_title"
+            android:layout_below="@+id/tv_check_reviewer_title"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_dealer"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_dealer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reviewer_title"
+            android:layout_below="@+id/tv_check_reviewer_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_dealer_title"
+            android:layout_toRightOf="@+id/tv_check_dealer_title"
             android:text="王美丽"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reportetime_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_dealer_title"
+            android:layout_below="@+id/tv_check_dealer_title"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_reporttime"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reportetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_dealer_title"
+            android:layout_below="@+id/tv_check_dealer_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_grade_title"
+            android:layout_toRightOf="@+id/tv_check_reportetime_title"
             android:text="2017年3月2日16:45:06"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reviewtime_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reportetime_title"
+            android:layout_below="@+id/tv_check_reportetime_title"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_reviewtime"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_reviewtime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reportetime_title"
+            android:layout_below="@+id/tv_check_reportetime_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_reviewtime_title"
+            android:layout_toRightOf="@+id/tv_check_reviewtime_title"
             android:text="2017年3月2日16:47:06"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_requesttime_title"
@@ -251,58 +279,121 @@
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_requesttime"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_requesttime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_road_title"
+            android:layout_below="@+id/tv_check_road_title"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_requesttime_title"
+            android:layout_toRightOf="@+id/tv_check_requesttime_title"
             android:text="2017年3月2日19:47:06"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_resulttime_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_requesttime"
+            android:layout_below="@+id/tv_check_requesttime"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_resultetime"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_resulttime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_requesttime"
+            android:layout_below="@+id/tv_check_requesttime"
             android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/tv_check_resulttime_title"
+            android:layout_toRightOf="@+id/tv_check_resulttime_title"
             android:text="2017年3月2日16:47:06"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_check_loca_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/tv_check_reviewtime"
+            android:text="@string/problemlocation"
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+
+        <FrameLayout
+            android:layout_marginTop="6dp"
+            android:id="@+id/tv_check_problem_loca1"
+            android:layout_below="@+id/tv_check_reviewtime"
+            android:layout_toRightOf="@+id/tv_check_loca_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:visibility="gone"
+                android:background="@drawable/selector_tv_audio"
+                android:id="@+id/tv_check_problem_audio"
+                android:layout_width="120dp"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:drawableRight="@mipmap/play"
+                android:textSize="20sp" />
+
+
+            <TextView
+                android:id="@+id/tv_check_problem_loca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="位置描述"
+                android:textSize="18sp" />
+
+
+        </FrameLayout>
+
+
+
+        <TextView
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/tv_check_problem_loca1"
+            android:id="@+id/tv_check_detail_diseasedestitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/cc_text_blank"
+            android:text="@string/report_problemdes"/>
+
+        <TextView
+            android:layout_marginTop="6dp"
+            android:id="@+id/tv_check_detail_diseasedes"
+            android:textSize="18sp"
+            android:text="miaoshu"
+            android:layout_below="@+id/tv_check_problem_loca1"
+            android:layout_toRightOf="@+id/tv_check_detail_diseasedestitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_check_decs_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reviewtime_title"
+            android:layout_below="@+id/tv_check_detail_diseasedes"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_repair"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_decs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_reviewtime_title"
+            android:layout_below="@+id/tv_check_detail_diseasedes"
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@id/tv_check_decs_title"
             android:maxLines="2"
             android:text="王美丽s dq w dqw "
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_road_title"
@@ -312,7 +403,7 @@
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_location"
             android:textColor="@color/cc_text_blank"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_check_road"
@@ -321,12 +412,13 @@
             android:layout_below="@id/tv_check_decs"
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@id/tv_check_road_title"
-            android:background="@color/cc_green"
+            android:background="@color/cc_supervise"
             android:gravity="center"
             android:padding="3dp"
             android:text="查看详细位置"
             android:textColor="@color/white"
             android:textSize="16sp" />
+
 
         <LinearLayout
             android:id="@+id/ll_check_detail_title"
@@ -399,37 +491,66 @@
                 android:scaleType="centerCrop" />
 
         </LinearLayout>
+
+
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_video"
+            android:orientation="vertical"
             android:layout_below="@+id/ll_check_detail_photo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginTop="6dp"
+                android:textColor="@color/cc_text_blank"
+                android:textSize="20sp"
+                android:text="@string/report_problemdes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_marginTop="3dp"
+                android:id="@+id/iv_play_video"
+                android:src="@mipmap/iv_video"
+                android:layout_width="100dp"
+                android:layout_height="80dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_below="@+id/ll_video"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:id="@+id/ll_check_idea"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="5dp"
+            android:padding="6dp"
             android:orientation="horizontal">
 
             <TextView
                 android:gravity="center"
                 android:id="@+id/tv_check_pass"
                 android:padding="3dp"
-                android:layout_width="60dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/cc_red"
+                android:background="@drawable/shape_sendroad_tv"
                 android:text="@string/review_tv_pass"
+                android:textColor="@color/cc_white"
                 android:textSize="18sp" />
 
             <TextView
                 android:gravity="center"
                 android:id="@+id/tv_check_back"
                 android:padding="3dp"
-                android:layout_width="60dp"
+                android:layout_width="0dp"
+                android:layout_marginLeft="6dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/cc_btn_bule"
+                android:background="@drawable/shape_sendroad_back"
                 android:text="@string/review_tv_fail"
+                android:textColor="@color/cc_white"
                 android:textSize="18sp" />
         </LinearLayout>
+
+
     </RelativeLayout>
 </ScrollView>

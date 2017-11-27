@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
@@ -52,6 +53,7 @@ public class SendRoadActivity extends AppCompatActivity {
     private static final int ISSENDPERSON = 1000003;
     private static final int ISSENDBACK = 1000004;
     private static final int ISSENDTASK = 1000005;
+    private static final int NOONE = 100003;
 
     private ListView mlv;
     private Bitmap largeBitmap;
@@ -60,18 +62,29 @@ public class SendRoadActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case ISSEND:
 
+
+                case GlobalContanstant.SENDFAIL:
+                    mProgressBar.setVisibility(View.GONE);
+                    ToastUtil.shortToast(getApplicationContext(),"未数据获取,请稍后");
+                    break;
+                case NOONE:
+                    ToastUtil.shortToast(getApplicationContext(),"已下派完毕");
+                    mProgressBar.setVisibility(View.GONE);
+                    break;
+
+                case ISSEND:
                     int passposition = msg.getData().getInt("passposition");
                     String isPass = msg.getData().getString("issend");
                     if (isPass.equals("true")){
+
                         ToastUtil.shortToast(getApplicationContext(),"下派成功");
                         Intent intent = getIntent();
                         intent.putExtra("passposition",passposition);
                         intent.putExtra("position",position);
                         setResult(505,intent);
 
-                        finish();
+                        //finish();
                     }
                     break;
                 case ISSENDBACK:
@@ -87,7 +100,7 @@ public class SendRoadActivity extends AppCompatActivity {
                         intent.putExtra("failposition",failposition);
                         intent.putExtra("position",position);
                         setResult(605,intent);
-                        finish();
+                        //finish();
                     }
                     break;
                 case ISSENDTASK:
@@ -149,6 +162,7 @@ public class SendRoadActivity extends AppCompatActivity {
     };
     private int personId;
     private ProgressBar mProgressBar;
+    private SendRoadAdapter sendRoadAdapter;
 
     private PendingIntent getContentIntent() {
         Intent intent = new Intent(this, DealActivity.class);
@@ -177,6 +191,8 @@ public class SendRoadActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_sendroad);
+
+        initAcitionbar();
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
         mlv = (ListView) findViewById(R.id.lv_sendroad);
         mProgressBar = (ProgressBar) findViewById(R.id.review_progressbar);
@@ -191,7 +207,6 @@ public class SendRoadActivity extends AppCompatActivity {
         soapObject.addProperty("TaskNumber", taskNumber);
         soapObject.addProperty("PhaseIndication", phaseIndication);
         soapObject.addProperty("PersonId",personID);
-        //soapObject.addProperty("IsPersonId",isPersonId);
         soapObject.addProperty("RejectInfo",advice);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
@@ -207,7 +222,7 @@ public class SendRoadActivity extends AppCompatActivity {
         return result;
     }
 
-
+    private List<String> audioUrls = new ArrayList<>();
     private void initData() {
 
         ToastUtil.shortToast(getApplicationContext(), "正在加载数据..");
@@ -231,7 +246,17 @@ public class SendRoadActivity extends AppCompatActivity {
 
                         Review.ReviewRoad reviewRoad = review.getReviewRoadList().get(position);
                         List<Review.ReviewRoad.ReviewRoadDetail> list = reviewRoad.getList();
+                        if (list.size()== 0){
+                            Message message = Message.obtain();
+                            message.what = NOONE;
+                            handler.sendMessage(message);
+                        }else {
+
+
+                        audioUrls.clear();
+
                         //遍历list
+
                         for (Review.ReviewRoad.ReviewRoadDetail detail :list){
                             String taskNumber = detail.getTaskNumber();
                             /**
@@ -247,6 +272,10 @@ public class SendRoadActivity extends AppCompatActivity {
 
                             }
 
+                            String audioUrl = RoadActivity.getAudio(taskNumber);
+
+                            audioUrls.add(audioUrl);
+
                         }
 
                         PersonList personList = JsonUtil.jsonToBean(allPersonList, PersonList.class);
@@ -254,8 +283,7 @@ public class SendRoadActivity extends AppCompatActivity {
                         List<PersonList.PersonListBean> personlist = personList.getPersonList();
 
 
-
-                        final SendRoadAdapter sendRoadAdapter = new SendRoadAdapter(handler,reviewRoad, imageUrlReportLists,personlist);
+                        sendRoadAdapter = new SendRoadAdapter(handler,reviewRoad, imageUrlReportLists,personlist,audioUrls);
                         if (sendRoadAdapter != null) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -266,8 +294,12 @@ public class SendRoadActivity extends AppCompatActivity {
                             });
                         }
                     }
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+
+                    Message message = Message.obtain();
+                    message.what =GlobalContanstant.SENDFAIL;
+                    handler.sendMessage(message);
                 }
             }
         }.start();
@@ -300,5 +332,21 @@ public class SendRoadActivity extends AppCompatActivity {
         intent.putExtra("backHome",GlobalContanstant.BACKHOME);
         startActivity(intent);
         finish();
+    }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.send);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

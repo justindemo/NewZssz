@@ -2,8 +2,8 @@
 <com.xytsz.xytsz.ui.Swipelayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="100dp"
-    android:layout_marginTop="3dp">
+    android:layout_height="wrap_content"
+    >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
             android:id="@+id/tv_pass2"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:background="#9e9e9e"
+            android:background="@color/graybackground"
             android:gravity="center"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
@@ -39,7 +39,7 @@
             android:id="@+id/tv_delete"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:background="#f00"
+            android:background="@color/cc_orage_red"
             android:gravity="center"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
@@ -53,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
+        android:padding="6dp"
         >
 
         <ImageView
@@ -60,19 +61,17 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="3dp"
-            android:layout_marginTop="3dp"
             android:scaleType="fitXY" />
 
         <TextView
             android:layout_alignParentRight="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="6dp"
+
             android:id="@+id/tv_detail"
             android:text="@string/review_tv_detail"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:padding="3dp"
             android:textColor="@color/white"
-            android:background="@color/cc_blue"
+            android:background="@drawable/shape_search_btn_back_normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -83,21 +82,18 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/iv_swipe_icon"
-            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:text="@string/allreporter"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_problem_reporter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/tv_problem_reporter_title"
             android:ellipsize="end"
             android:text="张王丽"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
 
 
@@ -106,47 +102,69 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="5dp"
             android:layout_below="@+id/tv_problem_reporter_title"
             android:ellipsize="end"
             android:layout_toRightOf="@id/iv_swipe_icon"
             android:text="@string/problemlocation"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_problem_loca"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+
+        <FrameLayout
+            android:id="@+id/tv_problem_loca1"
             android:layout_below="@+id/tv_problem_reporter_title"
             android:layout_toRightOf="@+id/tv_problem_loca_title"
-            android:ellipsize="end"
-            android:text="位置描述"
-            android:textSize="18sp" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:visibility="gone"
+                android:background="@drawable/selector_tv_audio"
+                android:id="@+id/tv_problem_audio"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:drawableRight="@mipmap/play"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:id="@+id/tv_problem_loca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:text="位置描述"
+                android:textSize="16sp" />
+
+
+        </FrameLayout>
+
 
 
         <TextView
             android:id="@+id/tv_problem_reportertime_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_problem_loca"
+            android:layout_below="@+id/tv_problem_loca1"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:text="@string/reportertime"
             android:layout_toRightOf="@id/iv_swipe_icon"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_problem_reportertime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_problem_loca"
+            android:layout_below="@+id/tv_problem_loca1"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/tv_problem_reportertime_title"
             android:ellipsize="end"
             android:text="2017/3/2 15:02"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
 
 

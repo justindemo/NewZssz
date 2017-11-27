@@ -3,6 +3,7 @@ package com.xytsz.xytsz.adapter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +33,7 @@ import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.ui.TimeChoiceButton;
 import com.xytsz.xytsz.R;
 
+import com.xytsz.xytsz.util.SoundUtil;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
@@ -60,13 +62,15 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
     private List<List<ImageUrl>> imageUrlLists;
     private String[] servicePerson;
     private List<PersonList.PersonListBean> personlist;
+    private List<String> audioUrls;
     private Handler handler;
     private int requirementsComplete_person_id;
     private String imgurl;
     private EditText etAdvice;
+    private SoundUtil soundUtil;
 
 
-    public SendRoadAdapter(Handler handler, Review.ReviewRoad reviewRoad, List<List<ImageUrl>> imageUrlLists,  List<PersonList.PersonListBean> personlist) {
+    public SendRoadAdapter(Handler handler, Review.ReviewRoad reviewRoad, List<List<ImageUrl>> imageUrlLists, List<PersonList.PersonListBean> personlist, List<String> audioUrls) {
         this.handler = handler;
 
         this.reviewRoad = reviewRoad;
@@ -74,6 +78,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
 
         //this.servicePerson = servicePerson;
         this.personlist = personlist;
+        this.audioUrls = audioUrls;
 
         this.servicePerson = new String[personlist.size()];
         for (int i = 0; i < servicePerson.length; i++) {
@@ -101,7 +106,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
 
 
     @Override
-    public View getView( final int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
         ViewHolder holder = null;
         if (convertView == null) {
@@ -109,6 +114,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
             convertView = View.inflate(parent.getContext(), R.layout.item_send, null);
             holder.Vname = (TextView) convertView.findViewById(R.id.tv_send_Vname);
             holder.Pname = (TextView) convertView.findViewById(R.id.tv_send_Pname);
+            holder.tvProblemAudio = (TextView) convertView.findViewById(R.id.tv_send_audio);
             holder.date = (TextView) convertView.findViewById(R.id.tv_send_date);
             holder.detail = (RelativeLayout) convertView.findViewById(R.id.rl_send_road_detail);
             holder.sendIcon = (ImageView) convertView.findViewById(R.id.iv_send_photo);
@@ -142,8 +148,8 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
         holder.btChoice.setReviewRoadDetail(this, reviewRoadDetail);
         //String userName = SpUtils.getString(parent.getContext(), GlobalContanstant.USERNAME);
         //赋值
-        holder.Pname.setText(userName);
-        holder.Vname.setText(Data.pbname[level]);
+        holder.Vname.setText(userName);
+        holder.Pname.setText(reviewRoadDetail.getAddressDescription());
         holder.date.setText(uploadTime);
 
 
@@ -162,7 +168,6 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
             public void onClick(final View v) {
                 //点击的时候弹出对话框 都是一样的 人员名字
 
-
                 //改变bean类的参数
                 if (reviewRoadDetail.getRequestTime() == null) {
                     ToastUtil.shortToast(v.getContext(), "请先选择要求时间");
@@ -173,7 +178,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Log.i("person",servicePerson.toString());
+                                    Log.i("person", servicePerson.toString());
                                     str = servicePerson[which];
                                     reviewRoadDetail.setSendPerson(str);
                                     Message message = Message.obtain();
@@ -190,7 +195,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
                                     dialog.dismiss();
 
                                     //上传服务器数据
-                                    final int passposition =  (int) btn.getTag();
+                                    final int passposition = (int) btn.getTag();
                                     SendRoadAdapter.this.taskNumber = getTaskNumber(passposition);
                                     getRequstPersonID(passposition, str);
                                     requstPersonID = reviewRoadDetail.getRequirementsComplete_Person_ID();
@@ -205,8 +210,8 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
                                                 Message message = Message.obtain();
                                                 message.what = ISSEND;
                                                 Bundle bundle = new Bundle();
-                                                bundle.putInt("passposition",passposition);
-                                                bundle.putString("issend",isSend);
+                                                bundle.putInt("passposition", passposition);
+                                                bundle.putString("issend", isSend);
                                                 message.setData(bundle);
                                                 //message.obj = isSend;
                                                 handler.sendMessage(message);
@@ -215,6 +220,10 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
                                             }
                                         }
                                     }.start();
+
+                                    reviewRoad.getList().remove(position);
+                                    imageUrlLists.remove(position);
+                                    notifyDataSetChanged();
 
                                 }
                             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -238,21 +247,74 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
         if (imageUrlLists.size() != 0) {
             urlList = imageUrlLists.get(position);
             //显示的第一张图片
-            ImageUrl imageUrl = urlList.get(0);
-            imgurl = imageUrl.getImgurl();
+            if (urlList.size() != 0) {
+                ImageUrl imageUrl = urlList.get(0);
+                imgurl = imageUrl.getImgurl();
 
-            Glide.with(parent.getContext()).load(imgurl).into(holder.sendIcon);
-            holder.sendIcon.setOnClickListener(new View.OnClickListener() {
+                Glide.with(parent.getContext()).load(imgurl).into(holder.sendIcon);
+                holder.sendIcon.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), PhotoShowActivity.class);
-                    intent.putExtra("imageUrllist", (Serializable)imageUrlLists.get(position));
-                    v.getContext().startActivity(intent);
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), PhotoShowActivity.class);
+                        intent.putExtra("imageUrllist", (Serializable) imageUrlLists.get(position));
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            } else {
+                Glide.with(parent.getContext()).load(R.mipmap.prepost).fitCenter().into(holder.sendIcon);
+            }
+
+        }
+
+
+        //判断是否有语音
+        if (reviewRoadDetail.getAddressDescription().isEmpty()) {
+            if (!audioUrls.get(position).equals("fasle")) {
+                holder.Pname.setVisibility(View.GONE);
+                holder.tvProblemAudio.setVisibility(View.VISIBLE);
+                soundUtil = new SoundUtil();
+
+                int time = soundUtil.getTime(audioUrls.get(position));
+                if (time != 0) {
+                    holder.tvProblemAudio.setText(time + "″");
                 }
-            });
+                holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
 
 
+                    @Override
+                    public void onClick(View v) {
+
+                        Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
+                        final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
+                        final TextView tv = (TextView) v;
+                        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+
+                        soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                            @Override
+                            public void onFinish() {
+                                tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
+
+                        soundUtil.play(audioUrls.get(position));
+                    }
+                });
+
+            } else {
+                holder.Pname.setVisibility(View.VISIBLE);
+                holder.tvProblemAudio.setVisibility(View.GONE);
+            }
+
+        } else {
+            holder.Pname.setVisibility(View.VISIBLE);
+            holder.tvProblemAudio.setVisibility(View.GONE);
         }
 
         holder.detail.setTag(position);
@@ -287,9 +349,9 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
                         message.what = ISSENDTASK;
 
                         Bundle bundle = new Bundle();
-                        bundle.putInt("failposition",failposition);
-                        bundle.putString("taskNumber",taskNumber);
-                        bundle.putString("advice",advice);
+                        bundle.putInt("failposition", failposition);
+                        bundle.putString("taskNumber", taskNumber);
+                        bundle.putString("advice", advice);
                         message.setData(bundle);
 
                         //message.obj = backList;
@@ -297,10 +359,13 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
                     }
                 });
 
+                reviewRoad.getList().remove(failposition);
+                imageUrlLists.remove(failposition);
+                notifyDataSetChanged();
+
 
             }
         });
-
 
 
         return convertView;
@@ -355,6 +420,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
                 int position1 = (int) v.getTag();
                 Intent intent = new Intent(v.getContext(), SendRoadDetailActivity.class);
                 intent.putExtra("detail", reviewRoad.getList().get(position1));
+                intent.putExtra("audioUrl", audioUrls.get(position1));
                 intent.putExtra("imageUrls", (Serializable) imageUrlLists.get(position1));
                 v.getContext().startActivity(intent);
                 break;
@@ -366,6 +432,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
         public TextView Vname;
         public TextView date;
         public TextView Pname;
+        public TextView tvProblemAudio;
         public ImageView sendIcon;
         public TextView btSend;
         public RelativeLayout detail;
@@ -406,7 +473,6 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
         return result;
 
     }
-
 
 
 }

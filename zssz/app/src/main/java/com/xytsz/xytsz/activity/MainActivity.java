@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         //让标签 跟着viewpager 滑动
         logintab.setupWithViewPager(loginVg);
 
-
         logintab.setTabsFromPagerAdapter(loginAdapter);
 
 

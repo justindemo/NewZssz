@@ -33,7 +33,6 @@ public class TimeChoiceButton extends Button {
 
     public  Calendar time = Calendar.getInstance(Locale.CHINA);
     public static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    private Button dataView;
     private DatePicker datePicker;
     private TimePicker timePicker;
     private AlertDialog dialog;
@@ -49,12 +48,6 @@ public class TimeChoiceButton extends Button {
 
     }
 
-    //dataView 是当前button
-    public TimeChoiceButton(Context context, Button dataView) {
-        super(context);
-        this.dataView = dataView;
-
-    }
 
     public AlertDialog dateTimePickerDialog(){
         View dateTimeLayout = LayoutInflater.from(getContext()).inflate(R.layout.date_time_picker, null);
@@ -62,7 +55,6 @@ public class TimeChoiceButton extends Button {
         timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.timepicker);
         timePicker.setIs24HourView(true);
 
-        init();
         TimePicker.OnTimeChangedListener timeListener= new TimePicker.OnTimeChangedListener() {
 
             @Override
@@ -111,13 +103,6 @@ public class TimeChoiceButton extends Button {
                         updateLabel();
                         dialog.dismiss();
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //
-                    dialog.dismiss();
-                    }
                 }).show();
         return dialog;
     }
@@ -125,32 +110,29 @@ public class TimeChoiceButton extends Button {
 
 
     private void init() {
-        TimeChoiceButtonManager.getInstance().setTimeChoiceButton(TimeChoiceButton.this);
+        this.setText("要求时间");
         this.setGravity(Gravity.CENTER);
-        this.setTextColor(Color.BLACK);
-        this.layout(0,0,3,0);
+        this.setTextColor(getResources().getColor(R.color.white));
         this.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // 生成一个DatePickerDialog对象，并显示。显示的DatePickerDialog控件可以选择年月日，并设置
                 dateTimePickerDialog();
-                updateLabel();
             }
         });
 
 
     }
     public void updateLabel() {
-        if(dataView != null){
-            dataView.setText(format.format(new Date(System.currentTimeMillis())));
-        }
-        TimeChoiceButtonManager manager = TimeChoiceButtonManager.getInstance();
+        String format = getDateString();
+        setText(format);
         //是不是当前这个条目
-        if(manager.getTimeChoiceButton() == TimeChoiceButton.this) {
+        if (reviewRoadDetail != null && sendRoadAdapter != null) {
             reviewRoadDetail.setRequestTime(getDateString());
             sendRoadAdapter.notifyDataSetChanged();
         }
+
 
     }
 

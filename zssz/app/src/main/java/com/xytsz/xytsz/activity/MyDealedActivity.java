@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,17 +58,22 @@ public class MyDealedActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case GlobalContanstant.CHECKFAIL:
+                    tvFail.setVisibility(View.VISIBLE);
+                    myreportProgressbar.setVisibility(View.GONE);
+                    tvFail.setText("未获取数据，请稍后");
+                    break;
+
                 case DEALED:
 
                     final List<ForMyDis> details = (List<ForMyDis>) msg.obj;
 
                     if (details.size() != 0) {
                         //加载数据
-                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists);
-                        if (adapter != null) {
-                            myreportProgressbar.setVisibility(View.GONE);
-                            lvReprote.setAdapter(adapter);
-                        }
+                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists, audioUrls);
+                        myreportProgressbar.setVisibility(View.GONE);
+                        lvReprote.setAdapter(adapter);
+
                         lvReprote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -75,6 +81,7 @@ public class MyDealedActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(MyDealedActivity.this, MyDealedDetailActivity.class);
                                 intent.putExtra("detail", details.get(position));
+                                intent.putExtra("audioUrl", audioUrls.get(position));
                                 intent.putExtra("imageUrlreport", (Serializable) imageUrlLists.get(position));
                                 intent.putExtra("imageUrlpost", (Serializable) imageUrlPostLists.get(position));
 
@@ -85,7 +92,6 @@ public class MyDealedActivity extends AppCompatActivity {
                         tvFail.setVisibility(View.VISIBLE);
                         tvFail.setText(nodata);
                         myreportProgressbar.setVisibility(View.GONE);
-                        ToastUtil.shortToast(getApplicationContext(), nodata);
                     }
                     break;
 
@@ -95,7 +101,7 @@ public class MyDealedActivity extends AppCompatActivity {
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
     private List<List<ImageUrl>> imageUrlPostLists = new ArrayList<>();
     private String nodata;
-
+    private List<String> audioUrls = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +112,7 @@ public class MyDealedActivity extends AppCompatActivity {
         personId = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
         //取网络数据
         nodata = getString(R.string.mydealed_nodata);
+        initAcitionbar();
         initData();
 
     }
@@ -117,19 +124,19 @@ public class MyDealedActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                String data = getData();
-                //TODo:得到实例
-                if (data != null) {
-                    List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
-                    }.getType());
+                try {
+                    String data = getData();
+                    if (data != null) {
+                        List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
+                        }.getType());
 
 
-                    for (ForMyDis forMyDis : details) {
-                        String taskNumber = forMyDis.getTaskNumber();
+                        for (ForMyDis forMyDis : details) {
+                            String taskNumber = forMyDis.getTaskNumber();
 
-                        String json = null;
-                        String post = null;
-                        try {
+                            String json = null;
+                            String post = null;
+
                             json = MyApplication.getAllImagUrl(taskNumber, GlobalContanstant.GETREVIEW);
                             post = getPostImagUrl(taskNumber);
                             if (json != null) {
@@ -147,18 +154,23 @@ public class MyDealedActivity extends AppCompatActivity {
 
                                 imageUrlPostLists.add(imageUrlPostList);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                            String audioUrl = RoadActivity.getAudio(taskNumber);
 
+                            audioUrls.add(audioUrl);
+
+                        }
+                        Message message = Message.obtain();
+                        message.obj = details;
+                        message.what = DEALED;
+                        handler.sendMessage(message);
 
                     }
-
-
+                } catch (Exception e) {
                     Message message = Message.obtain();
-                    message.obj = details;
-                    message.what = DEALED;
+                    message.what = GlobalContanstant.CHECKFAIL;
                     handler.sendMessage(message);
+
+
                 }
             }
         }.start();
@@ -208,5 +220,19 @@ public class MyDealedActivity extends AppCompatActivity {
         return result;
     }
 
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.mydealed);
+        }
+    }
 
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
 }

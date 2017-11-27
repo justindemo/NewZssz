@@ -104,10 +104,9 @@ public class UpdateVersionUtil {
      */
     public static void showDialog(final Context context, final VersionInfo versionInfo) {
         final Dialog dialog = new AlertDialog.Builder(context).create();
-        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz-app.apk");
+        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz_app.apk");
         //dialog.setCancelable(true);// 可以用“返回键”取消
         dialog.setCanceledOnTouchOutside(false);//
-
         dialog.show();
 
         View view = LayoutInflater.from(context).inflate(R.layout.version_update_dialog, null);
@@ -124,20 +123,18 @@ public class UpdateVersionUtil {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if (v.getId() == R.id.btn_update_id_ok) {
                     //新版本已经下载
-                    if (file.exists() && file.getName().equals("zssz-app.apk")) {
-                        SpUtils.exit(context);
+                    if (file.exists() && file.getName().equals("zssz_app.apk")) {
+                        //SpUtils.exit(context);
                         Intent intent = ApkUtils.getInstallIntent(file);
                         context.startActivity(intent);
                     } else {
-
 
                         showDownloadDialog(context, versionInfo);
 
                     }
                 }
-            }
+
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +169,7 @@ public class UpdateVersionUtil {
         HttpUtils httpUtils = new HttpUtils(5000);
         //url :地址
         String url = versionInfo.getDownloadUrl();
-        final File updateFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz-app.apk");
+        final File updateFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz_app.apk");
 
         RequestCallBack<File> callback = new RequestCallBack<File>() {
 
@@ -197,10 +194,16 @@ public class UpdateVersionUtil {
 
             @Override
             public void onSuccess(ResponseInfo<File> responseInfo) {
-                SpUtils.exit(context);
-                SpUtils.saveBoolean(context, GlobalContanstant.ISFIRSTENTER,false);
+
                 Intent installIntent = ApkUtils.getInstallIntent(updateFile);
                 context.startActivity(installIntent);
+                //下次更新 取消
+                //SpUtils.exit(context);
+                //SpUtils.saveBoolean(context, GlobalContanstant.ISFIRSTENTER,false);
+
+//                if (updateFile.isFile()&& updateFile.exists()){
+//                updateFile.delete();
+//                }
                 dialog.dismiss();
             }
 

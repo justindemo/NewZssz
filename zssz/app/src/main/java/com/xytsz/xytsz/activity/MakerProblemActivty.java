@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -89,6 +90,8 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         }
     };
     private LinearLayout progress;
+    private ImageView mIvDealIcon2;
+    private ImageView mIvDealIcon3;
 
 
     @Override
@@ -96,8 +99,7 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_maker);
-        String loading = getString(R.string.loading);
-        ToastUtil.shortToast(getApplicationContext(), loading);
+        initAcitionbar();
         initView();
         initData();
     }
@@ -163,11 +165,11 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
                             message.what = ISGETALLTASK;
                             message.obj = list;
                             handler.sendMessage(message);
-                        }else {
+                        } else {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.shortToast(getApplicationContext(),"没有上报的数据");
+                                    ToastUtil.shortToast(getApplicationContext(), "没有上报的数据");
                                 }
                             });
                         }
@@ -204,18 +206,17 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
     private void draw() {
 
         //是否显示缩放按钮
-        mMV.showZoomControls(false);
+        mMV.showZoomControls(true);
         //是否显示地图标尺
         mMV.showScaleControl(false);
 
 
         BitmapDescriptor bitmap = BitmapDescriptorFactory
-                .fromResource(R.mipmap.icon_position);
+                .fromResource(R.mipmap.icon_en);
         ArrayList<BitmapDescriptor> bitmaps = new ArrayList<>();
         bitmaps.add(bitmap);
         bitmaps.add(BitmapDescriptorFactory
-                .fromResource(R.mipmap.icon_problem));
-
+                .fromResource(R.mipmap.icon_twinkle));
 
 
         for (int i = 0; i < details.size(); i++) {
@@ -228,7 +229,7 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
             MarkerOptions option = new MarkerOptions()
                     .position(latLng).icons(bitmaps)
                     .title(problemDetail.getTasknumber());
-            baiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(16));
+            baiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(18));
             baiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(latLng));
             baiduMap.addOverlay(option);
         }
@@ -242,7 +243,9 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         pop = View.inflate(this, R.layout.maker_pop, null);
         mReportName = (TextView) pop.findViewById(R.id.report_name);
         mTvStatu = (TextView) pop.findViewById(R.id.tv_statu);
-        mIvDealIcon = (ImageView) pop.findViewById(R.id.iv_deal_icon);
+        mIvDealIcon = (ImageView) pop.findViewById(R.id.iv_deal_icon1);
+        mIvDealIcon2 = (ImageView) pop.findViewById(R.id.iv_deal_icon2);
+        mIvDealIcon3 = (ImageView) pop.findViewById(R.id.iv_deal_icon3);
         mIvReportIcon = (ImageView) pop.findViewById(R.id.marker_reporter_icon);
         mBtNavi = (Button) pop.findViewById(R.id.bt_navi);
         mBtDetail = (Button) pop.findViewById(R.id.bt_mark_detail);
@@ -310,16 +313,36 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
                 //病害头像
                 if (imageUrlLists.size() != 0) {
                     for (final List<ImageUrl> imageUrlList : imageUrlLists) {
-                        if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
-                            Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
-                            mIvDealIcon.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(v.getContext(), MarkerReportPhotoActivity.class);
-                                    intent.putExtra("imageUrls", (Serializable) imageUrlList);
-                                    startActivity(intent);
+
+                        if (imageUrlList.size() != 0) {
+
+
+                            if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
+                                if (imageUrlList.size() == 1) {
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
                                 }
-                            });
+                                if (imageUrlList.size() == 2) {
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
+                                }
+                                if (imageUrlList.size() == 3) {
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
+                                    Glide.with(getApplicationContext()).load(imageUrlList.get(2).getImgurl()).into(mIvDealIcon3);
+                                }
+
+
+                                mIvDealIcon.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(v.getContext(), MarkerReportPhotoActivity.class);
+                                        intent.putExtra("imageUrls", (Serializable) imageUrlList);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        } else {
+                            Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon);
                         }
                     }
                 }
@@ -400,4 +423,21 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         }
 
     }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.problemdeal);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
 }

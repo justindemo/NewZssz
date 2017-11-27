@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -38,15 +39,22 @@ import java.util.List;
 public class DealActivity extends AppCompatActivity {
 
     private static final int ISDEAL = 3003;
+    private static final int FAIL = 500;
     private ListView mLv;
     private int personID;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case ISDEAL:
-                    ToastUtil.shortToast(getApplicationContext(), "没有已审核的数据，请稍后重试");
+                    mProgressBar.setVisibility(View.GONE);
+                    mtvfail.setText(nodata);
+                    mtvfail.setVisibility(View.VISIBLE);
+                    break;
+                case FAIL:
+                    mProgressBar.setVisibility(View.GONE);
+                    ToastUtil.shortToast(getApplicationContext(), "未获取数据,请稍后");
                     break;
             }
         }
@@ -55,6 +63,7 @@ public class DealActivity extends AppCompatActivity {
     private List<Review.ReviewRoad> list;
     private TextView mtvfail;
     private String nodata;
+    private DealAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +73,8 @@ public class DealActivity extends AppCompatActivity {
 
         personID = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
         nodata = getString(R.string.deal_nodata);
+
+        initAcitionbar();
         initView();
 
         initData();
@@ -77,7 +88,6 @@ public class DealActivity extends AppCompatActivity {
 
     private void initData() {
 
-        //ToastUtil.shortToast(getApplicationContext(), "正在加载数据...");
         mProgressBar.setVisibility(View.VISIBLE);
         new Thread() {
             @Override
@@ -89,41 +99,33 @@ public class DealActivity extends AppCompatActivity {
 
                         Review review = JsonUtil.jsonToBean(dealData, Review.class);
                         list = review.getReviewRoadList();
+                        if (list.size() == 0) {
 
-                        int dealSum = 0;
-                        for (Review.ReviewRoad reviewRoad : list) {
-                            dealSum += reviewRoad.getList().size();
-                        }
+                            Message message = Message.obtain();
+                            message.what = ISDEAL;
+                            handler.sendMessage(message);
 
+                        } else {
 
-                        SpUtils.saveInt(getApplicationContext(), GlobalContanstant.DEALSUM, dealSum);
+                            adapter = new DealAdapter(list);
 
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                        final DealAdapter adapter = new DealAdapter(list);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (adapter != null) {
                                     mLv.setAdapter(adapter);
-                                    if (list.size() == 0){
-                                        mtvfail.setText(nodata);
-                                        mtvfail.setVisibility(View.VISIBLE);
-                                        ToastUtil.shortToast(getApplicationContext(),nodata);
-                                    }
+
                                     mProgressBar.setVisibility(View.GONE);
+
                                 }
-                            }
-                        });
+                            });
 
-                    } else {
-                        Message message = Message.obtain();
-                        message.what = ISDEAL;
-                        handler.sendMessage(message);
-
+                        }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Message message = Message.obtain();
+                    message.what = FAIL;
+                    handler.sendMessage(message);
                 }
             }
         }.start();
@@ -156,6 +158,22 @@ public class DealActivity extends AppCompatActivity {
 
         Log.i("json", json);
         return json;
+    }
+
+    private void initAcitionbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.deal);
+        }
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 
 

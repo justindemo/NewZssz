@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -54,6 +55,8 @@ import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.fragment.TableFragment;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.JsonUtil;
+import com.xytsz.xytsz.util.PermissionUtils;
+import com.xytsz.xytsz.util.PermissionUtils.PermissionGrant;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 import com.xytsz.xytsz.util.UpdateVersionUtil;
@@ -88,6 +91,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button mbtrefresh;
     private ProgressBar mprogressbar;
     private int role;
+    private static boolean isOnCreat;
 
 
     @Override
@@ -97,7 +101,6 @@ public class HomeActivity extends AppCompatActivity {
         /**
          * 没有登陆的时候，先登陆
          */
-
 
         SDKInitializer.initialize(getApplicationContext());
 
@@ -121,21 +124,29 @@ public class HomeActivity extends AppCompatActivity {
         initView();
 
         if (isNetworkAvailable(getApplicationContext())) {
+            mprogressbar.setVisibility(View.VISIBLE);
+            mViewpager.setVisibility(View.GONE);
+            isOnCreat = true;
             getData();
+
         }else {
             rl_notonlie.setVisibility(View.VISIBLE);
-            mbtrefresh.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isNetworkAvailable(getApplicationContext())){
-                        getData();
-                        rl_notonlie.setVisibility(View.GONE);
-                        mprogressbar.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-
+            mprogressbar.setVisibility(View.GONE);
         }
+
+        mbtrefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isNetworkAvailable(getApplicationContext())){
+                    mViewpager.setVisibility(View.GONE);
+                    getData();
+                    rl_notonlie.setVisibility(View.GONE);
+                    mprogressbar.setVisibility(View.VISIBLE);
+                }else {
+                    ToastUtil.shortToast(getApplicationContext(),"请检查网络");
+                }
+            }
+        });
 
         initData();
     }
@@ -314,7 +325,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Message message = Message.obtain();
+                    message.what = DATA_REPORT;
+                    handler.sendMessage(message);
 
                 }
             }
@@ -342,7 +355,6 @@ public class HomeActivity extends AppCompatActivity {
         fragments.add(new HomeFragment());
         fragments.add(new MainFragments());
         fragments.add(new SuperviseFragment());
-        fragments.add(new TableFragment());
         fragments.add(new MeFragment());
         //把fragment填充到viewpager
 
@@ -397,14 +409,9 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
 
-                    //加载数据 Table
-                    case R.id.homeactivity_rbtn_data:
-                        mViewpager.setCurrentItem(3, false);
-                        break;
-
                     //我的界面
                     case R.id.homeactivity_rbtn_me:
-                        mViewpager.setCurrentItem(4, false);
+                        mViewpager.setCurrentItem(3, false);
                         break;
 
 
@@ -421,6 +428,9 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
+        PermissionUtils.requestPermission(HomeActivity.this,PermissionUtils.CODE_RECORD_AUDIO,mPermissionGrant);
+
+        PermissionUtils.requestPermission(HomeActivity.this,PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE,mPermissionGrant);
 
         //先判断有没有现版本
         new Thread(){
@@ -462,6 +472,24 @@ public class HomeActivity extends AppCompatActivity {
             }).create().show();
         }
 
+    }
+
+
+    private PermissionGrant mPermissionGrant = new PermissionGrant() {
+        @Override
+        public void onPermissionGranted(int requestCode) {
+            switch (requestCode){
+                case PermissionUtils.CODE_RECORD_AUDIO:
+                    break;
+            }
+        }
+    };
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtils.requestPermissionsResult(HomeActivity.this,requestCode,permissions,grantResults,mPermissionGrant);
     }
 
     private Boolean isweekfive() {
@@ -533,6 +561,8 @@ public class HomeActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case DATA_SUCCESS:
+                    mViewpager.setVisibility(View.VISIBLE);
+                    rl_notonlie.setVisibility(View.GONE);
                     mprogressbar.setVisibility(View.GONE);
                     break;
                 case VERSIONINFO:
@@ -561,7 +591,7 @@ public class HomeActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
-                                                UpdateVersionUtil.showDialog(getApplicationContext(),versionInfo);
+                                                UpdateVersionUtil.showDialog(HomeActivity.this,versionInfo);
                                             }
                                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             @Override
@@ -587,7 +617,9 @@ public class HomeActivity extends AppCompatActivity {
                     break;
 
                 case DATA_REPORT:
-                    ToastUtil.shortToast(getApplicationContext(),"网络异常，未获取数据");
+                    mprogressbar.setVisibility(View.GONE);
+                    rl_notonlie.setVisibility(View.VISIBLE);
+                    ToastUtil.shortToast(getApplicationContext(),"网络异常,未获取数据,请刷新");
                     break;
             }
         }
@@ -675,10 +707,15 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
 
         //判断是否有网络
-        if (isNetworkAvailable(getApplicationContext())){
-            getData();
-        }else{
-            ToastUtil.shortToast(getApplicationContext(),"网络打盹了");
+        //做判断 如果是只走 onResume 那就请求  走onCreate 就不请求
+        if (!isOnCreat) {
+            if (isNetworkAvailable(getApplicationContext())) {
+                mViewpager.setVisibility(View.GONE);
+                getData();
+            } else {
+                ToastUtil.shortToast(getApplicationContext(), "未连接网络");
+            }
+
         }
 
         isFive =  isweekfive();
