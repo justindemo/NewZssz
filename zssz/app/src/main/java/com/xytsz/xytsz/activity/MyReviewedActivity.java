@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.MyReportAdapter;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ForMyDis;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -41,7 +42,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by admin on 2017/6/9.
- *
+ * <p>
  * wod 审核页面
  */
 public class MyReviewedActivity extends AppCompatActivity {
@@ -73,10 +74,9 @@ public class MyReviewedActivity extends AppCompatActivity {
                     final List<ForMyDis> details = (List<ForMyDis>) msg.obj;
                     if (details.size() != 0) {
                         MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists, audioUrls);
-                        if (adapter != null) {
-                            myreportProgressbar.setVisibility(View.GONE);
-                            lvReprote.setAdapter(adapter);
-                        }
+
+                        myreportProgressbar.setVisibility(View.GONE);
+                        lvReprote.setAdapter(adapter);
 
 
                         lvReprote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,8 +84,8 @@ public class MyReviewedActivity extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(MyReviewedActivity.this, MyReporteDetailActivity.class);
                                 intent.putExtra("detail", details.get(position));
-                                intent.putExtra("audioUrl",audioUrls.get(position));
-                                intent.putExtra("flag",2);
+                                intent.putExtra("audioUrl", audioUrls.get(position));
+                                intent.putExtra("flag", 2);
                                 intent.putExtra("imageUrlReport", (Serializable) imageUrlLists.get(position));
                                 startActivity(intent);
                             }
@@ -101,7 +101,7 @@ public class MyReviewedActivity extends AppCompatActivity {
         }
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
-    private List<String> audioUrls = new ArrayList<>();
+    private List<AudioUrl> audioUrls = new ArrayList<>();
     private String nodata;
 
 
@@ -127,16 +127,16 @@ public class MyReviewedActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                String data = getData();
-                if (data != null) {
-                    List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
-                    }.getType());
+                    String data = getData();
+                    if (data != null) {
+                        List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
+                        }.getType());
 
 
-                    for (ForMyDis forMyDis : details) {
-                        String taskNumber = forMyDis.getTaskNumber();
+                        for (ForMyDis forMyDis : details) {
+                            String taskNumber = forMyDis.getTaskNumber();
 
-                        String json = null;
+                            String json = null;
 
                             json = MyApplication.getAllImagUrl(taskNumber, GlobalContanstant.GETREVIEW);
 
@@ -148,15 +148,17 @@ public class MyReviewedActivity extends AppCompatActivity {
                                 imageUrlLists.add(imageUrlList);
                             }
 
-                            String audioUrl = RoadActivity.getAudio(taskNumber);
-
-                            audioUrls.add(audioUrl);
+                            String audioUrljson = RoadActivity.getAudio(taskNumber);
+                            if (audioUrljson != null) {
+                                AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                audioUrls.add(audioUrl);
+                            }
 
                         }
-                    Message message = Message.obtain();
-                    message.obj = details;
-                    message.what = REPORTE;
-                    handler.sendMessage(message);
+                        Message message = Message.obtain();
+                        message.obj = details;
+                        message.what = REPORTE;
+                        handler.sendMessage(message);
 
                     }
                 } catch (Exception e) {
@@ -171,7 +173,7 @@ public class MyReviewedActivity extends AppCompatActivity {
     }
 
 
-    private String getData() {
+    private String getData()throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getALlReviewByPersonID);
         soapObject.addProperty("personid", personId);
 
@@ -182,16 +184,13 @@ public class MyReviewedActivity extends AppCompatActivity {
 
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        try {
-            httpTransportSE.call(NetUrl.getALlReviewByPersonID_SOAP_ACTION, envelope);
-            SoapObject object = (SoapObject) envelope.bodyIn;
-            String result = object.getProperty(0).toString();
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return null;
+        httpTransportSE.call(NetUrl.getALlReviewByPersonID_SOAP_ACTION, envelope);
+        SoapObject object = (SoapObject) envelope.bodyIn;
+        String result = object.getProperty(0).toString();
+        return result;
+
+
     }
 
     private void initAcitionbar() {

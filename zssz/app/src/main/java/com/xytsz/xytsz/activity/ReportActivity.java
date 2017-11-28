@@ -940,6 +940,7 @@ public class ReportActivity extends AppCompatActivity  {
                 case R.id.report:
 
                     diseaseInformation.diseaseDescription = mEtDesc.getText().toString();
+                    diseaseInformation.audioTime = mtvAudio.getText().toString();
                     //保存到服务器  弹吐司
                     if (mEtlocation != null){
                         diseaseInformation.locationDesc = mEtlocation.getText().toString();
@@ -1155,8 +1156,8 @@ public class ReportActivity extends AppCompatActivity  {
         soapObject.addProperty("TaskNumber", diseaseInformation.taskNumber);
         soapObject.addProperty("FileName", diseaseInformation.audioName);  //文件类型
         soapObject.addProperty("AudioBase64", diseaseInformation.encodeBase64File);   //参数2  图片字符串
+        soapObject.addProperty("time", diseaseInformation.audioTime);   //参数2  图片字符串
 
-        Log.i("soapo", soapObject.toString());
         //设置访问地址 和 超时时间
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.bodyOut = soapObject;

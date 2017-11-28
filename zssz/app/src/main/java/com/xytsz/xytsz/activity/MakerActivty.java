@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.Review;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -91,7 +92,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
         }
     };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
-    private HashMap<String,String> audioUrls = new HashMap<>();
+    private HashMap<String,AudioUrl> audioUrls = new HashMap<>();
     private int position;
     private LatLng latlngNow;
     private double mylongitude;
@@ -177,9 +178,17 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                                 imageUrlLists.add(imageUrlList);
                             }
 
-                            String audioUrl = RoadActivity.getAudio(taskNumber);
+                            String audioUrljson = RoadActivity.getAudio(taskNumber);
 
-                            audioUrls.put(taskNumber,audioUrl);
+                            if (audioUrljson != null){
+
+                                AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                audioUrls.put(taskNumber,audioUrl);
+
+                            }
+
+
+
 
 
                         }
@@ -390,8 +399,8 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                         Intent intent = new Intent(v.getContext(), DiseaseDetailActivity.class);
                         intent.putExtra("detail", detail);
 
-                        for (Map.Entry<String,String> entry: audioUrls.entrySet()){
-                           if( entry.getKey() == detail.getTaskNumber()){
+                        for (Map.Entry<String,AudioUrl> entry: audioUrls.entrySet()){
+                           if( entry.getKey().equals(detail.getTaskNumber())){
                                intent.putExtra("audioUrl",entry.getValue());
                            }
 

@@ -22,7 +22,7 @@
         <RelativeLayout
             android:id="@+id/rl_post"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="6dp"
             >
 
@@ -77,7 +77,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="位置描述"
+                    android:text="位置描述位置描述位置描述位置描述位置描述位置描述位置描述位置描述位置描述"
                     android:textSize="16sp" />
 
             </FrameLayout>

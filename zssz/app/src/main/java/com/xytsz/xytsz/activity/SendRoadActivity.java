@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.SendRoadAdapter;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.Deal;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.PersonList;
@@ -222,7 +223,7 @@ public class SendRoadActivity extends AppCompatActivity {
         return result;
     }
 
-    private List<String> audioUrls = new ArrayList<>();
+    private List<AudioUrl> audioUrls = new ArrayList<>();
     private void initData() {
 
         ToastUtil.shortToast(getApplicationContext(), "正在加载数据..");
@@ -272,9 +273,12 @@ public class SendRoadActivity extends AppCompatActivity {
 
                             }
 
-                            String audioUrl = RoadActivity.getAudio(taskNumber);
+                            String audioUrljson = RoadActivity.getAudio(taskNumber);
+                            if (audioUrljson != null){
+                                AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                audioUrls.add(audioUrl);
+                            }
 
-                            audioUrls.add(audioUrl);
 
                         }
 
@@ -284,7 +288,6 @@ public class SendRoadActivity extends AppCompatActivity {
 
 
                         sendRoadAdapter = new SendRoadAdapter(handler,reviewRoad, imageUrlReportLists,personlist,audioUrls);
-                        if (sendRoadAdapter != null) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -292,7 +295,7 @@ public class SendRoadActivity extends AppCompatActivity {
                                     mProgressBar.setVisibility(View.GONE);
                                 }
                             });
-                        }
+
                     }
                     }
                 } catch (Exception e) {

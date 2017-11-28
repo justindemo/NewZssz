@@ -19,7 +19,7 @@
     <RelativeLayout
         android:padding="6dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_my_reporter_title"
@@ -47,7 +47,7 @@
 
         <TextView
             android:layout_marginTop="6dp"
-            android:text="金星路"
+            android:text="金星路金星路金星路金星路金星路金星路金星路金星路金星路金星路"
             android:id="@+id/tv_history_faci"
             android:layout_below="@id/tv_history_reporter"
             android:textSize="16sp"

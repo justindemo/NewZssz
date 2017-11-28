@@ -79,6 +79,7 @@ public class DiseaseInformation implements KvmSerializable {
     public String encodeBase64File;
     public String audioName;
     public String videoName;
+    public String audioTime;
 
     @Override
     public Object getProperty(int i) {

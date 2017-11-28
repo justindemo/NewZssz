@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ForMyDis;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.global.Data;
@@ -71,7 +72,7 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
     private ForMyDis detail;
     private List<ImageUrl> imageUrlReport;
     private int id;
-    private String audioUrl;
+    private AudioUrl audioUrl;
     private SoundUtil soundUtil;
     private int flag;
 
@@ -83,7 +84,7 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
             detail = (ForMyDis) getIntent().getSerializableExtra("detail");
 
             imageUrlReport = (List<ImageUrl>) getIntent().getSerializableExtra("imageUrlReport");
-            audioUrl = getIntent().getStringExtra("audioUrl");
+            audioUrl = (AudioUrl) getIntent().getSerializableExtra("audioUrl");
 
             flag = getIntent().getIntExtra("flag", -1);
         }
@@ -178,38 +179,48 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         ivDetailPhoto3.setOnClickListener(this);
 
         if (detail.getAddressDescription().isEmpty()) {
-            tvMyDetailAddress.setVisibility(View.GONE);
-            tvMyProblemAudio.setVisibility(View.VISIBLE);
-            soundUtil = new SoundUtil();
-            int time = soundUtil.getTime(audioUrl);
-            if (time != 0) {
-                tvMyProblemAudio.setText(time + "″");
-            }
-            tvMyProblemAudio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (audioUrl != null) {
+                if (!audioUrl.getAudioUrl().equals("false")) {
+                    if (!audioUrl.getTime().isEmpty()) {
+                        tvMyDetailAddress.setVisibility(View.GONE);
+                        tvMyProblemAudio.setVisibility(View.VISIBLE);
+                        soundUtil = new SoundUtil();
 
-                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
-                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+                        tvMyProblemAudio.setText(audioUrl.getTime());
+                        tvMyProblemAudio.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                    tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                                final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+
+                                tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
 
-                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                        @Override
-                        public void onFinish() {
-                            tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
-                        }
+                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                    @Override
+                                    public void onFinish() {
+                                        tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                    }
 
-                        @Override
-                        public void onError() {
+                                    @Override
+                                    public void onError() {
 
-                        }
-                    });
+                                    }
+                                });
 
-                    soundUtil.play(audioUrl);
+                                soundUtil.play(audioUrl.getAudioUrl());
+                            }
+                        });
+                    }
+                } else {
+                    tvMyDetailAddress.setVisibility(View.VISIBLE);
+                    tvMyProblemAudio.setVisibility(View.GONE);
                 }
-            });
+            } else {
+                tvMyDetailAddress.setVisibility(View.VISIBLE);
+                tvMyProblemAudio.setVisibility(View.GONE);
+            }
 
         } else {
             tvMyDetailAddress.setVisibility(View.VISIBLE);

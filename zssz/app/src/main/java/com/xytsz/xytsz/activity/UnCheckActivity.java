@@ -106,36 +106,99 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
             switch (msg.what) {
                 case GlobalContanstant.CHECKFAIL:
-                    ToastUtil.shortToast(getApplicationContext(),"未获取数据");
+                    ToastUtil.shortToast(getApplicationContext(), "上传失败");
                     break;
+
                 case ISPOST:
                     String isPost = (String) msg.obj;
-                    if (isPost.equals("true")) {
-                        ToastUtil.shortToast(getApplicationContext(), "报验成功");
-                        goHome();
+                    if (isPost != null) {
+                        if (isPost.equals("true")) {
+                            ToastUtil.shortToast(getApplicationContext(), "上传图片中");
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    for (int i = 0; i < fileNamesss.size(); i++) {
+                                        diseaseInformation.photoName = fileNamesss.get(i);
+                                        diseaseInformation.encode = imageBase64Stringsss.get(i);
+                                        diseaseInformation.taskNumber = taskNumber;
+
+                                        try {
+                                            isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETCHECK);
+                                        } catch (Exception e) {
+                                            Message message = Message.obtain();
+                                            message.what = GlobalContanstant.CHECKFAIL;
+                                            handler.sendMessage(message);
+                                        }
+
+
+                                    }
+                                    Message message = Message.obtain();
+                                    message.what = IS_PHOTO_SUCCESS3;
+                                    message.obj = isphotoSuccess;
+                                    handler.sendMessage(message);
+
+                                }
+                            }.start();
+                        } else {
+                            ToastUtil.shortToast(getApplicationContext(), "上传失败");
+                        }
+                    } else {
+                        ToastUtil.shortToast(getApplicationContext(), "上传失败");
                     }
                     break;
                 case IS_PHOTO_SUCCESS1:
                     String isphotoSuccess = (String) msg.obj;
-                    if (isphotoSuccess.equals("true")) {
-                        ToastUtil.shortToast(getApplicationContext(), "处置前照片上报成功");
-                        btUncheckPredeal.setVisibility(View.GONE);
-                        isPostFirst = true;
-
+                    if (isphotoSuccess != null) {
+                        if (isphotoSuccess.equals("true")) {
+                            ToastUtil.shortToast(getApplicationContext(), "处置前照片上报成功");
+                            btUncheckPredeal.setVisibility(View.GONE);
+                            isPostFirst = true;
+                            ivPredealIcon1.setEnabled(false);
+                            ivPredealIcon2.setEnabled(false);
+                            ivPredealIcon3.setEnabled(false);
+                        } else {
+                            imageBase64Strings.clear();
+                            ToastUtil.shortToast(getApplicationContext(), "照片上报失败");
+                        }
+                    } else {
+                        imageBase64Strings.clear();
+                        ToastUtil.shortToast(getApplicationContext(), "照片上报失败");
                     }
+
                     break;
                 case IS_PHOTO_SUCCESS2:
                     String isphotoSuccess1 = (String) msg.obj;
-                    if (isphotoSuccess1.equals("true")) {
-                        ToastUtil.shortToast(getApplicationContext(), "处置中照片上报成功");
-                        btUncheckDealing.setVisibility(View.GONE);
-                        isPostSecond = true;
+                    if (isphotoSuccess1 != null) {
+                        if (isphotoSuccess1.equals("true")) {
+                            ToastUtil.shortToast(getApplicationContext(), "处置中照片上报成功");
+                            btUncheckDealing.setVisibility(View.GONE);
+                            isPostSecond = true;
+                            ivDealingIcon1.setEnabled(false);
+                            ivDealingIcon2.setEnabled(false);
+                            ivDealingIcon3.setEnabled(false);
+                        } else {
+                            imageBase64Stringss.clear();
+                            ToastUtil.shortToast(getApplicationContext(), "照片上报失败");
+                        }
+                    } else {
+                        imageBase64Stringss.clear();
+                        ToastUtil.shortToast(getApplicationContext(), "照片上报失败");
                     }
+
                     break;
                 case IS_PHOTO_SUCCESS3:
                     String isphotoSuccess2 = (String) msg.obj;
-                    if (isphotoSuccess2.equals("true")) {
-                        ToastUtil.shortToast(getApplicationContext(), "报验成功");
+                    if (isphotoSuccess2 != null) {
+                        if (isphotoSuccess2.equals("true")) {
+                            goHome();
+                            ToastUtil.shortToast(getApplicationContext(), "报验成功");
+                        } else {
+                            imageBase64Stringsss.clear();
+                            ToastUtil.shortToast(getApplicationContext(), "照片上报失败");
+                        }
+                    } else {
+                        imageBase64Stringsss.clear();
+                        ToastUtil.shortToast(getApplicationContext(), "图片未上传");
                     }
                     break;
             }
@@ -188,8 +251,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     if (preDealJson != null) {
                         final List<ImageUrl> imageUrlList = JsonUtil.jsonToBean(preDealJson,
                                 new TypeToken<List<ImageUrl>>() {
-                        }.getType());
-
+                                }.getType());
 
 
                         runOnUiThread(new Runnable() {
@@ -373,7 +435,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         soapObject.addProperty("FileName", diseaseInformation.photoName);  //文件类型
         soapObject.addProperty("ImgBase64String", diseaseInformation.encode);   //参数2  图片字符串
         soapObject.addProperty("PhaseId", phaseIndication);
-        Log.i("soapo", soapObject.toString());
+
         Log.i("upload", "发送给服务器的：" + diseaseInformation.encode);
         //设置访问地址 和 超时时间
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
@@ -435,7 +497,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private DiseaseInformation diseaseInformation;
-    private static final String iconPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/UncheckImage";//图片的存储目录
+    private static final String iconPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Zssz/UncheckImage";//图片的存储目录
 
     public String saveToSDCard(Bitmap bitmap) {
         //先要判断SD卡是否存在并且挂载
@@ -521,7 +583,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
             // 点击上报处置前的照片
             case R.id.bt_uncheck_predeal:
-                ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
+                ToastUtil.shortToast(getApplicationContext(), "正在上传，请稍候");
                 new Thread() {
 
                     @Override
@@ -534,8 +596,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                             try {
                                 isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETSEND);
                             } catch (Exception e) {
-
-                                return;
+                                Message message = Message.obtain();
+                                message.what = GlobalContanstant.CHECKFAIL;
+                                handler.sendMessage(message);
                             }
 
 
@@ -577,7 +640,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 //是否有处置前的照片
 
                 if (isPostFirst) {
-                    ToastUtil.shortToast(getApplicationContext(),"正在上传，请稍候");
+                    ToastUtil.shortToast(getApplicationContext(), "正在上传，请稍候");
                     new Thread() {
                         @Override
                         public void run() {
@@ -590,8 +653,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 try {
                                     isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETDEAL);
                                 } catch (Exception e) {
-
-                                    return;
+                                    Message message = Message.obtain();
+                                    message.what = GlobalContanstant.CHECKFAIL;
+                                    handler.sendMessage(message);
                                 }
 
 
@@ -664,7 +728,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                     handler.sendMessage(message);
 
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Message message = Message.obtain();
+                                    message.what = GlobalContanstant.CHECKFAIL;
+                                    handler.sendMessage(message);
                                 }
                             }
                         }.start();
@@ -681,8 +747,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                     try {
                                         isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETCHECK);
                                     } catch (Exception e) {
-
-                                        return;
+                                        Message message = Message.obtain();
+                                        message.what = GlobalContanstant.CHECKFAIL;
+                                        handler.sendMessage(message);
                                     }
 
 
@@ -712,7 +779,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         // 照片全路径
         String fileName;
         // 文件夹路径
-        String pathUrl = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Image/mymy/";
+        String pathUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Image/mymy/";
         String imageName = "imageTest" + i + ".jpg";
         File file = new File(pathUrl);
         file.mkdirs();// 创建文件夹
@@ -766,7 +833,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         Bitmap rotateBitmap = BitmapUtil.rotateBitmap(bitmap, bitmapDegree);
         return rotateBitmap;
     }
-
 
 
     @Override
@@ -870,7 +936,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 btUncheckDealed.setEnabled(true);
                 btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
             } else if (requestCode == 9008) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
+
                 bitmap = getBitmap(ivDealedIcon2);
                 fileName = saveToSDCard(bitmap);
                 //将选择的图片设置到控件上
@@ -882,7 +948,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 btUncheckDealed.setEnabled(true);
                 btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
             } else if (requestCode == 9009) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
 
                 bitmap = getBitmap(ivDealedIcon3);
                 fileName = saveToSDCard(bitmap);
@@ -892,7 +957,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 encode = photo2Base64(path);
                 fileNamesss.add(fileName);
                 imageBase64Stringsss.add(encode);
-
                 btUncheckDealed.setEnabled(true);
                 btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
             }
@@ -916,7 +980,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
             actionBar.setTitle(R.string.post);
         }
     }
-
 
 
     @Override

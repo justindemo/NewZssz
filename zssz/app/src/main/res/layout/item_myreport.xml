@@ -13,8 +13,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="6dp">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="6dp">
 
         <TextView
             android:id="@+id/tv_my_reporter_title"
@@ -66,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="位置描述"
+                android:text="位置描述位置描述位置描述位置描述位置描述位置描述位置描述位置描述位置描述"
                 android:textSize="16sp" />
 
         </FrameLayout>
@@ -76,7 +77,7 @@
             android:id="@+id/tv_my_report_time_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_my_pbname1"
+            android:layout_below="@+id/tv_my_pbname1"
             android:layout_marginLeft="3dp"
             android:layout_marginTop="6dp"
             android:text="@string/reportertime"
@@ -86,7 +87,7 @@
             android:id="@+id/tv_my_report_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_my_pbname_title"
+            android:layout_below="@+id/tv_my_pbname1"
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@+id/tv_my_pbname_title"
             android:text="2017-05-31 09:29:54"

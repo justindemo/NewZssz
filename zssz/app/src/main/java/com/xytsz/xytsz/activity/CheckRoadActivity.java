@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.CheckRoadAdapter;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.Review;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -38,7 +39,7 @@ import java.util.List;
 
 /**
  * Created by admin on 2017/2/22.
- * <p/>
+ * <p>
  * Item界面
  */
 public class CheckRoadActivity extends AppCompatActivity {
@@ -48,22 +49,22 @@ public class CheckRoadActivity extends AppCompatActivity {
     private int position;
     private Review.ReviewRoad reviewRoad;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
 
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
 
                 case GlobalContanstant.CHECKPASS:
                     mProgressBar.setVisibility(View.GONE);
-                    ToastUtil.shortToast(getApplicationContext(),"已验收完毕");
+                    ToastUtil.shortToast(getApplicationContext(), "已验收完毕");
                     break;
 
                 case GlobalContanstant.CHECKFAIL:
                     mProgressBar.setVisibility(View.GONE);
-                    ToastUtil.shortToast(getApplicationContext(),"未获取数据,请稍后");
+                    ToastUtil.shortToast(getApplicationContext(), "未获取数据,请稍后");
                     break;
 
                 case ROADDATA:
@@ -73,11 +74,11 @@ public class CheckRoadActivity extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Intent intent = new Intent(parent.getContext(), CheckDetailActivity.class);
                             intent.putExtra("position", position);
-                            intent.putExtra("audioUrls",(Serializable) audioUrls);
+                            intent.putExtra("audioUrls", (Serializable) audioUrls);
                             intent.putExtra("reviewRoad", reviewRoad);
-                            intent.putExtra("imageUrlReport",(Serializable) imageUrlLists);
-                            intent.putExtra("imageUrlPost",(Serializable) imageUrlPostLists);
-                            startActivityForResult(intent,40001);
+                            intent.putExtra("imageUrlReport", (Serializable) imageUrlLists);
+                            intent.putExtra("imageUrlPost", (Serializable) imageUrlPostLists);
+                            startActivityForResult(intent, 40001);
 
                         }
                     });
@@ -90,7 +91,7 @@ public class CheckRoadActivity extends AppCompatActivity {
     private CheckRoadAdapter adapter;
     private List<List<ImageUrl>> imageUrlPostLists = new ArrayList<>();
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
-    private List<String> audioUrls = new ArrayList<>();
+    private List<AudioUrl> audioUrls = new ArrayList<>();
     private List<Review.ReviewRoad.ReviewRoadDetail> list;
     private ProgressBar mProgressBar;
 
@@ -163,19 +164,19 @@ public class CheckRoadActivity extends AppCompatActivity {
                                 }
 
 
-                                String audioUrl = RoadActivity.getAudio(taskNumber);
-
-                                audioUrls.add(audioUrl);
+                                String audioUrljson = RoadActivity.getAudio(taskNumber);
+                                if (audioUrljson != null) {
+                                    AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                    audioUrls.add(audioUrl);
+                                }
                             }
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     adapter = new CheckRoadAdapter(reviewRoad, imageUrlLists, imageUrlPostLists);
-                                    if (adapter != null) {
+                                    mlv.setAdapter(adapter);
+                                    mProgressBar.setVisibility(View.GONE);
 
-                                        mlv.setAdapter(adapter);
-                                        mProgressBar.setVisibility(View.GONE);
-                                    }
                                 }
                             });
 
@@ -198,7 +199,7 @@ public class CheckRoadActivity extends AppCompatActivity {
 
     }
 
-    public  String getPostImagUrl(String taskNumber) throws Exception {
+    public String getPostImagUrl(String taskNumber) throws Exception {
 
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getPostImageURLmethodName);
         soapObject.addProperty("TaskNumber", taskNumber);
@@ -212,7 +213,7 @@ public class CheckRoadActivity extends AppCompatActivity {
 
         httpTransportSE.call(NetUrl.getPostImageURL_SOAP_ACTION, envelope);
         SoapObject object = (SoapObject) envelope.bodyIn;
-        String result =  object.getProperty(0).toString();
+        String result = object.getProperty(0).toString();
         return result;
     }
 
@@ -220,16 +221,16 @@ public class CheckRoadActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (resultCode){
+        switch (resultCode) {
             case GlobalContanstant.CHECKPASS:
                 int passposition = data.getIntExtra("passposition", -1);
                 list.remove(passposition);
                 adapter.notifyDataSetChanged();
 
                 Intent intent = getIntent();
-                intent.putExtra("position",position);
-                intent.putExtra("passposition",passposition);
-                setResult(GlobalContanstant.CHECKROADPASS,intent);
+                intent.putExtra("position", position);
+                intent.putExtra("passposition", passposition);
+                setResult(GlobalContanstant.CHECKROADPASS, intent);
                 break;
 
             case GlobalContanstant.CHECKFAIL:
@@ -238,15 +239,14 @@ public class CheckRoadActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
                 Intent intent1 = getIntent();
-                intent1.putExtra("position",position);
-                intent1.putExtra("failposition",failposition);
-                setResult(GlobalContanstant.CHECKROADFAIL,intent1);
+                intent1.putExtra("position", position);
+                intent1.putExtra("failposition", failposition);
+                setResult(GlobalContanstant.CHECKROADFAIL, intent1);
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
 
     }
-
 
 
     private void initAcitionbar() {

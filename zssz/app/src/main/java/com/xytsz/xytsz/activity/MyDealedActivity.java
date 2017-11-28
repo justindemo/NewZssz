@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.MyReportAdapter;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ForMyDis;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -101,7 +102,7 @@ public class MyDealedActivity extends AppCompatActivity {
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
     private List<List<ImageUrl>> imageUrlPostLists = new ArrayList<>();
     private String nodata;
-    private List<String> audioUrls = new ArrayList<>();
+    private List<AudioUrl> audioUrls = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -154,9 +155,13 @@ public class MyDealedActivity extends AppCompatActivity {
 
                                 imageUrlPostLists.add(imageUrlPostList);
                             }
-                            String audioUrl = RoadActivity.getAudio(taskNumber);
+                            String audioUrljson = RoadActivity.getAudio(taskNumber);
 
-                            audioUrls.add(audioUrl);
+
+                            if (audioUrljson != null){
+                                AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                audioUrls.add(audioUrl);
+                            }
 
                         }
                         Message message = Message.obtain();
@@ -197,7 +202,7 @@ public class MyDealedActivity extends AppCompatActivity {
         return result;
     }
 
-    private String getData() {
+    private String getData()throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getALlDealByPersonID);
 
         soapObject.addProperty("personid", personId);
@@ -209,11 +214,8 @@ public class MyDealedActivity extends AppCompatActivity {
 
 
         HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        try {
-            httpTransportSE.call(NetUrl.getALlDealByPersonID_SOAP_ACTION, envelope);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        httpTransportSE.call(NetUrl.getALlDealByPersonID_SOAP_ACTION, envelope);
 
         SoapObject object = (SoapObject) envelope.bodyIn;
         String result = object.getProperty(0).toString();

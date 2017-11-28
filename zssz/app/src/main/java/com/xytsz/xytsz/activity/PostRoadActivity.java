@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.PostRoadAdapter;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.Review;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -37,14 +38,14 @@ public class PostRoadActivity extends AppCompatActivity {
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
     private ProgressBar mProgressBar;
     private PostRoadAdapter adapter;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case GlobalContanstant.SENDFAIL:
                     mProgressBar.setVisibility(View.GONE);
-                    ToastUtil.shortToast(getApplicationContext(),"未数据获取,请稍后");
+                    ToastUtil.shortToast(getApplicationContext(), "未数据获取,请稍后");
                     break;
             }
         }
@@ -66,7 +67,7 @@ public class PostRoadActivity extends AppCompatActivity {
 
     }
 
-    private List<String> audioUrls = new ArrayList<>();
+    private List<AudioUrl> audioUrls = new ArrayList<>();
 
     private void initData() {
 
@@ -89,7 +90,6 @@ public class PostRoadActivity extends AppCompatActivity {
                         List<Review.ReviewRoad.ReviewRoadDetail> list = reviewRoad.getList();
 
 
-
                         audioUrls.clear();
                         //遍历list
                         for (Review.ReviewRoad.ReviewRoadDetail detail : list) {
@@ -107,19 +107,22 @@ public class PostRoadActivity extends AppCompatActivity {
                                 imageUrlLists.add(imageUrlList);
                             }
 
-                            String audioUrl = RoadActivity.getAudio(taskNumber);
+                            String audioUrljson = RoadActivity.getAudio(taskNumber);
 
-                            audioUrls.add(audioUrl);
+                            if (audioUrljson != null) {
+                                AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                audioUrls.add(audioUrl);
+                            }
                         }
                         adapter = new PostRoadAdapter(review.getReviewRoadList().get(position), imageUrlLists, audioUrls);
                         //主线程更新UI
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mlv.setAdapter(adapter);
-                                    mProgressBar.setVisibility(View.GONE);
-                                }
-                            });
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mlv.setAdapter(adapter);
+                                mProgressBar.setVisibility(View.GONE);
+                            }
+                        });
 
                     }
                 } catch (Exception e) {

@@ -20,6 +20,7 @@ import com.xytsz.xytsz.MyApplication;
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.adapter.ReviewAdapter;
 import com.xytsz.xytsz.adapter.RoadAdapter;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.Review;
 import com.xytsz.xytsz.global.GlobalContanstant;
@@ -98,7 +99,7 @@ public class RoadActivity extends AppCompatActivity {
             }
         };
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
-    private List<String> audioUrls = new ArrayList<>();
+    private List<AudioUrl> audioUrls = new ArrayList<>();
     private int personId;
     private int position;
     private ProgressBar mProgressBar;
@@ -177,9 +178,14 @@ public class RoadActivity extends AppCompatActivity {
                                 }
 
 
-                                String audioUrl = getAudio(taskNumber);
+                                String audioUrljson = getAudio(taskNumber);
 
-                                audioUrls.add(audioUrl);
+                                if (audioUrljson != null){
+                                    AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                    audioUrls.add(audioUrl);
+                                }
+
+
 
                             }
 

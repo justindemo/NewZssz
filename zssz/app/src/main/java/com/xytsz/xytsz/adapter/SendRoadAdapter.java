@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.xytsz.xytsz.activity.PhotoShowActivity;
 import com.xytsz.xytsz.activity.SendBigPhotoActivity;
 import com.xytsz.xytsz.activity.SendRoadDetailActivity;
+import com.xytsz.xytsz.bean.AudioUrl;
 import com.xytsz.xytsz.bean.ImageUrl;
 import com.xytsz.xytsz.bean.PersonList;
 import com.xytsz.xytsz.bean.Review;
@@ -62,7 +63,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
     private List<List<ImageUrl>> imageUrlLists;
     private String[] servicePerson;
     private List<PersonList.PersonListBean> personlist;
-    private List<String> audioUrls;
+    private List<AudioUrl> audioUrls;
     private Handler handler;
     private int requirementsComplete_person_id;
     private String imgurl;
@@ -70,7 +71,7 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
     private SoundUtil soundUtil;
 
 
-    public SendRoadAdapter(Handler handler, Review.ReviewRoad reviewRoad, List<List<ImageUrl>> imageUrlLists, List<PersonList.PersonListBean> personlist, List<String> audioUrls) {
+    public SendRoadAdapter(Handler handler, Review.ReviewRoad reviewRoad, List<List<ImageUrl>> imageUrlLists, List<PersonList.PersonListBean> personlist, List<AudioUrl> audioUrls) {
         this.handler = handler;
 
         this.reviewRoad = reviewRoad;
@@ -84,6 +85,8 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
         for (int i = 0; i < servicePerson.length; i++) {
             this.servicePerson[i] = personlist.get(i).getName();
         }
+
+        soundUtil = new SoundUtil();
     }
 
     @Override
@@ -270,43 +273,47 @@ public class SendRoadAdapter extends BaseAdapter implements View.OnClickListener
 
         //判断是否有语音
         if (reviewRoadDetail.getAddressDescription().isEmpty()) {
-            if (!audioUrls.get(position).equals("fasle")) {
-                holder.Pname.setVisibility(View.GONE);
-                holder.tvProblemAudio.setVisibility(View.VISIBLE);
-                soundUtil = new SoundUtil();
+            final AudioUrl audioUrl = audioUrls.get(position);
+            if (audioUrl != null) {
+                if (!audioUrl.getAudioUrl().equals("false")) {
+                    if (!audioUrl.getTime().isEmpty()) {
+                        holder.Pname.setVisibility(View.GONE);
+                        holder.tvProblemAudio.setVisibility(View.VISIBLE);
 
-                int time = soundUtil.getTime(audioUrls.get(position));
-                if (time != 0) {
-                    holder.tvProblemAudio.setText(time + "″");
-                }
-                holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
+                        holder.tvProblemAudio.setText(audioUrl.getTime());
 
+                        holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-
-                        Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
-                        final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
-                        final TextView tv = (TextView) v;
-                        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
-
-                        soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                            @Override
-                            public void onFinish() {
-                                tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
-
-                            }
 
                             @Override
-                            public void onError() {
+                            public void onClick(View v) {
 
+                                Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
+                                final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
+                                final TextView tv = (TextView) v;
+                                tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+
+                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                    @Override
+                                    public void onFinish() {
+                                        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+
+                                    }
+                                });
+
+                                soundUtil.play(audioUrl.getAudioUrl());
                             }
                         });
-
-                        soundUtil.play(audioUrls.get(position));
                     }
-                });
-
+                }else {
+                    holder.Pname.setVisibility(View.VISIBLE);
+                    holder.tvProblemAudio.setVisibility(View.GONE);
+                }
             } else {
                 holder.Pname.setVisibility(View.VISIBLE);
                 holder.tvProblemAudio.setVisibility(View.GONE);
