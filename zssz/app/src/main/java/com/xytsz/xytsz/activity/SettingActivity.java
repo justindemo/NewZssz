@@ -119,7 +119,7 @@ public class SettingActivity extends AppCompatActivity {
                             message.what = VERSIONINFO;
                             handler.sendMessage(message);
                         } catch (Exception e) {
-                            e.printStackTrace();
+
                         }
 
                     }

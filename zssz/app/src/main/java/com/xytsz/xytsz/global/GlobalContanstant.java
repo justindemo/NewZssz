@@ -68,4 +68,12 @@ public class GlobalContanstant {
     public static final String SIGN = "sign";
     public static final String ALLUSERCOUNT = "allusercount";
     public static final String INERGRAL = "inergral";
+    public static final int REPORTEFAIL = 66600;
+    public static final int IMAGEFAIL = 60000;
+    public static final int REPORTESUCCESS = 6002;
+    public static final int FAIL = 501;
+    public static final int MYSENDFAIL = 50001;
+    public static final int MYSENDSUCCESS = 50002;
+    public static final int PERSONLISTSUCCESS = 50003;
+    public static final int PERSONLISTFAIL = 50004;
 }

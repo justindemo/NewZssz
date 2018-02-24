@@ -1,7 +1,6 @@
 package com.xytsz.xytsz.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,18 +11,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.xytsz.xytsz.R;
-import com.xytsz.xytsz.bean.VisitorInfo;
 import com.xytsz.xytsz.global.Data;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
-import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
@@ -31,8 +24,6 @@ import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-
-import java.util.jar.Attributes;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,6 +46,8 @@ public class MyInformationActivity extends AppCompatActivity {
     RelativeLayout myLlActivite;
     @Bind(R.id.mine_compelet)
     Button mineCompelet;
+    @Bind(R.id.mine_modification_psd)
+    Button mineModificationPsd;
 
     private String phone;
     private String username;
@@ -103,9 +96,9 @@ public class MyInformationActivity extends AppCompatActivity {
         if (role == 0) {
             mineCompelet.setVisibility(View.VISIBLE);
 
-            if (username.equals(originalName)){
+            if (username.equals(originalName)) {
                 ToastUtil.shortToast(getApplicationContext(), compelet);
-            }else {
+            } else {
                 myName.setText(username);
                 myName.setCursorVisible(false);
                 myName.setFocusable(false);
@@ -135,7 +128,7 @@ public class MyInformationActivity extends AppCompatActivity {
                                     handler.sendMessage(message);
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+
                             }
                         }
                     }.start();
@@ -170,9 +163,9 @@ public class MyInformationActivity extends AppCompatActivity {
                     String json = (String) msg.obj;
                     if (json.equals("true")) {
                         SpUtils.saveString(getApplicationContext(), GlobalContanstant.USERNAME, name);
-                        ToastUtil.shortToast(getApplicationContext(),success);
+                        ToastUtil.shortToast(getApplicationContext(), success);
                         Intent intent = getIntent();
-                        setResult(3,intent);
+                        setResult(3, intent);
                         MyInformationActivity.this.finish();
                     }
                     break;
@@ -201,4 +194,9 @@ public class MyInformationActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.mine_modification_psd)
+    public void onViewClicked() {
+        Intent intent = new Intent(MyInformationActivity.this,ModificationActivity.class);
+        startActivity(intent);
+    }
 }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -30,18 +31,8 @@ import com.xytsz.xytsz.fragment.LoginFragment;
 import com.xytsz.xytsz.fragment.PhoneFragment;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.R;
+import com.xytsz.xytsz.util.PermissionUtils;
 
-import com.xytsz.xytsz.net.NetUrl;
-import com.xytsz.xytsz.service.LocationService;
-import com.xytsz.xytsz.util.IntentUtil;
-import com.xytsz.xytsz.util.JsonUtil;
-import com.xytsz.xytsz.util.SpUtils;
-import com.xytsz.xytsz.util.ToastUtil;
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +59,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
 
-        logintab = (TabLayout) findViewById(R.id.login_tab);
-        loginVg = (ViewPager)findViewById(R.id.login_viewpager);
 
-        String password =  getString(R.string.main_password);
+        PermissionUtils.requestPermission(MainActivity.this, PermissionUtils.CODE_RECORD_AUDIO, mPermissionGrant);
+        PermissionUtils.requestPermission(MainActivity.this, PermissionUtils.CODE_ACCESS_FINE_LOCATION, mPermissionGrant);
+
+        PermissionUtils.requestPermission(MainActivity.this, PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE, mPermissionGrant);
+        PermissionUtils.requestPermission(MainActivity.this, PermissionUtils.CODE_READ_EXTERNAL_STORAGE, mPermissionGrant);
+
+
+        logintab = (TabLayout) findViewById(R.id.login_tab);
+        loginVg = (ViewPager) findViewById(R.id.login_viewpager);
+
+        String password = getString(R.string.main_password);
         String phone = getString(R.string.main_phone);
 
 
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new LoginFragment());
         fragments.add(new PhoneFragment());
 
-        LoginAdapter loginAdapter = new LoginAdapter(getSupportFragmentManager(),fragments,titles);
+        LoginAdapter loginAdapter = new LoginAdapter(getSupportFragmentManager(), fragments, titles);
         loginVg.setAdapter(loginAdapter);
 
         //让标签 跟着viewpager 滑动
@@ -100,12 +99,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private PermissionUtils.PermissionGrant mPermissionGrant = new PermissionUtils.PermissionGrant() {
+        @Override
+        public void onPermissionGranted(int requestCode) {
+            switch (requestCode) {
+                case PermissionUtils.CODE_RECORD_AUDIO:
+                    break;
+            }
+        }
+    };
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE) {
+            PermissionUtils.openSettingActivity(MainActivity.this, "请打开存储权限");
+            return;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtils.requestPermissionsResult(MainActivity.this, requestCode, permissions, grantResults, mPermissionGrant);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         finish();
     }
-
 
 
 }

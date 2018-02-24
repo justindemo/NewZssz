@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.ui.SwipeLayoutManager;
+import com.xytsz.xytsz.ui.Swipelayout;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.SoundUtil;
 import com.xytsz.xytsz.util.SpUtils;
@@ -60,6 +62,7 @@ public class RoadAdapter extends BaseAdapter {
     private EditText etAdvice;
     private Button btnOk;
     private SoundUtil soundUtil;
+    private String advise;
 
 
     public RoadAdapter(Handler handler, Review.ReviewRoad reviewRoad, List<List<ImageUrl>> imageUrlLists, List<AudioUrl> audioUrls) {
@@ -162,43 +165,44 @@ public class RoadAdapter extends BaseAdapter {
         if (reviewRoadDetail.getAddressDescription().isEmpty()) {
             final AudioUrl audioUrl = audioUrls.get(position);
             if (audioUrl != null) {
-                if (!audioUrl.getAudioUrl().equals("false")) {
-                    if (!audioUrl.getTime().isEmpty()) {
-                        holder.tvProblemlocaname.setVisibility(View.GONE);
-                        holder.tvProblemAudio.setVisibility(View.VISIBLE);
-                        holder.tvProblemAudio.setText(audioUrl.getTime());
+                if (audioUrl.getAudioUrl() !=null) {
+                    if (!audioUrl.getAudioUrl().equals("false")) {
+                        if (!audioUrl.getTime().isEmpty()) {
+                            holder.tvProblemlocaname.setVisibility(View.GONE);
+                            holder.tvProblemAudio.setVisibility(View.VISIBLE);
+                            holder.tvProblemAudio.setText(audioUrl.getTime());
+                            holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
 
-                        holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
 
+                                @Override
+                                public void onClick(View v) {
 
-                            @Override
-                            public void onClick(View v) {
+                                    Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
+                                    final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
+                                    final TextView tv = (TextView) v;
+                                    tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
-                                Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
-                                final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
-                                final TextView tv = (TextView) v;
-                                tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                        @Override
+                                        public void onFinish() {
+                                            tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
 
-                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                        }
 
-                                    }
+                                        @Override
+                                        public void onError() {
 
-                                    @Override
-                                    public void onError() {
+                                        }
+                                    });
 
-                                    }
-                                });
-
-                                soundUtil.play(audioUrl.getAudioUrl());
-                            }
-                        });
+                                    soundUtil.play(audioUrl.getAudioUrl());
+                                }
+                            });
+                        }
+                    } else {
+                        holder.tvProblemlocaname.setVisibility(View.VISIBLE);
+                        holder.tvProblemAudio.setVisibility(View.GONE);
                     }
-                } else {
-                    holder.tvProblemlocaname.setVisibility(View.VISIBLE);
-                    holder.tvProblemAudio.setVisibility(View.GONE);
                 }
             } else {
                 holder.tvProblemlocaname.setVisibility(View.VISIBLE);
@@ -258,21 +262,45 @@ public class RoadAdapter extends BaseAdapter {
                 case R.id.tv_delete:
                     final int position = (int) v.getTag();
                     phaseIndication = 5;
+                    //点击的时候关闭这个条目
+                    Swipelayout swipeLayout = SwipeLayoutManager.getInstance().getSwipeLayout();
+                    if (swipeLayout != null){
+                        swipeLayout.close(false);
+                    }
+
                     taskNumber = getTaskNumber(position);
                     personID = SpUtils.getInt(v.getContext(), GlobalContanstant.PERSONID);
                     final AlertDialog dialog = new AlertDialog.Builder(v.getContext()).create();
                     View view = View.inflate(v.getContext(), R.layout.dialog_reject, null);
                     etAdvice = (EditText) view.findViewById(R.id.dialog_et_advise);
                     btnOk = (Button) view.findViewById(R.id.btn_ok);
+                    Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+                    RadioGroup radiogroup = (RadioGroup) view.findViewById(R.id.back_rg);
+
+                    radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            switch (checkedId) {
+                                case R.id.noblong_me_rb:
+                                    advise = "非管护段";
+                                    break;
+                                case R.id.noblong_rb:
+                                    advise = "非权属";
+                                    break;
+                            }
+                        }
+                    });
+
+
                     dialog.setView(view);
                     dialog.show();
-
 
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            dialog.dismiss();
-                            final String advice = etAdvice.getText().toString();
+
+                            final String advice = advise + "," + etAdvice.getText().toString();
                             new Thread() {
                                 @Override
                                 public void run() {
@@ -290,28 +318,32 @@ public class RoadAdapter extends BaseAdapter {
                                         //message.obj = isFail;
                                         handler.sendMessage(message);
 
+                                        dialog.dismiss();
+                                        reviewRoad.getList().remove(position);
+                                        imageUrlLists.remove(position);
+                                        audioUrls.remove(position);
+                                        notifyDataSetChanged();
+
                                     } catch (Exception e) {
-                                        e.printStackTrace();
+
                                     }
 
                                 }
                             }.start();
                         }
                     });
-
-                    reviewRoad.getList().remove(position);
-                    imageUrlLists.remove(position);
-                    notifyDataSetChanged();
-                    //点击的时候关闭这个条目
-                    SwipeLayoutManager.getInstance().getSwipeLayout().close(false);
-                    //上传当前状态给服务器
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
 
                     break;
                 //带修改：
                 case R.id.tv_pass1:
                     //派给养护一段
                     final int position1 = (int) v.getTag();
-
                     phaseIndication = 1;
                     taskNumber = getTaskNumber(position1);
                     personID = SpUtils.getInt(v.getContext(), GlobalContanstant.PERSONID);
@@ -332,16 +364,22 @@ public class RoadAdapter extends BaseAdapter {
                                 //message.obj = isPass;
                                 handler.sendMessage(message);
                             } catch (Exception e) {
-                                e.printStackTrace();
+
                             }
 
                         }
                     }.start();
                     reviewRoad.getList().remove(position1);
                     imageUrlLists.remove(position1);
+                    audioUrls.remove(position1);
                     //点击的时候关闭这个条目
                     notifyDataSetChanged();
-                    SwipeLayoutManager.getInstance().getSwipeLayout().close(false);
+                    Swipelayout swipeLayout1 = SwipeLayoutManager.getInstance()
+                            .getSwipeLayout();
+                    if (swipeLayout1 != null){
+                        swipeLayout1.close(false);
+                    }
+
                     break;
 
                 /*case R.id.tv_pass2:

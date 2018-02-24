@@ -56,7 +56,7 @@ public class ProblemActivity extends AppCompatActivity{
                         mLv.setAdapter(adapter);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }.start();

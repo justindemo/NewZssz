@@ -321,16 +321,16 @@ public class ForMyDis implements Serializable{
         this.Department_ID = Department_ID;
     }
 
-    public String getLongitude() {
-        return Longitude;
+    public double getLongitude() {
+        return Double.parseDouble(Longitude);
     }
 
     public void setLongitude(String Longitude) {
         this.Longitude = Longitude;
     }
 
-    public String getLatitude() {
-        return Latitude;
+    public double getLatitude() {
+        return Double.parseDouble(Latitude);
     }
 
     public void setLatitude(String Latitude) {

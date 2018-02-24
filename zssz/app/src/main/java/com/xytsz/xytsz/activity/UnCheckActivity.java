@@ -1,26 +1,29 @@
 package com.xytsz.xytsz.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +35,7 @@ import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.util.BitmapUtil;
 import com.xytsz.xytsz.util.JsonUtil;
+import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
@@ -51,8 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.microedition.khronos.opengles.GL;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,6 +71,8 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
     private static final int IS_PHOTO_SUCCESS1 = 10000003;
     private static final int IS_PHOTO_SUCCESS3 = 10000005;
     private static final int IS_PHOTO_SUCCESS2 = 10000004;
+    @Bind(R.id.uncheck_progressbar)
+    LinearLayout uncheckProgressbar;
 
     private boolean isPostFirst;
     @Bind(R.id.iv_predeal_icon1)
@@ -107,6 +112,8 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
             switch (msg.what) {
                 case GlobalContanstant.CHECKFAIL:
                     ToastUtil.shortToast(getApplicationContext(), "上传失败");
+                    uncheckProgressbar.setVisibility(View.GONE);
+                    btUncheckDealed.setVisibility(View.VISIBLE);
                     break;
 
                 case ISPOST:
@@ -141,9 +148,13 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                             }.start();
                         } else {
                             ToastUtil.shortToast(getApplicationContext(), "上传失败");
+                            uncheckProgressbar.setVisibility(View.GONE);
+                            btUncheckDealed.setVisibility(View.VISIBLE);
                         }
                     } else {
                         ToastUtil.shortToast(getApplicationContext(), "上传失败");
+                        uncheckProgressbar.setVisibility(View.GONE);
+                        btUncheckDealed.setVisibility(View.VISIBLE);
                     }
                     break;
                 case IS_PHOTO_SUCCESS1:
@@ -190,14 +201,19 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     String isphotoSuccess2 = (String) msg.obj;
                     if (isphotoSuccess2 != null) {
                         if (isphotoSuccess2.equals("true")) {
+                            uncheckProgressbar.setVisibility(View.GONE);
                             goHome();
                             ToastUtil.shortToast(getApplicationContext(), "报验成功");
                         } else {
                             imageBase64Stringsss.clear();
+                            uncheckProgressbar.setVisibility(View.GONE);
+                            btUncheckDealed.setVisibility(View.VISIBLE);
                             ToastUtil.shortToast(getApplicationContext(), "照片上报失败");
                         }
                     } else {
                         imageBase64Stringsss.clear();
+                        uncheckProgressbar.setVisibility(View.GONE);
+                        btUncheckDealed.setVisibility(View.VISIBLE);
                         ToastUtil.shortToast(getApplicationContext(), "图片未上传");
                     }
                     break;
@@ -208,7 +224,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
     private String path;
     private String taskNumber;
     private String isphotoSuccess;
+    private String dialogtitle;
     private Uri fileUri;
+    private File data;
 
 
     @Override
@@ -226,10 +244,11 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         ButterKnife.bind(this);
 
         initAcitionbar();
-
+        dialogtitle = this.getString(R.string.report_dialog_title);
         initData();
     }
 
+    private String[] items = new String[]{"拍照", "照片"};
 
     private void initData() {
 
@@ -459,14 +478,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
     public String createPhotoName() {
         //以系统的当前时间给图片命名
         Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
         String fileName = format.format(date) + ".jpg";
         return fileName;
     }
 
 
     private String getCurrentTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         String actualTime = format.format(new Date(System.currentTimeMillis()));
         return actualTime;
     }
@@ -497,7 +516,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private DiseaseInformation diseaseInformation;
-    private static final String iconPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Zssz/UncheckImage";//图片的存储目录
+    private static final String iconPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Zssz/UncheckImage/";//图片的存储目录
 
     public String saveToSDCard(Bitmap bitmap) {
         //先要判断SD卡是否存在并且挂载
@@ -514,7 +533,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);//把图片数据写入文件
                 photo2Base64(path);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+
             } finally {
                 if (outputStream != null) {
                     try {
@@ -552,33 +571,135 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         }
         return null;
     }
+    private String Tag = "com.xytsz.xytsz.fileprovider";
+
+    private PermissionUtils.PermissionGrant mPermissionGrant = new PermissionUtils.PermissionGrant() {
+        @Override
+        public void onPermissionGranted(int requestCode) {
+            switch (requestCode) {
+                case PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE:
+                    break;
+                case PermissionUtils.CODE_CAMERA:
+                    new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    dialog.dismiss();
+
+                                    data = new File(getPhotopath(1));
+                                    //fileUri = Uri.fromFile(file);
+                                    if (Build.VERSION.SDK_INT >= 24) {
+                                        fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                    } else {
+                                        fileUri=Uri.fromFile(data);
+                                    }
+                                    Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                    intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                    startActivityForResult(intent1, 9001);
+
+                                    break;
+                                case 1:
+                                    dialog.dismiss();
+                                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    startActivityForResult(intent, 9011);
+                                    break;
+                            }
+                        }
+                    }).create().show();
+
+                    break;
+
+
+            }
+        }
+    };
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionUtils.CODE_RECORD_AUDIO) {
+            PermissionUtils.openSettingActivity(UnCheckActivity.this, "请打开录音权限");
+            return;
+        }
+
+        PermissionUtils.requestPermissionsResult(this, requestCode, permissions, grantResults, mPermissionGrant);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 
     @OnClick({R.id.iv_predeal_icon1, R.id.iv_predeal_icon2, R.id.iv_predeal_icon3, R.id.bt_uncheck_predeal, R.id.iv_dealing_icon1, R.id.iv_dealing_icon2, R.id.iv_dealing_icon3, R.id.bt_uncheck_dealing, R.id.iv_dealed_icon1, R.id.iv_dealed_icon2, R.id.iv_dealed_icon3, R.id.bt_uncheck_dealed})
     public void onClick(View view) {
 
         switch (view.getId()) {
             case R.id.iv_predeal_icon1:
-                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file = new File(getPhotopath(1));
-                fileUri = Uri.fromFile(file);
-                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent1, 9001);
+
+                PermissionUtils.requestPermission(UnCheckActivity.this,PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE,mPermissionGrant);
+                PermissionUtils.requestPermission(UnCheckActivity.this,PermissionUtils.CODE_CAMERA,mPermissionGrant);
+
+
                 break;
             case R.id.iv_predeal_icon2:
-                Intent intent2 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file1 = new File(getPhotopath(2));
-                fileUri = Uri.fromFile(file1);
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent2, 9002);
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                                data = new File(getPhotopath(2));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent2 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent2.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent2, 9002);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9012);
+                                break;
+                        }
+                    }
+                }).create().show();
                 break;
             case R.id.iv_predeal_icon3:
-                Intent intent3 = new Intent("android.media.action.IMAGE_CAPTURE");
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                                data = new File(getPhotopath(3));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9003);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9013);
+                                break;
+                        }
+                    }
+                }).create().show();
 
-                File file2 = new File(getPhotopath(3));
-                fileUri = Uri.fromFile(file2);
-                intent3.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-                startActivityForResult(intent3, 9003);
                 break;
 
             // 点击上报处置前的照片
@@ -613,26 +734,92 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
                 break;
             case R.id.iv_dealing_icon1:
-                Intent intent4 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file3 = new File(getPhotopath(4));
-                fileUri = Uri.fromFile(file3);
-                intent4.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent4, 9004);
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                               data = new File(getPhotopath(4));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9004);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9014);
+                                break;
+                        }
+                    }
+                }).create().show();
+
                 break;
             case R.id.iv_dealing_icon2:
-                Intent intent5 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file4 = new File(getPhotopath(5));
-                fileUri = Uri.fromFile(file4);
-                intent5.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-                startActivityForResult(intent5, 9005);
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                             data = new File(getPhotopath(5));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9005);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9015);
+                                break;
+                        }
+                    }
+                }).create().show();
                 break;
             case R.id.iv_dealing_icon3:
-                Intent intent6 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file5 = new File(getPhotopath(6));
-                fileUri = Uri.fromFile(file5);
-                intent6.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                startActivityForResult(intent6, 9006);
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                                data = new File(getPhotopath(6));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9006);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9016);
+                                break;
+                        }
+                    }
+                }).create().show();
                 break;
             //点击上报正在处置图片
             case R.id.bt_uncheck_dealing:
@@ -673,35 +860,101 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.iv_dealed_icon1:
-                Intent intent7 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file6 = new File(getPhotopath(7));
-                fileUri = Uri.fromFile(file6);
-                intent7.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-                startActivityForResult(intent7, 9007);
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                                data = new File(getPhotopath(7));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9007);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9017);
+                                break;
+                        }
+                    }
+                }).create().show();
                 break;
             case R.id.iv_dealed_icon2:
-                Intent intent8 = new Intent("android.media.action.IMAGE_CAPTURE");
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                                data = new File(getPhotopath(8));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9008);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9018);
+                                break;
+                        }
+                    }
+                }).create().show();
 
-                File file7 = new File(getPhotopath(8));
-                fileUri = Uri.fromFile(file7);
-                intent8.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-                startActivityForResult(intent8, 9008);
                 break;
             case R.id.iv_dealed_icon3:
-                Intent intent9 = new Intent("android.media.action.IMAGE_CAPTURE");
-                File file8 = new File(getPhotopath(9));
-                fileUri = Uri.fromFile(file8);
-                intent9.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-                startActivityForResult(intent9, 9009);
-                btUncheckDealed.setFocusable(true);
+                new AlertDialog.Builder(UnCheckActivity.this).setTitle(dialogtitle).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                dialog.dismiss();
+                                data = new File(getPhotopath(9));
+                                //fileUri = Uri.fromFile(file);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
+                                } else {
+                                    fileUri=Uri.fromFile(data);
+                                }
+                                Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
+                                intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                startActivityForResult(intent1, 9009);
+                                break;
+                            case 1:
+                                dialog.dismiss();
+                                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivityForResult(intent, 9019);
+                                btUncheckDealed.setFocusable(true);
+                                break;
+                        }
+                    }
+                }).create().show();
                 break;
             case R.id.bt_uncheck_dealed:
 
                 if (isPostFirst) {
                     if (isPostSecond) {
+                        ToastUtil.shortToast(getApplicationContext(), "开始上传");
+                        uncheckProgressbar.setVisibility(View.VISIBLE);
+                        btUncheckDealed.setVisibility(View.GONE);
 
                         personID = SpUtils.getInt(getApplicationContext(), GlobalContanstant.PERSONID);
                         //维修说明
@@ -715,7 +968,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                         new Thread() {
                             @Override
                             public void run() {
-
                                 //to上传信息以及 维修说明
                                 try {
 
@@ -735,32 +987,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }.start();
 
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                for (int i = 0; i < fileNamesss.size(); i++) {
-                                    diseaseInformation.photoName = fileNamesss.get(i);
-                                    diseaseInformation.encode = imageBase64Stringsss.get(i);
-                                    diseaseInformation.taskNumber = taskNumber;
-                                    Log.i("taskNumber", diseaseInformation.taskNumber);
 
-                                    try {
-                                        isphotoSuccess = connectWebService(diseaseInformation, GlobalContanstant.GETCHECK);
-                                    } catch (Exception e) {
-                                        Message message = Message.obtain();
-                                        message.what = GlobalContanstant.CHECKFAIL;
-                                        handler.sendMessage(message);
-                                    }
-
-
-                                }
-                                Message message = Message.obtain();
-                                message.what = IS_PHOTO_SUCCESS3;
-                                message.obj = isphotoSuccess;
-                                handler.sendMessage(message);
-
-                            }
-                        }.start();
                     } else {
                         ToastUtil.shortToast(getApplicationContext(), "请先上报处置中的照片");
 
@@ -779,7 +1006,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         // 照片全路径
         String fileName;
         // 文件夹路径
-        String pathUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Image/mymy/";
+        String pathUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Zssz/Image/mymy/";
         String imageName = "imageTest" + i + ".jpg";
         File file = new File(pathUrl);
         file.mkdirs();// 创建文件夹
@@ -788,21 +1015,21 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private List<String> fileNames = new ArrayList<>();
     /**
      * 处置中的文件名集合
      */
+    private List<String> fileNames = new ArrayList<>();
     private List<String> fileNamess = new ArrayList<>();
     private List<String> fileNamesss = new ArrayList<>();
-    private List<String> imageBase64Strings = new ArrayList<>();
     /**
      * 处置中的base64集合
      */
+    private List<String> imageBase64Strings = new ArrayList<>();
     private List<String> imageBase64Stringss = new ArrayList<>();
     private List<String> imageBase64Stringsss = new ArrayList<>();
 
 
-    private Bitmap getBitmap(ImageView imageView) {
+    private Bitmap getBitmap(ImageView imageView, String path) {
         Bitmap bitmap;
         int width = imageView.getWidth();
 
@@ -811,7 +1038,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
 
         factoryOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(fileUri.getPath(), factoryOptions);
+        BitmapFactory.decodeFile(path, factoryOptions);
 
         int imageWidth = factoryOptions.outWidth;
         int imageHeight = factoryOptions.outHeight;
@@ -826,10 +1053,10 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
         factoryOptions.inSampleSize = scaleFactor;
         factoryOptions.inPurgeable = true;
 
-        bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
+        bitmap = BitmapFactory.decodeFile(path,
                 factoryOptions);
 
-        int bitmapDegree = BitmapUtil.getBitmapDegree(fileUri.getPath());
+        int bitmapDegree = BitmapUtil.getBitmapDegree(path);
         Bitmap rotateBitmap = BitmapUtil.rotateBitmap(bitmap, bitmapDegree);
         return rotateBitmap;
     }
@@ -837,130 +1064,319 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         if (resultCode == RESULT_CANCELED) {
             return;
         }
 
+        Bitmap bitmap;
+        String fileName;
+        String encode;
+        String picturePath;
         if (data == null) {
-            Bitmap bitmap;
-            String fileName;
-            String encode;
-            if (requestCode == 9001) {
-                // 有的手机data 为空
-                //bitmap = (Bitmap) data.getExtras().get("data");
-                bitmap = getBitmap(ivPredealIcon1);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivPredealIcon1.setImageBitmap(bitmap);
-                ivPredealIcon1.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNames.add(fileName);
-                imageBase64Strings.add(encode);
-                btUncheckPredeal.setEnabled(true);
-                btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
-            } else if (requestCode == 9002) {
-                // bitmap = (Bitmap) data.getExtras().get("data");
-                bitmap = getBitmap(ivPredealIcon2);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivPredealIcon2.setImageBitmap(bitmap);
-                ivPredealIcon2.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNames.add(fileName);
-                imageBase64Strings.add(encode);
-                btUncheckPredeal.setEnabled(true);
-                btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
-            } else if (requestCode == 9003) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
-                bitmap = getBitmap(ivPredealIcon3);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivPredealIcon3.setImageBitmap(bitmap);
-                ivPredealIcon3.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNames.add(fileName);
-                imageBase64Strings.add(encode);
-                btUncheckPredeal.setEnabled(true);
-                btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
-            } else if (requestCode == 9004) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
-                bitmap = getBitmap(ivDealingIcon1);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivDealingIcon1.setImageBitmap(bitmap);
-                ivDealingIcon1.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNamess.add(fileName);
-                imageBase64Stringss.add(encode);
-                btUncheckDealing.setEnabled(true);
-                btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
-            } else if (requestCode == 9005) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
+            switch (requestCode) {
+                case 9001:
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivPredealIcon1, this.data.getAbsolutePath());
+                    }else {
+                         bitmap = getBitmap(ivPredealIcon1, fileUri.getPath());
+                    }
 
-                bitmap = getBitmap(ivDealingIcon2);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivDealingIcon2.setImageBitmap(bitmap);
-                ivDealingIcon2.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNamess.add(fileName);
-                imageBase64Stringss.add(encode);
-                btUncheckDealing.setEnabled(true);
-                btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
-            } else if (requestCode == 9006) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivPredealIcon1.setImageBitmap(bitmap);
+                    ivPredealIcon1.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNames.add(fileName);
+                    imageBase64Strings.add(encode);
+                    btUncheckPredeal.setEnabled(true);
+                    btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
+                    break;
+                case 9002:
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivPredealIcon2, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivPredealIcon2, fileUri.getPath());
 
-                bitmap = getBitmap(ivDealingIcon3);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivDealingIcon3.setImageBitmap(bitmap);
-                ivDealingIcon3.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNamess.add(fileName);
-                imageBase64Stringss.add(encode);
+                    }fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivPredealIcon2.setImageBitmap(bitmap);
+                    ivPredealIcon2.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNames.add(fileName);
+                    imageBase64Strings.add(encode);
+                    btUncheckPredeal.setEnabled(true);
+                    btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
+                    break;
+                case 9003:
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivPredealIcon3, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivPredealIcon3, fileUri.getPath());
+                    }fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivPredealIcon3.setImageBitmap(bitmap);
+                    ivPredealIcon3.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNames.add(fileName);
+                    imageBase64Strings.add(encode);
+                    btUncheckPredeal.setEnabled(true);
+                    btUncheckPredeal.setBackgroundResource(R.drawable.btn_uncheck_press);
+                    break;
+                case 9004:
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivDealingIcon1, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivDealingIcon1, fileUri.getPath());
+                    }
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivDealingIcon1.setImageBitmap(bitmap);
+                    ivDealingIcon1.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNamess.add(fileName);
+                    imageBase64Stringss.add(encode);
+                    btUncheckDealing.setEnabled(true);
+                    btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
+                    break;
+                case 9005:
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivDealingIcon2, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivDealingIcon2, fileUri.getPath());
+                    }
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivDealingIcon2.setImageBitmap(bitmap);
+                    ivDealingIcon2.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNamess.add(fileName);
+                    imageBase64Stringss.add(encode);
+                    btUncheckDealing.setEnabled(true);
+                    btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
+                    break;
+                case 9006:
+                    //bitmap = (Bitmap) data.getExtras().get("data");
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivDealingIcon3, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivDealingIcon3, fileUri.getPath());
 
-                btUncheckDealing.setEnabled(true);
-                btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
-            } else if (requestCode == 9007) {
-                //bitmap = (Bitmap) data.getExtras().get("data");
-                bitmap = getBitmap(ivDealedIcon1);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivDealedIcon1.setImageBitmap(bitmap);
-                ivDealedIcon1.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNamesss.add(fileName);
-                imageBase64Stringsss.add(encode);
-                btUncheckDealed.setEnabled(true);
-                btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
-            } else if (requestCode == 9008) {
+                    }fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivDealingIcon3.setImageBitmap(bitmap);
+                    ivDealingIcon3.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNamess.add(fileName);
+                    imageBase64Stringss.add(encode);
+                    btUncheckDealing.setEnabled(true);
+                    btUncheckDealing.setBackgroundResource(R.drawable.btn_uncheck_press);
+                    break;
+                case 9007:
 
-                bitmap = getBitmap(ivDealedIcon2);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivDealedIcon2.setImageBitmap(bitmap);
-                ivDealedIcon2.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNamesss.add(fileName);
-                imageBase64Stringsss.add(encode);
-                btUncheckDealed.setEnabled(true);
-                btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
-            } else if (requestCode == 9009) {
-
-                bitmap = getBitmap(ivDealedIcon3);
-                fileName = saveToSDCard(bitmap);
-                //将选择的图片设置到控件上
-                ivDealedIcon3.setImageBitmap(bitmap);
-                ivDealedIcon3.setFocusable(false);
-                encode = photo2Base64(path);
-                fileNamesss.add(fileName);
-                imageBase64Stringsss.add(encode);
-                btUncheckDealed.setEnabled(true);
-                btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivDealedIcon1, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivDealedIcon1, fileUri.getPath());
+                    }fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivDealedIcon1.setImageBitmap(bitmap);
+                    ivDealedIcon1.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNamesss.add(fileName);
+                    imageBase64Stringsss.add(encode);
+                    btUncheckDealed.setEnabled(true);
+                    btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
+                    break;
+                case 9008:
+                    //bitmap = (Bitmap) data.getExtras().get("data");
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivDealedIcon2, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivDealedIcon2, fileUri.getPath());
+                    }fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivDealedIcon2.setImageBitmap(bitmap);
+                    ivDealedIcon2.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNamesss.add(fileName);
+                    imageBase64Stringsss.add(encode);
+                    btUncheckDealed.setEnabled(true);
+                    btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
+                    break;
+                case 9009:
+                    //bitmap = (Bitmap) data.getExtras().get("data");
+                    if (Build.VERSION.SDK_INT>= 24){
+                        bitmap = getBitmap(ivDealedIcon3, this.data.getAbsolutePath());
+                    }else {
+                        bitmap = getBitmap(ivDealedIcon3, fileUri.getPath());
+                    }fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
+                    ivDealedIcon3.setImageBitmap(bitmap);
+                    ivDealedIcon3.setClickable(false);
+                    encode = photo2Base64(path);
+                    fileNamesss.add(fileName);
+                    imageBase64Stringsss.add(encode);
+                    btUncheckDealed.setEnabled(true);
+                    btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
+                    break;
             }
         }
+
+        switch (requestCode) {
+            case 9011:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivPredealIcon1, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNames.add(fileName);
+                imageBase64Strings.add(encode);
+                setParameter(bitmap, ivPredealIcon1, btUncheckPredeal);
+                break;
+            case 9012:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivPredealIcon2, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNames.add(fileName);
+                imageBase64Strings.add(encode);
+                setParameter(bitmap, ivPredealIcon2, btUncheckPredeal);
+                break;
+            case 9013:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivPredealIcon3, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNames.add(fileName);
+                imageBase64Strings.add(encode);
+                setParameter(bitmap, ivPredealIcon3, btUncheckPredeal);
+                break;
+            case 9014:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivDealingIcon1, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNamess.add(fileName);
+                imageBase64Stringss.add(encode);
+                setParameter(bitmap, ivDealingIcon1, btUncheckDealing);
+                break;
+            case 9015:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivDealingIcon2, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNamess.add(fileName);
+                imageBase64Stringss.add(encode);
+                setParameter(bitmap, ivDealingIcon2, btUncheckDealing);
+                break;
+            case 9016:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivDealingIcon3, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNamess.add(fileName);
+                imageBase64Stringss.add(encode);
+                setParameter(bitmap, ivDealingIcon3, btUncheckDealing);
+                break;
+            case 9017:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivDealedIcon1, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNamesss.add(fileName);
+                imageBase64Stringsss.add(encode);
+                setParameter(bitmap, ivDealedIcon1, btUncheckDealed);
+                break;
+            case 9018:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivDealedIcon2, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNamesss.add(fileName);
+                imageBase64Stringsss.add(encode);
+                setParameter(bitmap, ivDealedIcon2, btUncheckDealed);
+                break;
+            case 9019:
+                picturePath = getPicturePath(data);
+                bitmap = getBitmap(ivDealedIcon3, picturePath);
+                if (bitmap == null) {
+                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
+                    return;
+                }
+                fileName = saveToSDCard(bitmap);
+                encode = photo2Base64(path);
+                fileNamesss.add(fileName);
+                imageBase64Stringsss.add(encode);
+                setParameter(bitmap, ivDealedIcon3, btUncheckDealed);
+                break;
+
+
+        }
+
+
+    }
+
+    private void setParameter(Bitmap bitmap, ImageView imageView,
+                              Button btn) {
+        //将选择的图片设置到控件上
+        imageView.setImageBitmap(bitmap);
+        imageView.setClickable(false);
+
+        btn.setEnabled(true);
+        if (btn.getId() == R.id.bt_uncheck_dealed) {
+            btn.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
+        } else {
+            btn.setBackgroundResource(R.drawable.btn_uncheck_press);
+        }
+
+    }
+
+    private String getPicturePath(Intent data) {
+        if (data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            return picturePath;
+        }
+        return null;
     }
 
 

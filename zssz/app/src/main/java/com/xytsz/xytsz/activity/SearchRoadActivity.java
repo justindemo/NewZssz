@@ -80,11 +80,15 @@ public class SearchRoadActivity extends AppCompatActivity implements SearchView.
     private static int hintSize = DEFAULT_HINT_SIZE;
 
     private  List<String> dbData = new ArrayList<>();
+    private String[] roads;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent() != null){
+            roads = getIntent().getStringArrayExtra("road");
+        }
         setContentView(R.layout.activity_searchroad);
 
 
@@ -131,8 +135,8 @@ public class SearchRoadActivity extends AppCompatActivity implements SearchView.
     private void getDbData() {
 
         dbData.clear();
-        for (int i = 0; i < Deal.roadS.length; i++) {
-            dbData.add(Deal.roadS[i]);
+        for (int i = 0; i < roads.length; i++) {
+            dbData.add(roads[i]);
         }
 
     }

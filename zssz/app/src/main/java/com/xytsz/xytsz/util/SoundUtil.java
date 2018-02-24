@@ -44,10 +44,8 @@ public class SoundUtil {
                 mRecorder.prepare();
                 mRecorder.start();
                 mEMA = 0.0;
-            } catch (IllegalStateException e) {
-                System.out.print(e.getMessage());
             } catch (IOException e) {
-                System.out.print(e.getMessage());
+                Log.i("Tag",Log.getStackTraceString(e));
             }
 
         }

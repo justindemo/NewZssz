@@ -52,7 +52,7 @@ import com.xytsz.xytsz.fragment.MeFragment;
 import com.xytsz.xytsz.net.NetUrl;
 import com.xytsz.xytsz.ui.NoScrollViewpager;
 import com.xytsz.xytsz.R;
-import com.xytsz.xytsz.fragment.TableFragment;
+
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button mbtrefresh;
     private ProgressBar mprogressbar;
     private int role;
-    private static boolean isOnCreat;
+    private boolean isOnCreat;
 
 
     @Override
@@ -124,10 +124,14 @@ public class HomeActivity extends AppCompatActivity {
         initView();
 
         if (isNetworkAvailable(getApplicationContext())) {
-            mprogressbar.setVisibility(View.VISIBLE);
-            mViewpager.setVisibility(View.GONE);
+//            mprogressbar.setVisibility(View.VISIBLE);
+//            mViewpager.setVisibility(View.GONE);
             isOnCreat = true;
             getData();
+
+            mViewpager.setVisibility(View.VISIBLE);
+            rl_notonlie.setVisibility(View.GONE);
+            mprogressbar.setVisibility(View.GONE);
 
         }else {
             rl_notonlie.setVisibility(View.VISIBLE);
@@ -138,10 +142,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkAvailable(getApplicationContext())){
-                    mViewpager.setVisibility(View.GONE);
-                    getData();
+//                    mViewpager.setVisibility(View.GONE);
+                  getData();
+//                    rl_notonlie.setVisibility(View.GONE);
+//                    mprogressbar.setVisibility(View.VISIBLE);
+
+                    //修改
+                    mViewpager.setVisibility(View.VISIBLE);
                     rl_notonlie.setVisibility(View.GONE);
-                    mprogressbar.setVisibility(View.VISIBLE);
+                    mprogressbar.setVisibility(View.GONE);
                 }else {
                     ToastUtil.shortToast(getApplicationContext(),"请检查网络");
                 }
@@ -152,188 +161,39 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        new Thread() {
+        new  Thread(){
             @Override
             public void run() {
-
                 try {
-                    String dealTypejson = getJson(NetUrl.dealtypemethodName, NetUrl.dealtype_SOAP_ACTION);
-                    String fatypejson = getJson(NetUrl.fatypemethodName, NetUrl.fatype_SOAP_ACTION);
-                    String pbTypejson = getJson(NetUrl.problemmethodName, NetUrl.pbtype_SOAP_ACTION);
-                    String faNamejson = getJson(NetUrl.faNamemethodName, NetUrl.faname_SOAP_ACTION);
-                    String faSizejson = getJson(NetUrl.faSizemethodName, NetUrl.fasize_SOAP_ACTION);
-                    String streetjson = getJson(NetUrl.streetmethodName, NetUrl.street_SOAP_ACTION);
-
                     int allUserCount = getAllUserCount(NetUrl.getAllUserCountMethodName, NetUrl.getAllUserCount_SOAP_ACITION);
-
                     SpUtils.saveInt(getApplicationContext(), GlobalContanstant.ALLUSERCOUNT,allUserCount);
 
-                    List<DealType> dealtypeList = JsonUtil.jsonToBean(dealTypejson, new TypeToken<List<DealType>>() {
-                    }.getType());
-                    List<FacilityType> fatypeList = JsonUtil.jsonToBean(fatypejson, new TypeToken<List<FacilityType>>() {
-                    }.getType());
-                    List<DiseaseType> pbtypeList = JsonUtil.jsonToBean(pbTypejson, new TypeToken<List<DiseaseType>>() {
-                    }.getType());
-                    List<FacilityName> faNameList = JsonUtil.jsonToBean(faNamejson, new TypeToken<List<FacilityName>>() {
-                    }.getType());
-                    List<FacilitySpecifications> faSizeList = JsonUtil.jsonToBean(faSizejson, new TypeToken<List<FacilitySpecifications>>() {
-                    }.getType());
-                    List<Road> streetList = JsonUtil.jsonToBean(streetjson, new TypeToken<List<Road>>() {
-                    }.getType());
-
-                    Deal.dealType.clear();
-                    Deal.facilityTypes.clear();
-                    Deal.problemTypes.clear();
-                    Deal.facilityNames.clear();
-                    Deal.facilitySizes.clear();
-                    Deal.selectFatype.clear();
-                    Deal.selectPbtype.clear();
-                    Deal.selectFaSizetype.clear();
-                    Deal.selectFaNametype.clear();
-
-                    if (dealtypeList.size() != 0 && fatypeList.size() != 0 && pbtypeList.size() != 0 && faNameList.size() != 0 && faSizeList.size() != 0  && streetList.size() != 0) {
-                        //开始添加数据
-                        ArrayList<String> dealtype = new ArrayList<>();
-                        dealtype.clear();
-                        for (int i = 0; i < dealtypeList.size(); i++) {
-                            dealtype.add(dealtypeList.get(i).getDealTypeName());
-                        }
-
-
-                        Deal.dealType.addAll(dealtype);
-
-                        Deal.roadS = new String[streetList.size()];
-                        for (int i = 0; i < streetList.size(); i++) {
-                            Deal.roadS[i] = streetList.get(i).getStreetName();
-                        }
-
-
-
-                        //设施类型
-                        //zhangyi
-                        for (int i = 0; i < dealtypeList.size(); i++) {
-                            ArrayList<String> strings = new ArrayList<String>();
-                            strings.clear();
-                            for (int j = 0; j < fatypeList.size(); j++) {
-                                if (dealtypeList.get(i).getID() == fatypeList.get(j).getDealTypeID()) {
-                                    strings.add(fatypeList.get(j).getFacilityTypeName());
-                                }
-                            }
-                            Deal.facilityTypes.add(strings);
-                        }
-
-                        for (int i = 0; i < fatypeList.size(); i++) {
-                            Deal.selectFatype.add(fatypeList.get(i).getFacilityTypeName());
-                        }
-
-                        for (int i = 0; i < pbtypeList.size(); i++) {
-                            Deal.selectPbtype.add(pbtypeList.get(i).getDiseaseType_Name());
-                        }
-
-                        for (int i = 0; i < faNameList.size(); i++) {
-                            Deal.selectFaNametype.add(faNameList.get(i).getFacilityName_Name());
-                        }
-
-                        for (int i = 0; i < faSizeList.size(); i++) {
-                            Deal.selectFaSizetype.add(faSizeList.get(i).getFacilitySpecifications_Name());
-                        }
-
-                        //病害类型
-
-                        for (int i = 0; i < dealtypeList.size(); i++) {
-                            ArrayList<ArrayList<String>> problemtypes = new ArrayList<ArrayList<String>>();
-                            problemtypes.clear();
-                            for (int j = 0; j < fatypeList.size(); j++) {
-                                if (dealtypeList.get(i).getID() == fatypeList.get(j).getDealTypeID()) {
-
-                                    ArrayList<String> list = new ArrayList<String>();
-                                    list.clear();
-                                    for (int k = 0; k < pbtypeList.size(); k++) {
-
-                                        if (fatypeList.get(j).getFacilityTypeID() == pbtypeList.get(k).getFacilityType_ID()) {
-
-                                            list.add(pbtypeList.get(k).getDiseaseType_Name());
-                                        }
-                                    }
-
-                                    problemtypes.add(list);
-                                }
-                            }
-                            Deal.problemTypes.add(problemtypes);
-                        }
-
-                        //设施名称
-
-                        for (int i = 0; i < dealtypeList.size(); i++) {
-                            ArrayList<ArrayList<String>> facilitynames = new ArrayList<ArrayList<String>>();
-                            facilitynames.clear();
-                            for (int j = 0; j < fatypeList.size(); j++) {
-                                if (dealtypeList.get(i).getID() == fatypeList.get(j).getDealTypeID()) {
-                                    ArrayList<String> faNames = new ArrayList<String>();
-                                    faNames.clear();
-                                    for (int k = 0; k < faNameList.size(); k++) {
-                                        if (fatypeList.get(j).getFacilityTypeID() == faNameList.get(k).getFacilityType_ID()) {
-
-                                            faNames.add(faNameList.get(k).getFacilityName_Name());
-                                        }
-                                    }
-                                    facilitynames.add(faNames);
-                                }
-                            }
-                            Deal.facilityNames.add(facilitynames);
-                        }
-
-
-                        // 设施规格
-                        for (int i = 0; i < dealtypeList.size(); i++) {
-                            ArrayList<ArrayList<ArrayList<String>>> facilitysizes = new ArrayList<ArrayList<ArrayList<String>>>();
-                            facilitysizes.clear();
-                            for (int j = 0; j < fatypeList.size(); j++) {
-
-                                if (dealtypeList.get(i).getID() == fatypeList.get(j).getDealTypeID()) {
-                                    ArrayList<ArrayList<String>> faSizes = new ArrayList<ArrayList<String>>();
-                                    faSizes.clear();
-                                    for (int k = 0; k < faNameList.size(); k++) {
-                                        if (fatypeList.get(j).getFacilityTypeID() == faNameList.get(k).getFacilityType_ID()) {
-                                            ArrayList<String> faSize = new ArrayList<String>();
-                                            faSize.clear();
-                                            for (int g = 0; g < faSizeList.size(); g++) {
-                                                if (faNameList.get(k).getFacilityName_ID() == faSizeList.get(g).getFacilityName_ID()) {
-
-                                                    faSize.add(faSizeList.get(g).getFacilitySpecifications_Name());
-
-                                                }
-                                            }
-                                            faSizes.add(faSize);
-                                        }
-                                    }
-                                    facilitysizes.add(faSizes);
-                                }
-                            }
-                            Deal.facilitySizes.add(facilitysizes);
-                        }
-                        Message message = Message.obtain();
-                        message.what = DATA_SUCCESS;
-                        handler.sendMessage(message);
-
-
-                    }else {
-                        Message message = Message.obtain();
-                        message.what = DATA_REPORT;
-                        handler.sendMessage(message);
-                    }
-
-
-                } catch (Exception e) {
-                    Message message = Message.obtain();
-                    message.what = DATA_REPORT;
-                    handler.sendMessage(message);
+                }catch (Exception e){
 
                 }
+
             }
         }.start();
 
     }
+
+    public int getAllUserCount(String method,String soap_action) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(soap_action, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        return Integer.valueOf(object.getProperty(0).toString());
+
+    }
+
 
 
 
@@ -428,9 +288,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
-        PermissionUtils.requestPermission(HomeActivity.this,PermissionUtils.CODE_RECORD_AUDIO,mPermissionGrant);
-
-        PermissionUtils.requestPermission(HomeActivity.this,PermissionUtils.CODE_WRITE_EXTERNAL_STORAGE,mPermissionGrant);
 
         //先判断有没有现版本
         new Thread(){
@@ -443,7 +300,7 @@ public class HomeActivity extends AppCompatActivity {
                     message.what = VERSIONINFO;
                     handler.sendMessage(message);
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
 
             }
@@ -475,22 +332,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private PermissionGrant mPermissionGrant = new PermissionGrant() {
-        @Override
-        public void onPermissionGranted(int requestCode) {
-            switch (requestCode){
-                case PermissionUtils.CODE_RECORD_AUDIO:
-                    break;
-            }
-        }
-    };
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtils.requestPermissionsResult(HomeActivity.this,requestCode,permissions,grantResults,mPermissionGrant);
-    }
 
     private Boolean isweekfive() {
 
@@ -513,21 +355,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private String getJson(String method, String soap_action) throws Exception {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
 
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-
-        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        httpTransportSE.call(soap_action, envelope);
-
-        SoapObject object = (SoapObject) envelope.bodyIn;
-
-        return object.getProperty(0).toString();
-    }
 
 
     /**
@@ -707,16 +535,22 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
 
         //判断是否有网络
-        //做判断 如果是只走 onResume 那就请求  走onCreate 就不请求
-        if (!isOnCreat) {
+        //做判断 如果是只走 onResume 那就请求  ,如果走onCreate 就不请求
+        //isOncreat  =false
+       if (!isOnCreat) {
             if (isNetworkAvailable(getApplicationContext())) {
-                mViewpager.setVisibility(View.GONE);
                 getData();
+                mViewpager.setVisibility(View.VISIBLE);
+                rl_notonlie.setVisibility(View.GONE);
+                mprogressbar.setVisibility(View.GONE);
             } else {
                 ToastUtil.shortToast(getApplicationContext(), "未连接网络");
-            }
+                rl_notonlie.setVisibility(View.VISIBLE);
+                mViewpager.setVisibility(View.GONE);
 
+            }
         }
+        isOnCreat = false;
 
         isFive =  isweekfive();
         if (isFive){
@@ -745,22 +579,7 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 
-    public int getAllUserCount(String method,String soap_action) throws Exception {
-        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
 
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
-        envelope.bodyOut = soapObject;
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(soapObject);
-
-        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
-        httpTransportSE.call(soap_action, envelope);
-
-        SoapObject object = (SoapObject) envelope.bodyIn;
-
-        return Integer.valueOf(object.getProperty(0).toString());
-
-    }
 
 
 

@@ -67,6 +67,8 @@ public class SuperviseFragment extends BaseFragment  {
         titles.add("车辆管理");
         titles.add("设施管理");
         titles.add("防汛警告");
+        titles.add("智能井盖");
+        titles.add("智慧路灯");
 
         mActionbartext.setText(R.string.supervise);
         SuperviseAdapter adapter = new SuperviseAdapter(titles,role);

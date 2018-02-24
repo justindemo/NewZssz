@@ -1,11 +1,14 @@
 package com.xytsz.xytsz.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +29,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by admin on 2017/5/31.
@@ -69,6 +73,14 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
     TextView tvMyProblemAudio;
     @Bind(R.id.tv_my_detail_address)
     TextView tvMyDetailAddress;
+    @Bind(R.id.tv_detail_diseasedes)
+    TextView tvDetailDiseasedes;
+    @Bind(R.id.tv_mydetail_loca)
+    TextView tvMydetailLoca;
+    @Bind(R.id.tv_myreview_state)
+    TextView tvMyreviewState;
+    @Bind(R.id.tv_state)
+    TextView tvState;
     private ForMyDis detail;
     private List<ImageUrl> imageUrlReport;
     private int id;
@@ -97,7 +109,7 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         String reporte = getString(R.string.myreported);
         String review = getString(R.string.myreviewed);
 
-        switch (flag){
+        switch (flag) {
             case 1:
                 initAcitionbar(reporte);
                 break;
@@ -112,6 +124,25 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
 
 
     private void initData() {
+
+
+        int phaseIndication = detail.getPhaseIndication();
+        switch (phaseIndication) {
+
+            case 1:
+                tvMyreviewState.setText("未下派");
+                break;
+            case 2:
+                tvMyreviewState.setText("未处置");
+                break;
+            case 3:
+                tvMyreviewState.setText("处置完");
+                break;
+            case 5:
+                tvMyreviewState.setText("已驳回");
+                break;
+        }
+
 
 
         String upload_person_id = detail.getUpload_Person_ID() + "";
@@ -142,10 +173,11 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
 
         tvMydetailReporteplace.setText(detail.getStreetAddress_Name());
 
+        tvDetailDiseasedes.setText(detail.getDiseaseDescription());
 
         tvMydetailFaname.setText(detail.getFacilityName_Name());
 
-
+        tvMyDetailAddress.setText(detail.getAddressDescription());
         tvMydetailFasize.setText(detail.getFacilitySpecifications_Name());
 
         String uploadTime = detail.getUploadTime();
@@ -180,42 +212,44 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
 
         if (detail.getAddressDescription().isEmpty()) {
             if (audioUrl != null) {
-                if (!audioUrl.getAudioUrl().equals("false")) {
-                    if (!audioUrl.getTime().isEmpty()) {
-                        tvMyDetailAddress.setVisibility(View.GONE);
-                        tvMyProblemAudio.setVisibility(View.VISIBLE);
-                        soundUtil = new SoundUtil();
+                if (audioUrl.getAudioUrl() != null) {
+                    if (!audioUrl.getAudioUrl().equals("false")) {
+                        if (!audioUrl.getTime().isEmpty()) {
+                            tvMyDetailAddress.setVisibility(View.GONE);
+                            tvMyProblemAudio.setVisibility(View.VISIBLE);
+                            soundUtil = new SoundUtil();
 
-                        tvMyProblemAudio.setText(audioUrl.getTime());
-                        tvMyProblemAudio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                            tvMyProblemAudio.setText(audioUrl.getTime());
+                            tvMyProblemAudio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                                Drawable drawable = getResources().getDrawable(R.mipmap.pause);
-                                final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+                                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
 
-                                tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                    tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
 
-                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
-                                    }
+                                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                        @Override
+                                        public void onFinish() {
+                                            tvMyProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                        }
 
-                                    @Override
-                                    public void onError() {
+                                        @Override
+                                        public void onError() {
 
-                                    }
-                                });
+                                        }
+                                    });
 
-                                soundUtil.play(audioUrl.getAudioUrl());
-                            }
-                        });
+                                    soundUtil.play(audioUrl.getAudioUrl());
+                                }
+                            });
+                        }
+                    } else {
+                        tvMyDetailAddress.setVisibility(View.VISIBLE);
+                        tvMyProblemAudio.setVisibility(View.GONE);
                     }
-                } else {
-                    tvMyDetailAddress.setVisibility(View.VISIBLE);
-                    tvMyProblemAudio.setVisibility(View.GONE);
                 }
             } else {
                 tvMyDetailAddress.setVisibility(View.VISIBLE);
@@ -254,4 +288,43 @@ public class MyReporteDetailActivity extends AppCompatActivity implements View.O
         return super.onSupportNavigateUp();
     }
 
+    @OnClick({R.id.tv_mydetail_loca, R.id.tv_state})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_mydetail_loca:
+                double longitude = detail.getLongitude();
+                double latitude = detail.getLatitude();
+                Intent intent = new Intent(MyReporteDetailActivity.this, MarkPositionActivity.class);
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("latitude", latitude);
+                startActivity(intent);
+                break;
+            case R.id.tv_state:
+                final Dialog dialog = new AlertDialog.Builder(MyReporteDetailActivity.this).create();
+                dialog.setCancelable(true);// 可以用“返回键”取消
+                dialog.setCanceledOnTouchOutside(true);//
+                dialog.show();
+                View inflate = LayoutInflater.from(MyReporteDetailActivity.this).inflate(R.layout.myreview_state_dialog, null);
+                dialog.setContentView(inflate);
+
+                TextView mtvReportTime = (TextView) inflate.findViewById(R.id.tv_report_time);
+                TextView mtvReviewTime = (TextView) inflate.findViewById(R.id.tv_review_time);
+                TextView mtvSendTime = (TextView) inflate.findViewById(R.id.tv_send_time);
+                TextView mtvPostTime = (TextView) inflate.findViewById(R.id.tv_post_time);
+
+                mtvReportTime.setText(detail.getUploadTime());
+                mtvReviewTime.setText(detail.getReviewedTime());
+                if (detail.getIssuedTime() == null) {
+                    mtvSendTime.setText("未下派");
+                } else {
+                    mtvSendTime.setText(detail.getIssuedTime());
+                }
+                if (detail.getActualCompletionTime().equals("null") || detail.getActualCompletionTime().isEmpty()) {
+                    mtvPostTime.setText("未处置");
+                } else {
+                    mtvPostTime.setText(detail.getActualCompletionTime());
+                }
+                break;
+        }
+    }
 }

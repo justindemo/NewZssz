@@ -170,12 +170,16 @@
     <string name="report_dialog_content1">拍照</string>
     <string name="report_upimg">正在上传图片···</string>
     <string name="report_uploading">开始上传</string>
-    <string name="report_imgsuccess">上传图片成功</string>
+    <string name="report_imgsuccess">图片上传成功</string>
     <string name="report_dialog_content2">相册</string>
     <string name="report_request">至少选择一张上报图片</string>
     <string name="report_notifica">上报一条新病害</string>
     <string name="report_notifica_title">：新上报一条病害</string>
     <string name="report_error">数据未获取，稍后重试</string>
+    <string name="report_imageerror">图片未上报成功</string>
+    <string name="report_uperror">数据未上传成功</string>
+    <string name="report_success">数据上传成功</string>
+
     <string name="report_delete_title">删除录音</string>
     <string name="report_delete_video_title">删除视频</string>
     <string name="report_delete_content">确定删除录音?</string>
@@ -311,6 +315,10 @@
     
     <string name="information_compelet">请完善资料</string>
     <string name="information_save">保存</string>
+    <string name="information_modification">修改密码</string>
+    <string name="modificationtip">密码组成：6~16个字符,数字、字母</string>
+    <string name="modificationtitle">请设置密码并妥善保存</string>
+
 
     <string name="for_us_content">&#160;&#160;&#160;&#160;&#160;&#160;北京向阳天科技有限公司,专注于智慧城市技术的研究和开发,以“掌上市政”为核心产品,形成了针对城市管养及运维领域,对于不同规模、不同应用的管养及运维工作提出针对性解决方案,是国内最有影响力的市政设施管养系统提供商。\n
   &#160;&#160;&#160;&#160;&#160;&#160;“掌上市政”已经成为市政设施管理行业中较知名和最有影响力的品牌.荣获2017年工业和信息化部“创客中国”互联网+创新创业大赛“优胜奖”称号,并多次荣获国家级、省、市优秀软件称号,用户遍及中国多个省市,有多家市政设施管理企业及会员加盟案例。

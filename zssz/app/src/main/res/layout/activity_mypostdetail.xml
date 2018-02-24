@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 
     <RelativeLayout
@@ -275,22 +276,69 @@
 
 
         </FrameLayout>
+        <TextView
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/tv_check_problem_loca1"
+            android:id="@+id/tv_check_detail_diseasedestitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/cc_text_blank"
+            android:text="@string/report_problemdes"/>
+
+        <TextView
+            android:layout_marginTop="6dp"
+            android:id="@+id/tv_check_detail_diseasedes"
+            android:textSize="18sp"
+            android:text="miaoshu"
+            android:layout_below="@+id/tv_check_problem_loca1"
+            android:layout_toRightOf="@+id/tv_check_detail_diseasedestitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+        <TextView
+            android:id="@+id/tv_checkdetail_loca_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_check_detail_diseasedes"
+            android:layout_marginTop="6dp"
+            android:text="病害位置："
+            android:textColor="@color/cc_text_blank"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_checkdetail_loca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_check_detail_diseasedes"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/cc_supervise"
+            android:layout_toRightOf="@+id/tv_checkdetail_loca_title"
+            android:text="点击查看"
+            android:textSize="18sp" />
+
+
 
         <TextView
             android:id="@+id/tv_mycheck_reportetime_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_problem_loca1"
+            android:layout_below="@id/tv_checkdetail_loca"
             android:layout_marginTop="6dp"
             android:text="@string/check_detail_reporttime"
             android:textColor="@color/cc_text_blank"
             android:textSize="18sp" />
 
+
         <TextView
             android:id="@+id/tv_mycheck_reportetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_check_problem_loca1"
+            android:layout_below="@+id/tv_checkdetail_loca"
             android:layout_marginTop="6dp"
             android:layout_toRightOf="@+id/tv_mycheck_reportetime_title"
             android:text="2017年3月2日16:45:06"

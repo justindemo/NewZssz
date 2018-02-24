@@ -165,7 +165,7 @@ public class RecordVideoActivity extends AppCompatActivity implements SurfaceHol
                 mCamera.setParameters(parameters);
                 mCamera.startPreview();
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
         }
 
@@ -246,7 +246,7 @@ public class RecordVideoActivity extends AppCompatActivity implements SurfaceHol
                 mMediaRecorder.start();
                 isRecording = true;
             } catch (Exception e) {
-                e.printStackTrace();
+
             }
 
         }
@@ -399,7 +399,7 @@ public class RecordVideoActivity extends AppCompatActivity implements SurfaceHol
                                             Thread.sleep(20);
                                         }
                                     } catch (InterruptedException e) {
-                                        e.printStackTrace();
+
                                     }
                                 }
                             };

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -177,7 +178,7 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }.start();
@@ -271,7 +272,9 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
     @Override
     protected void onStart() {
         super.onStart();
-        locationClient.start();
+        if (locationClient != null){
+            locationClient.start();
+        }
     }
 
     @Override
@@ -283,14 +286,20 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
     @Override
     public void onPause() {
         mMV.onPause();
-        locationClient.stop();
+        if (locationClient != null){
+            locationClient.unRegisterLocationListener(myListener);
+            locationClient.stop();
+        }
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         mMV.onDestroy();
-        locationClient.stop();
+        if (locationClient != null){
+            locationClient.unRegisterLocationListener(myListener);
+            locationClient.stop();
+        }
         super.onDestroy();
         finish();
     }
@@ -387,7 +396,7 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         return true;
     }
 
-    public BDLocationListener myListener = new MyListener();
+    public BDAbstractLocationListener myListener = new MyListener();
     private LocationClient locationClient;
     private LatLng latlngNow;
 
@@ -406,10 +415,11 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
         option.setIgnoreKillProcess(false);// 可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
         locationClient.setLocOption(option);
+        locationClient.start();
 
     }
 
-    private class MyListener implements BDLocationListener {
+    private class MyListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             //获取到经度

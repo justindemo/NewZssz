@@ -54,7 +54,7 @@ public class AppraiseActivity extends AppCompatActivity {
                     ToastUtil.shortToast(getApplicationContext(), "提交成功");
                     break;
                 case FAIL:
-                    ToastUtil.shortToast(getApplicationContext(), "请检查网络");
+                    ToastUtil.shortToast(getApplicationContext(), "提交失败");
                     break;
             }
         }

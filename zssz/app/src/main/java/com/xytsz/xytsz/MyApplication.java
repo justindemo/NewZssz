@@ -1,29 +1,14 @@
 package com.xytsz.xytsz;
 
-import android.app.Application;
-import android.app.Service;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Vibrator;
+
+
 
 import com.baidu.mapapi.SDKInitializer;
-import com.google.gson.reflect.TypeToken;
+
 import com.mob.MobApplication;
-import com.mob.commons.SHARESDK;
-import com.xytsz.xytsz.bean.Deal;
-import com.xytsz.xytsz.bean.DealType;
-import com.xytsz.xytsz.bean.DiseaseType;
-import com.xytsz.xytsz.bean.FacilityName;
-import com.xytsz.xytsz.bean.FacilitySpecifications;
-import com.xytsz.xytsz.bean.FacilityType;
-import com.xytsz.xytsz.bean.PersonList;
-import com.xytsz.xytsz.bean.Road;
-import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
-import com.xytsz.xytsz.util.JsonUtil;
-import com.xytsz.xytsz.util.SpUtils;
-import com.xytsz.xytsz.util.ToastUtil;
+
+
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -31,11 +16,6 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cn.jpush.android.api.JPushInterface;
-import cn.sharesdk.framework.ShareSDK;
 
 
 /**
@@ -44,7 +24,6 @@ import cn.sharesdk.framework.ShareSDK;
  */
 public class MyApplication extends MobApplication {
 
-    private Vibrator mVibrator;
 
     @Override
     public void onCreate() {
@@ -55,13 +34,6 @@ public class MyApplication extends MobApplication {
          */
         SDKInitializer.initialize(this);
         //分享
-        //初始化极光推送
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
-
-
-        mVibrator = (Vibrator) getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
-
 
 
     }
@@ -83,7 +55,6 @@ public class MyApplication extends MobApplication {
         return result;
 
     }
-
 
 
     public static String getAllImagUrl(String taskNumber, int phaseIndication) throws Exception {

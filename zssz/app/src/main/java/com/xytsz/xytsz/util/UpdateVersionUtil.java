@@ -104,7 +104,6 @@ public class UpdateVersionUtil {
      */
     public static void showDialog(final Context context, final VersionInfo versionInfo) {
         final Dialog dialog = new AlertDialog.Builder(context).create();
-        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz_app.apk");
         //dialog.setCancelable(true);// 可以用“返回键”取消
         dialog.setCanceledOnTouchOutside(false);//
         dialog.show();
@@ -115,7 +114,7 @@ public class UpdateVersionUtil {
         Button btnCancel = (Button) view.findViewById(R.id.btn_update_id_cancel);
         TextView tvContent = (TextView) view.findViewById(R.id.tv_update_content);
         TextView tvUpdateTile = (TextView) view.findViewById(R.id.tv_update_title);
-        tvContent.setText(versionInfo.getMessage());
+        tvContent.setText("更新内容："+ versionInfo.getMessage());
         tvUpdateTile.setText("最新版本：" + versionInfo.getVersionName());
 
 
@@ -124,15 +123,15 @@ public class UpdateVersionUtil {
             public void onClick(View v) {
                 dialog.dismiss();
                     //新版本已经下载
-                    if (file.exists() && file.getName().equals("zssz_app.apk")) {
-                        //SpUtils.exit(context);
-                        Intent intent = ApkUtils.getInstallIntent(file);
-                        context.startActivity(intent);
-                    } else {
+//                    if (file.exists() && file.getName().equals("zssz_app.apk")) {
+//                        //SpUtils.exit(context);
+//                        Intent intent = ApkUtils.getInstallIntent(file);
+//                        context.startActivity(intent);
+//                    } else {
 
-                        showDownloadDialog(context, versionInfo);
+                showDownloadDialog(context, versionInfo);
 
-                    }
+
                 }
 
         });
@@ -146,6 +145,7 @@ public class UpdateVersionUtil {
     }
     private static long initTotal = 0;
 
+    private static String filePath =Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz_app.apk" ;
 
     private static void showDownloadDialog(final Context context, VersionInfo versionInfo) {
         final ProgressDialog dialog = new ProgressDialog(context);
@@ -155,21 +155,17 @@ public class UpdateVersionUtil {
         dialog.setCancelable(false);
         dialog.setProgress(0);
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);//有一个进度可以展示
-        /*dialog.setButton("取消", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //home
-                dialog.dismiss();
-            }
-        });*/
+
         dialog.show();
 
 
         HttpUtils httpUtils = new HttpUtils(5000);
         //url :地址
         String url = versionInfo.getDownloadUrl();
-        final File updateFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Zssz/updateVersion/zssz_app.apk");
+
+        deleteFile(filePath);
+        final File updateFile = new File(filePath);
 
         RequestCallBack<File> callback = new RequestCallBack<File>() {
 
@@ -197,13 +193,6 @@ public class UpdateVersionUtil {
 
                 Intent installIntent = ApkUtils.getInstallIntent(updateFile);
                 context.startActivity(installIntent);
-                //下次更新 取消
-                //SpUtils.exit(context);
-                //SpUtils.saveBoolean(context, GlobalContanstant.ISFIRSTENTER,false);
-
-//                if (updateFile.isFile()&& updateFile.exists()){
-//                updateFile.delete();
-//                }
                 dialog.dismiss();
             }
 
@@ -216,6 +205,12 @@ public class UpdateVersionUtil {
         };
         httpUtils.download(url, updateFile.getAbsolutePath(), false, callback);
 
+
+    }
+
+    private static void deleteFile(String filePath) {
+        File file = new File(filePath);
+        file.delete();
     }
 
 

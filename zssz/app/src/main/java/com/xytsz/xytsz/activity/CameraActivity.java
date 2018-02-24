@@ -363,7 +363,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
                     Toast.makeText(getApplicationContext(), "没有检测到内存卡", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+
             } finally {
                 try {
                     bos.flush();//输出

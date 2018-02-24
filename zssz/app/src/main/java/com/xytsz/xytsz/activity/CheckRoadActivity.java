@@ -225,6 +225,9 @@ public class CheckRoadActivity extends AppCompatActivity {
             case GlobalContanstant.CHECKPASS:
                 int passposition = data.getIntExtra("passposition", -1);
                 list.remove(passposition);
+                audioUrls.remove(passposition);
+                imageUrlLists.remove(passposition);
+                imageUrlPostLists.remove(passposition);
                 adapter.notifyDataSetChanged();
 
                 Intent intent = getIntent();
@@ -236,8 +239,11 @@ public class CheckRoadActivity extends AppCompatActivity {
             case GlobalContanstant.CHECKFAIL:
                 int failposition = data.getIntExtra("failposition", -1);
                 list.remove(failposition);
-                adapter.notifyDataSetChanged();
+                audioUrls.remove(failposition);
+                imageUrlLists.remove(failposition);
+                imageUrlPostLists.remove(failposition);
 
+                adapter.notifyDataSetChanged();
                 Intent intent1 = getIntent();
                 intent1.putExtra("position", position);
                 intent1.putExtra("failposition", failposition);

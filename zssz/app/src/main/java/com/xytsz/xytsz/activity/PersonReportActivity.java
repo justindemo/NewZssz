@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -58,6 +59,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -115,7 +117,7 @@ public class PersonReportActivity extends AppCompatActivity {
     };
 
     private LocationClient locationClient;
-    public BDLocationListener myLocaitonListener = new MyLocationListener();
+    public BDAbstractLocationListener myLocaitonListener = new MyLocationListener();
     private GeoCoder mGeoCoder;
     private OnGetGeoCoderResultListener GeoListener = new OnGetGeoCoderResultListener() {
         @Override
@@ -145,7 +147,7 @@ public class PersonReportActivity extends AppCompatActivity {
         return str;
     }
 
-    private class MyLocationListener implements BDLocationListener {
+    private class MyLocationListener extends BDAbstractLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
@@ -174,13 +176,13 @@ public class PersonReportActivity extends AppCompatActivity {
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setCoorType("bd09ll");
         option.setIsNeedAddress(true);
-        option.setScanSpan(0);
+        option.setScanSpan(10000);
         option.setOpenGps(true);
         option.setLocationNotify(false);
         option.setIgnoreKillProcess(false);
         option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
         locationClient.setLocOption(option);
-
+        locationClient.start();
 
     }
 
@@ -213,7 +215,7 @@ public class PersonReportActivity extends AppCompatActivity {
     public String createPhotoName() {
         //以系统的当前时间给图片命名
         Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
         String fileName = format.format(date);
         return fileName;
     }
@@ -283,6 +285,7 @@ public class PersonReportActivity extends AppCompatActivity {
 
         //定位
         PermissionUtils.requestPermission(PersonReportActivity.this, PermissionUtils.CODE_ACCESS_COARSE_LOCATION, mPermissionGrant);
+        PermissionUtils.requestPermission(PersonReportActivity.this, PermissionUtils.CODE_ACCESS_FINE_LOCATION, mPermissionGrant);
 
     }
 
@@ -345,7 +348,9 @@ public class PersonReportActivity extends AppCompatActivity {
                     String success = getString(R.string.personreporte_success);
                     String fail = getString(R.string.personreporte_fail);
                     String reported = getString(R.string.person_reproted);
+                    //获取是否已上报
                     if (results.get(0).equals("true")) {
+
                         if (results.get(1).equals("true")) {
                             ToastUtil.shortToast(getApplicationContext(), success);
                         }else {
@@ -383,7 +388,7 @@ public class PersonReportActivity extends AppCompatActivity {
                 //提交服务器
                 String commiting = getString(R.string.personreporte_commiting);
                 ToastUtil.shortToast(getApplicationContext(),commiting);
-                //btPersonCommit.setEnabled(false);
+
                 String tasknumber = getTasknumber();
 
                 cityPersonReporte.setName(etPersonName.getText().toString());
@@ -501,6 +506,6 @@ public class PersonReportActivity extends AppCompatActivity {
         super.onDestroy();
         locationClient.stop();
         locationClient.unRegisterLocationListener(myLocaitonListener);
-
+        finish();
     }
 }

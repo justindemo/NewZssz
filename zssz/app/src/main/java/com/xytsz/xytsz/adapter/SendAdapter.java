@@ -22,9 +22,10 @@ public class SendAdapter extends BaseAdapter {
 
     public SendAdapter(List<Review.ReviewRoad> reviewRoads) {
 
-
         this.reviewRoads = reviewRoads;
     }
+
+
     @Override
     public int getCount() {
 
@@ -72,5 +73,11 @@ public class SendAdapter extends BaseAdapter {
         public TextView unreadmsg;
         public TextView roadname;
 
+    }
+
+
+    public void updateAdapter(List<Review.ReviewRoad> reviewRoads){
+        this.reviewRoads = reviewRoads;
+        notifyDataSetChanged();
     }
 }

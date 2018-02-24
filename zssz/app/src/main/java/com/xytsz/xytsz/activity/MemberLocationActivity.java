@@ -123,8 +123,8 @@ public class MemberLocationActivity extends AppCompatActivity implements BaiduMa
                         handler.sendMessage(message);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+            }
 
             }
         }.start();

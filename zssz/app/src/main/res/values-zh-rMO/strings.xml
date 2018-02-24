@@ -165,12 +165,15 @@
     <string name="report_dialog_content1">拍照</string>
     <string name="report_upimg">正在上傳圖片···</string>
     <string name="report_uploading">開始上傳</string>
-    <string name="report_imgsuccess">上傳圖片成功</string>
+    <string name="report_imgsuccess">圖片上傳成功</string>
     <string name="report_dialog_content2">相冊</string>
     <string name="report_request">至少選擇一張上報圖片</string>
     <string name="report_notifica">上報一條新病害</string>
     <string name="report_notifica_title">：新上報一條病害</string>
     <string name="report_error">數據未獲取，請稍後重試</string>
+    <string name="report_imageerror">圖片未上傳成功</string>
+    <string name="report_uperror">數據未上傳成功</string>
+
     <string name="report_delete_title">刪除錄音</string>
     <string name="report_delete_video_title">删除視頻</string>
     <string name="report_delete_content">確定刪除錄音?</string>

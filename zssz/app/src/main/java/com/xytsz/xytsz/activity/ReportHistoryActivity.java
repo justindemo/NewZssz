@@ -78,6 +78,17 @@ public class ReportHistoryActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             });
+
+
+                            adapter.setOnRecyclerViewItemClickListener(new BaseQuickAdapter.OnRecyclerViewItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+                                    Intent intent = new Intent(ReportHistoryActivity.this,ReportProccessActivity.class);
+                                    intent.putExtra("detail",list.get(position));
+                                    intent.putExtra("reportimageUrllist", (Serializable) list.get(position).getImglist());
+                                    startActivity(intent);
+                                }
+                            });
                         }
                     }
                     break;
@@ -126,6 +137,7 @@ public class ReportHistoryActivity extends AppCompatActivity {
                     data = getData();
                     List<HistoryReport> list = JsonUtil.jsonToBean(data, new TypeToken<List<HistoryReport>>() {
                     }.getType());
+
                     Message message = Message.obtain();
                     message.obj = list;
                     message.what = SUCCESS;

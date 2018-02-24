@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +48,9 @@ public class AllPayActivity extends AppCompatActivity {
     @Bind(R.id.product_price)
     TextView productPrice;
     @Bind(R.id.alipay)
-    Button alipay;
+    LinearLayout alipay;
     @Bind(R.id.wxpay)
-    Button wxpay;
+    LinearLayout wxpay;
 
     /** 支付宝支付业务：入参app_id */
     public static final String APPID = "";
@@ -57,7 +59,6 @@ public class AllPayActivity extends AppCompatActivity {
     public static final String PID = "";
     /** 支付宝账户登录授权业务：入参target_id值 */
     public static final String TARGET_ID = "";
-
 
     /**
      * 只需要填一个
@@ -104,7 +105,6 @@ public class AllPayActivity extends AppCompatActivity {
                     break;
                 }
 
-
                 default:
                     break;
             }
@@ -118,9 +118,18 @@ public class AllPayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_allpay);
         ButterKnife.bind(this);
-
+        initAcitonbar();
         initview();
 
+    }
+
+    private void initAcitonbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle("开通会员");
+        }
     }
 
     private void initview() {
@@ -148,7 +157,7 @@ public class AllPayActivity extends AppCompatActivity {
         //从服务器返回
         String url = "http://wxpay.weixin.qq.com/pub_v2/app/app_pay.php?plat=android";
 
-        wxpay.setEnabled(false);
+
         Toast.makeText(AllPayActivity.this, "获取订单中...", Toast.LENGTH_SHORT).show();
         try{
 //            byte[] buf = Util.httpGet(url);
@@ -184,7 +193,6 @@ public class AllPayActivity extends AppCompatActivity {
             Log.e("PAY_GET", "异常："+e.getMessage());
             Toast.makeText(AllPayActivity.this, "异常："+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        wxpay.setEnabled(true);
 
     }
 
@@ -231,5 +239,12 @@ public class AllPayActivity extends AppCompatActivity {
         payThread.start();
 
 
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 }

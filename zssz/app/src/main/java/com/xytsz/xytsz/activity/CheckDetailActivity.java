@@ -84,25 +84,30 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
             switch (msg.what) {
                 case ISCHECKPASS:
                     String isPass = msg.getData().getString("ispass");
-                    int passposition = msg.getData().getInt("passposition");
-                    if (isPass.equals("true")) {
-                        ToastUtil.shortToast(getApplicationContext(), "验收通过");
-                        Intent intent = getIntent();
-                        intent.putExtra("passposition", passposition);
-                        setResult(GlobalContanstant.CHECKPASS, intent);
-                        finish();
+                    int passposition = msg.getData().getInt("passpostion");
+                    if (isPass != null) {
+
+                        if (isPass.equals("true")) {
+                            ToastUtil.shortToast(getApplicationContext(), "验收通过");
+                            Intent intent = getIntent();
+                            intent.putExtra("passposition", passposition);
+                            setResult(GlobalContanstant.CHECKPASS, intent);
+                            finish();
+                        }
                     }
                     break;
                 case ISUNCHECKPASS:
                     String isFail = msg.getData().getString("isfail");
-                    int failposition = msg.getData().getInt("failposition");
-                    if (isFail.equals("true")) {
-                        ToastUtil.shortToast(getApplicationContext(), "验收未通过");
-                        Intent intent = getIntent();
-                        intent.putExtra("failposition", failposition);
-                        setResult(GlobalContanstant.CHECKFAIL, intent);
-                        finish();
+                    int failposition = msg.getData().getInt("failpostion");
+                    if (isFail != null) {
+                        if (isFail.equals("true")) {
+                            ToastUtil.shortToast(getApplicationContext(), "验收未通过");
+                            Intent intent = getIntent();
+                            intent.putExtra("failposition", failposition);
+                            setResult(GlobalContanstant.CHECKFAIL, intent);
+                            finish();
 
+                        }
                     }
                     break;
 
@@ -138,7 +143,7 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
 
 
         if (getIntent() != null) {
-            position = getIntent().getIntExtra("position", 0);
+            position = getIntent().getIntExtra("position", -1);
             reviewRoad = (Review.ReviewRoad) getIntent().getSerializableExtra("reviewRoad");
             imageUrlReport = (List<List<ImageUrl>>) getIntent().getSerializableExtra("imageUrlReport");
             imageUrlPost = (List<List<ImageUrl>>) getIntent().getSerializableExtra("imageUrlPost");
@@ -239,7 +244,7 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
 
         int disposalLevel_id = detail.getDisposalLevel_ID() - 1;
         int level = detail.getLevel();
-        //mtvDiseaseName.setText(Data.pbname[level]);
+        mtvDiseaseName.setText(Data.pbname[level]);
         mtvGrade.setText(Data.grades[disposalLevel_id]);
         mtvDealtype.setText(detail.getDealType_Name());
         mtvFatype.setText(detail.getFacilityType_Name());
@@ -265,7 +270,7 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
         String actualCompletionTime = detail.getActualCompletionTime();
         mtvResultTime.setText(actualCompletionTime);
 
-
+        mtvProblemLoca.setText(detail.getAddressDescription());
         tvCheckDetailDiseasedes.setText(detail.getDiseaseDescription());
 
         mtvRoad.setOnClickListener(new View.OnClickListener() {
@@ -307,45 +312,46 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
         if (detail.getAddressDescription().isEmpty()) {
             final AudioUrl audioUrl = audioUrls.get(position);
             if (audioUrl != null) {
+                if (audioUrl.getAudioUrl() != null) {
+                    if (!audioUrl.getAudioUrl().equals("false")) {
 
-                if (!audioUrl.getAudioUrl().equals("false")) {
+                        if (!audioUrl.getTime().isEmpty()) {
+                            mtvProblemLoca.setVisibility(View.GONE);
+                            mtvProblemAudio.setVisibility(View.VISIBLE);
+                            soundUtil = new SoundUtil();
+                            mtvProblemAudio.setText(audioUrl.getTime());
 
-                    if (!audioUrl.getTime().isEmpty()) {
-                        mtvProblemLoca.setVisibility(View.GONE);
-                        mtvProblemAudio.setVisibility(View.VISIBLE);
-                        soundUtil = new SoundUtil();
-                        mtvProblemAudio.setText(audioUrl.getTime());
+                            mtvProblemAudio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                        mtvProblemAudio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
 
-                                Drawable drawable = getResources().getDrawable(R.mipmap.pause);
-                                final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
-
-                                mtvProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                    mtvProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
 
-                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        mtvProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
-                                    }
+                                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                        @Override
+                                        public void onFinish() {
+                                            mtvProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                        }
 
-                                    @Override
-                                    public void onError() {
+                                        @Override
+                                        public void onError() {
 
-                                    }
-                                });
+                                        }
+                                    });
 
-                                soundUtil.play(audioUrl.getAudioUrl());
-                            }
-                        });
+                                    soundUtil.play(audioUrl.getAudioUrl());
+                                }
+                            });
+                        }
+                    } else {
+                        mtvProblemLoca.setVisibility(View.VISIBLE);
+                        mtvProblemLoca.setText(detail.getAddressDescription());
+                        mtvProblemAudio.setVisibility(View.GONE);
                     }
-                } else {
-                    mtvProblemLoca.setVisibility(View.VISIBLE);
-                    mtvProblemLoca.setText(detail.getAddressDescription());
-                    mtvProblemAudio.setVisibility(View.GONE);
                 }
             } else {
                 mtvProblemLoca.setVisibility(View.VISIBLE);
@@ -355,7 +361,7 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
 
         } else {
             mtvProblemLoca.setVisibility(View.VISIBLE);
-            mtvProblemLoca.setText(detail.getAddressDescription());
+
             mtvProblemAudio.setVisibility(View.GONE);
         }
 
@@ -404,7 +410,7 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
                             handler.sendMessage(message);
 
                         } catch (Exception e) {
-                            e.printStackTrace();
+
                         }
                     }
                 }.start();
@@ -412,7 +418,6 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.tv_check_pass:
                 //记录当前状态
-
 
                 new Thread() {
                     @Override
@@ -429,7 +434,7 @@ public class CheckDetailActivity extends AppCompatActivity implements View.OnCli
                             handler.sendMessage(message);
 
                         } catch (Exception e) {
-                            e.printStackTrace();
+
                         }
                     }
                 }.start();

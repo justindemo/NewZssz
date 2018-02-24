@@ -195,7 +195,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                                     }
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+
 
                             }
 

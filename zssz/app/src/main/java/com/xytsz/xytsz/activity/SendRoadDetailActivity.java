@@ -256,7 +256,6 @@ public class SendRoadDetailActivity extends AppCompatActivity implements View.On
                 Glide.with(getApplicationContext()).load(imageUrls.get(2).getImgurl()).into(ivSendDetailPhoto3);
             }
         } else {
-
             ivSendDetailPhoto1.setVisibility(View.VISIBLE);
             ivSendDetailPhoto1.setVisibility(View.INVISIBLE);
             ivSendDetailPhoto1.setVisibility(View.INVISIBLE);
@@ -271,43 +270,45 @@ public class SendRoadDetailActivity extends AppCompatActivity implements View.On
 
         if (detail.getAddressDescription().isEmpty()) {
             if (audioUrl != null) {
-                if (!audioUrl.getAudioUrl().equals("false")) {
+                if (audioUrl.getAudioUrl() != null) {
+                    if (!audioUrl.getAudioUrl().equals("false")) {
 
-                    if (!audioUrl.getTime().isEmpty()) {
-                        tvSendDetailAddress.setVisibility(View.GONE);
-                        tvSendProblemAudio.setVisibility(View.VISIBLE);
-                        soundUtil = new SoundUtil();
-                        tvSendProblemAudio.setText(audioUrl.getTime());
+                        if (!audioUrl.getTime().isEmpty()) {
+                            tvSendDetailAddress.setVisibility(View.GONE);
+                            tvSendProblemAudio.setVisibility(View.VISIBLE);
+                            soundUtil = new SoundUtil();
+                            tvSendProblemAudio.setText(audioUrl.getTime());
 
-                        tvSendProblemAudio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                            tvSendProblemAudio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                                Drawable drawable = getResources().getDrawable(R.mipmap.pause);
-                                final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+                                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
 
-                                tvSendProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                    tvSendProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
 
-                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        tvSendProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
-                                    }
+                                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                        @Override
+                                        public void onFinish() {
+                                            tvSendProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                        }
 
-                                    @Override
-                                    public void onError() {
+                                        @Override
+                                        public void onError() {
 
-                                    }
-                                });
+                                        }
+                                    });
 
-                                soundUtil.play(audioUrl.getAudioUrl());
-                            }
-                        });
+                                    soundUtil.play(audioUrl.getAudioUrl());
+                                }
+                            });
+                        }
+                    } else {
+                        tvSendDetailAddress.setVisibility(View.VISIBLE);
+                        tvSendProblemAudio.setVisibility(View.GONE);
                     }
-                } else {
-                    tvSendDetailAddress.setVisibility(View.VISIBLE);
-                    tvSendProblemAudio.setVisibility(View.GONE);
                 }
             } else {
                 tvSendDetailAddress.setVisibility(View.VISIBLE);

@@ -2,11 +2,13 @@ package com.xytsz.xytsz.activity;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
+import java.io.Serializable;
+
 /**
  * Created by admin on 2017/8/15.
  *
  */
-public class MemberShow extends MultiItemEntity{
+public class MemberShow extends MultiItemEntity implements Serializable{
 
 
     /**

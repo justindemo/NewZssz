@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -188,9 +189,6 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                             }
 
 
-
-
-
                         }
 
 
@@ -292,7 +290,9 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
     @Override
     protected void onStart() {
         super.onStart();
-        locationClient.start();
+        if (locationClient != null){
+            locationClient.start();
+        }
     }
 
     @Override
@@ -300,6 +300,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
         mMV.onPause();
         super.onPause();
         if (locationClient != null){
+            locationClient.unRegisterLocationListener(myListener);
             locationClient.stop();
         }
     }
@@ -308,7 +309,10 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
     public void onDestroy() {
         super.onDestroy();
         mMV.onDestroy();
-        locationClient.stop();
+        if (locationClient != null){
+            locationClient.unRegisterLocationListener(myListener);
+            locationClient.stop();
+        }
     }
 
     private int id;
@@ -433,7 +437,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
     }
 
 
-    public BDLocationListener myListener = new MyListener();
+    public BDAbstractLocationListener myListener = new MyListener();
     private LocationClient locationClient;
 
     private void locat() {
@@ -454,7 +458,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
         locationClient.start();
     }
 
-    private class MyListener implements BDLocationListener {
+    private class MyListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             //获取到经度

@@ -14,7 +14,7 @@ import com.xytsz.xytsz.R;
  */
 public class MoreAdapter extends BaseAdapter{
     //桌面图片
-    private int[] mIcons = {R.mipmap.more_person,R.mipmap.more_problem,R.mipmap.more_lib,R.mipmap.more_flood,R.mipmap.more_notice };
+    private int[] mIcons = {R.mipmap.more_person,R.mipmap.more_problem,R.mipmap.more_lib,R.mipmap.more_flood,R.mipmap.more_caroil};
 
     // 桌面标题
     private String[] mTitles = { "人员","病害","井盖", "防汛","公告"};

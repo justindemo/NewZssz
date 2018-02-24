@@ -102,10 +102,9 @@ public class MemberShowActivity extends AppCompatActivity {
 
                             if (businessList.get(position).getUrl() == null) {
                                 Intent intent = new Intent(MemberShowActivity.this, NoMemberActivity.class);
-
                                 intent.putExtra("dataList", (Serializable) businessList);
                                 intent.putExtra("position", position);
-                                startActivity(intent);
+                                view.getContext().startActivity(intent);
 
                             } else {
                                 Intent intent = new Intent(MemberShowActivity.this, MemberShowContentActivity.class);
@@ -133,19 +132,18 @@ public class MemberShowActivity extends AppCompatActivity {
 
                             //返回的数据做判断  如果url 为null;就进入一个为加盟的界面
 
-                            if (companyList.get(position).getUrl() == null) {
+//                            if (companyList.get(position).getUrl() == null) {
                                 Intent intent = new Intent(MemberShowActivity.this, NoMemberActivity.class);
-
                                 intent.putExtra("dataList", (Serializable) companyList);
                                 intent.putExtra("position", position);
-                                startActivity(intent);
+                                view.getContext().startActivity(intent);
 
-                            } else {
-                                Intent intent = new Intent(MemberShowActivity.this, MemberShowContentActivity.class);
-                                intent.putExtra("url", companyList.get(position).getUrl());
-                                startActivity(intent);
-
-                            }
+//                            } else {
+//                                Intent intent = new Intent(MemberShowActivity.this, MemberShowContentActivity.class);
+//                                intent.putExtra("url", companyList.get(position).getUrl());
+//                                startActivity(intent);
+//
+//                            }
 
 
                         }

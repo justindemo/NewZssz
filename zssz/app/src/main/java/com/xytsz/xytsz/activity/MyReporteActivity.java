@@ -60,7 +60,6 @@ public class MyReporteActivity extends AppCompatActivity {
             switch (msg.what) {
                 case GlobalContanstant.CHECKFAIL:
                     tvFail.setVisibility(View.VISIBLE);
-
                     myreportProgressbar.setVisibility(View.GONE);
                     tvFail.setText("未获取数据，请稍后");
                     break;
@@ -69,7 +68,7 @@ public class MyReporteActivity extends AppCompatActivity {
 
                     final List<ForMyDis> details = (List<ForMyDis>) msg.obj;
                     if (details.size() != 0) {
-                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists,audioUrls);
+                        MyReportAdapter adapter = new MyReportAdapter(details, imageUrlLists, audioUrls);
                         myreportProgressbar.setVisibility(View.GONE);
                         lvReprote.setAdapter(adapter);
 
@@ -79,8 +78,8 @@ public class MyReporteActivity extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(MyReporteActivity.this, MyReporteDetailActivity.class);
                                 intent.putExtra("detail", details.get(position));
-                                intent.putExtra("audioUrl",audioUrls.get(position));
-                                intent.putExtra("flag",1);
+                                intent.putExtra("audioUrl", audioUrls.get(position));
+                                intent.putExtra("flag", 1);
                                 intent.putExtra("imageUrlReport", (Serializable) imageUrlLists.get(position));
                                 startActivity(intent);
                             }
@@ -98,6 +97,7 @@ public class MyReporteActivity extends AppCompatActivity {
     private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
     private String nodata;
     private List<AudioUrl> audioUrls = new ArrayList<>();
+
     @Override
     protected void
     onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,16 +123,16 @@ public class MyReporteActivity extends AppCompatActivity {
             public void run() {
 
                 try {
-                String data = getData();
-                if (data != null) {
-                    List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
-                    }.getType());
+                    String data = getData();
+                    if (data != null) {
+                        List<ForMyDis> details = JsonUtil.jsonToBean(data, new TypeToken<List<ForMyDis>>() {
+                        }.getType());
 
 
-                    for (ForMyDis forMyDis : details) {
-                        String taskNumber = forMyDis.getTaskNumber();
+                        for (ForMyDis forMyDis : details) {
+                            String taskNumber = forMyDis.getTaskNumber();
 
-                        String json = null;
+                            String json = null;
 
                             json = MyApplication.getAllImagUrl(taskNumber, GlobalContanstant.GETREVIEW);
 
@@ -145,18 +145,18 @@ public class MyReporteActivity extends AppCompatActivity {
                             }
 
 
-                        String audioUrljson = RoadActivity.getAudio(taskNumber);
+                            String audioUrljson = RoadActivity.getAudio(taskNumber);
 
-                        if (audioUrljson != null){
-                            AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
-                            audioUrls.add(audioUrl);
+                            if (audioUrljson != null) {
+                                AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
+                                audioUrls.add(audioUrl);
+                            }
+
                         }
-
-                    }
-                    Message message = Message.obtain();
-                    message.obj = details;
-                    message.what = REPORTE;
-                    handler.sendMessage(message);
+                        Message message = Message.obtain();
+                        message.obj = details;
+                        message.what = REPORTE;
+                        handler.sendMessage(message);
 
                     }
                 } catch (Exception e) {
@@ -171,7 +171,7 @@ public class MyReporteActivity extends AppCompatActivity {
     }
 
 
-    private String getData() throws Exception{
+    private String getData() throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getALlReportByPersonID);
 
         soapObject.addProperty("personid", personId);

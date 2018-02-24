@@ -180,7 +180,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                                             Thread.sleep(1000);
 
                                         } catch (InterruptedException e) {
-                                            e.printStackTrace();
+
                                         }
                                     }
                                     handler.sendEmptyMessage(CODE_REPEAT);

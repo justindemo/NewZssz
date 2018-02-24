@@ -98,47 +98,49 @@ public class MyReportAdapter extends BaseAdapter {
         if (forMyDis.getAddressDescription().isEmpty()) {
             final AudioUrl audioUrl = audioUrls.get(position);
             if (audioUrl != null) {
-                if (audioUrl.getAudioUrl().equals("false")) {
-                    if (!audioUrl.getTime().isEmpty()) {
-                        holder.pbname.setVisibility(View.GONE);
-                        holder.tvProblemAudio.setVisibility(View.VISIBLE);
-                        holder.tvProblemAudio.setText(audioUrl.getTime());
+                if (audioUrl.getAudioUrl() != null) {
+                    if (!audioUrl.getAudioUrl().equals("false")) {
+                        if (!audioUrl.getTime().isEmpty()) {
+                            holder.pbname.setVisibility(View.GONE);
+                            holder.tvProblemAudio.setVisibility(View.VISIBLE);
+                            holder.tvProblemAudio.setText(audioUrl.getTime());
 
-                        holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
+                            holder.tvProblemAudio.setOnClickListener(new View.OnClickListener() {
 
 
-                            @Override
-                            public void onClick(View v) {
+                                @Override
+                                public void onClick(View v) {
 
-                                Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
-                                final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
-                                final TextView tv = (TextView) v;
-                                tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                    Drawable drawable = parent.getContext().getResources().getDrawable(R.mipmap.pause);
+                                    final Drawable drawableRight = parent.getContext().getResources().getDrawable(R.mipmap.play);
+                                    final TextView tv = (TextView) v;
+                                    tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
-                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                        @Override
+                                        public void onFinish() {
+                                            tv.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
 
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onError() {
+                                        @Override
+                                        public void onError() {
 
-                                    }
-                                });
+                                        }
+                                    });
 
-                                soundUtil.play(audioUrl.getAudioUrl());
-                            }
-                        });
+                                    soundUtil.play(audioUrl.getAudioUrl());
+                                }
+                            });
 
-                    }else {
+                        } else {
+                            holder.pbname.setVisibility(View.VISIBLE);
+                            holder.tvProblemAudio.setVisibility(View.GONE);
+                        }
+                    } else {
                         holder.pbname.setVisibility(View.VISIBLE);
                         holder.tvProblemAudio.setVisibility(View.GONE);
                     }
-                }else {
-                    holder.pbname.setVisibility(View.VISIBLE);
-                    holder.tvProblemAudio.setVisibility(View.GONE);
                 }
             } else {
                 holder.pbname.setVisibility(View.VISIBLE);

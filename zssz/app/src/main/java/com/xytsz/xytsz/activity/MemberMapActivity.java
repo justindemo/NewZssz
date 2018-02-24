@@ -49,8 +49,6 @@ public class MemberMapActivity extends AppCompatActivity implements BaiduMap.OnM
             mylatitude = bdLocation.getLatitude();
             mylongitude = bdLocation.getLongitude();
 
-
-
         }
     };
     private double mylatitude;
@@ -133,6 +131,7 @@ public class MemberMapActivity extends AppCompatActivity implements BaiduMap.OnM
         option.setLocationNotify(false);
 
         locationClient.setLocOption(option);
+        locationClient.start();
 
     }
 
@@ -165,7 +164,9 @@ public class MemberMapActivity extends AppCompatActivity implements BaiduMap.OnM
     @Override
     protected void onStart() {
         super.onStart();
-        locationClient.start();
+        if (locationClient != null){
+            locationClient.start();
+        }
 
 
     }
@@ -182,7 +183,9 @@ public class MemberMapActivity extends AppCompatActivity implements BaiduMap.OnM
     protected void onPause() {
         super.onPause();
         mpMembermap.onPause();
-        locationClient.stop();
+        if (locationClient != null){
+            locationClient.stop();
+        }
     }
 
     @Override

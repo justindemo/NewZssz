@@ -2,6 +2,7 @@ package com.xytsz.xytsz.util;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.xytsz.xytsz.BuildConfig;
 import com.xytsz.xytsz.R;
 
 import java.util.ArrayList;
@@ -166,16 +168,15 @@ public class PermissionUtils {
         final List<String> permissionsList = getNoGrantedPermission(activity, false);
         final List<String> shouldRationalePermissionsList = getNoGrantedPermission(activity, true);
 
-        //TODO checkSelfPermission
         if (permissionsList == null || shouldRationalePermissionsList == null) {
             return;
         }
-        Log.d(TAG, "requestMultiPermissions permissionsList:" + permissionsList.size() + ",shouldRationalePermissionsList:" + shouldRationalePermissionsList.size());
+//        Log.d(TAG, "requestMultiPermissions permissionsList:" + permissionsList.size() + ",shouldRationalePermissionsList:" + shouldRationalePermissionsList.size());
 
         if (permissionsList.size() > 0) {
             ActivityCompat.requestPermissions(activity, permissionsList.toArray(new String[permissionsList.size()]),
                     CODE_MULTI_PERMISSION);
-            Log.d(TAG, "showMessageOKCancel requestPermissions");
+//            Log.d(TAG, "showMessageOKCancel requestPermissions");
 
         } else if (shouldRationalePermissionsList.size() > 0) {
             showMessageOKCancel(activity, "should open those permission",
@@ -184,7 +185,7 @@ public class PermissionUtils {
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(activity, shouldRationalePermissionsList.toArray(new String[shouldRationalePermissionsList.size()]),
                                     CODE_MULTI_PERMISSION);
-                            Log.d(TAG, "showMessageOKCancel requestPermissions");
+//                            Log.d(TAG, "showMessageOKCancel requestPermissions");
                         }
                     });
         } else {
@@ -230,7 +231,7 @@ public class PermissionUtils {
         if (activity == null) {
             return;
         }
-        Log.d(TAG, "requestPermissionsResult requestCode:" + requestCode);
+//        Log.d(TAG, "requestPermissionsResult requestCode:" + requestCode);
 
         if (requestCode == CODE_MULTI_PERMISSION) {
             requestMultiResult(activity, permissions, grantResults, permissionGrant);
@@ -238,44 +239,90 @@ public class PermissionUtils {
         }
 
         if (requestCode < 0 || requestCode >= requestPermissions.length) {
-            Log.w(TAG, "requestPermissionsResult illegal requestCode:" + requestCode);
+//            Log.w(TAG, "requestPermissionsResult illegal requestCode:" + requestCode);
             Toast.makeText(activity, "illegal requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Log.i(TAG, "onRequestPermissionsResult requestCode:" + requestCode + ",permissions:" + permissions.toString()
-                + ",grantResults:" + grantResults.toString() + ",length:" + grantResults.length);
+//        Log.i(TAG, "onRequestPermissionsResult requestCode:" + requestCode + ",permissions:" + permissions.toString()
+//                + ",grantResults:" + grantResults.toString() + ",length:" + grantResults.length);
 
         if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "onRequestPermissionsResult PERMISSION_GRANTED");
-            //TODO success, do something, can use callback
+           // Log.i(TAG, "onRequestPermissionsResult PERMISSION_GRANTED");
             permissionGrant.onPermissionGranted(requestCode);
 
         } else {
-            //TODO hint user this permission function
-            Log.i(TAG, "onRequestPermissionsResult PERMISSION NOT GRANTED");
-            //TODO
+           // Log.i(TAG, "onRequestPermissionsResult PERMISSION NOT GRANTED");
+
             String[] permissionsHint = activity.getResources().getStringArray(R.array.permissions);
             openSettingActivity(activity,  "Result" + permissionsHint[requestCode]);
         }
 
     }
 
-    private static void openSettingActivity(final Activity activity, String message) {
+    public static void openSettingActivity(final Activity activity, String message) {
 
         showMessageOKCancel(activity, message, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Log.d(TAG, "getPackageName(): " + activity.getPackageName());
-                Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
-                intent.setData(uri);
-                activity.startActivity(intent);
+                gotoMiuiPermission(activity);
+                dialog.dismiss();
             }
         });
     }
 
+    @NonNull
+    private static Intent getAppDetailSettingIntent(Activity activity) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        //Log.d(TAG, "getPackageName(): " + activity.getPackageName());
+        Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+        intent.setData(uri);
+        return intent;
+    }
+
+
+    private static void gotoMiuiPermission(Activity activity) {
+        Intent i = new Intent("miui.intent.action.APP_PERM_EDITOR");
+        ComponentName componentName = new ComponentName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+        i.setComponent(componentName);
+        i.putExtra("extra_pkgname", activity.getPackageName());
+        try {
+            activity.startActivity(i);
+        } catch (Exception e) {
+
+            gotoMeizuPermission(activity);
+        }
+    }
+
+    /**
+     * 跳转到魅族的权限管理系统
+     */
+    private static void gotoMeizuPermission(Activity activity) {
+        Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+        try {
+            activity.startActivity(intent);
+        } catch (Exception e) {
+
+            gotoHuaweiPermission(activity);
+        }
+    }
+
+    private static void gotoHuaweiPermission(Activity activity) {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
+            intent.setComponent(comp);
+            activity.startActivity(intent);
+        } catch (Exception e) {
+
+            activity.startActivity(getAppDetailSettingIntent(activity));
+        }
+
+    }
 
     /**
      * @param activity
@@ -289,8 +336,6 @@ public class PermissionUtils {
         for (int i = 0; i < requestPermissions.length; i++) {
             String requestPermission = requestPermissions[i];
 
-
-            //TODO checkSelfPermission
             int checkSelfPermission = -1;
             try {
                 checkSelfPermission = ActivityCompat.checkSelfPermission(activity, requestPermission);
@@ -302,10 +347,10 @@ public class PermissionUtils {
             }
 
             if (checkSelfPermission != PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "getNoGrantedPermission ActivityCompat.checkSelfPermission != PackageManager.PERMISSION_GRANTED:" + requestPermission);
+                //Log.i(TAG, "getNoGrantedPermission ActivityCompat.checkSelfPermission != PackageManager.PERMISSION_GRANTED:" + requestPermission);
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity, requestPermission)) {
-                    Log.d(TAG, "shouldShowRequestPermissionRationale if");
+                   // Log.d(TAG, "shouldShowRequestPermissionRationale if");
                     if (isShouldRationale) {
                         permissions.add(requestPermission);
                     }
@@ -315,7 +360,7 @@ public class PermissionUtils {
                     if (!isShouldRationale) {
                         permissions.add(requestPermission);
                     }
-                    Log.d(TAG, "shouldShowRequestPermissionRationale else");
+                   // Log.d(TAG, "shouldShowRequestPermissionRationale else");
                 }
 
             }

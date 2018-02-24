@@ -6,6 +6,5 @@
         android:id="@+id/membershow_join"
         android:title="加盟"
         android:orderInCategory="100"
-        android:showAsAction="always"
         />
 </menu>

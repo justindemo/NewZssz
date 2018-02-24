@@ -29,6 +29,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -158,6 +159,62 @@ public class SendActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (resultCode) {
+
+
+            //多选的删除
+            case 202:
+                position = data.getIntExtra("passposition", -1);
+                List<Review.ReviewRoad.ReviewRoadDetail> deletlist =
+                        (List<Review.ReviewRoad.ReviewRoadDetail>) data.getSerializableExtra("deletlist");
+
+                for (Review.ReviewRoad.ReviewRoadDetail reviewRoadDetail : deletlist) {
+                    String taskNumber = reviewRoadDetail.getTaskNumber();
+                    Iterator<Review.ReviewRoad.ReviewRoadDetail> iterator =
+                            list.get(position).getList().iterator();
+
+                    while (iterator.hasNext()){
+                        Review.ReviewRoad.ReviewRoadDetail next = iterator.next();
+                        if (next.getTaskNumber().equals(taskNumber)){
+                            iterator.remove();
+                        }
+                    }
+
+                }
+
+
+                size = list.get(position).getList().size();
+                if (size == 0) {
+                    list.remove(position);
+                }
+                adapter.updateAdapter(list);
+                //adapter.notifyDataSetChanged();
+                break;
+            case 201:
+                position = data.getIntExtra("failposition", -1);
+                List<Review.ReviewRoad.ReviewRoadDetail> deletbacklist =
+                        (List<Review.ReviewRoad.ReviewRoadDetail>) data.getSerializableExtra("deletbacklist");
+
+                for (Review.ReviewRoad.ReviewRoadDetail reviewRoadDetail : deletbacklist) {
+                    String taskNumber = reviewRoadDetail.getTaskNumber();
+                    Iterator<Review.ReviewRoad.ReviewRoadDetail> iterator =
+                            list.get(position).getList().iterator();
+
+                    while (iterator.hasNext()){
+                        Review.ReviewRoad.ReviewRoadDetail next = iterator.next();
+                        if (next.getTaskNumber().equals(taskNumber)){
+                            iterator.remove();
+                        }
+                    }
+
+                }
+
+                size = list.get(position).getList().size();
+                if (size == 0) {
+                    list.remove(position);
+                }
+                adapter.updateAdapter(list);
+                //adapter.notifyDataSetChanged();
+                break;
             case 505:
                 position = data.getIntExtra("position", -1);
                 int passposition = data.getIntExtra("passposition", -1);

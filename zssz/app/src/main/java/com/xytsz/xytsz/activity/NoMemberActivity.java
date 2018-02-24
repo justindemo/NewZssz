@@ -46,6 +46,9 @@ public class NoMemberActivity extends AppCompatActivity {
     LinearLayout llBottom;
     private List<MemberShow> dataList;
     private int position;
+    //号码展示状态
+    private boolean isShow;
+    private MemberShow memberShow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,10 +68,11 @@ public class NoMemberActivity extends AppCompatActivity {
             dataList = (List<MemberShow>) getIntent().getSerializableExtra("dataList");
             position = getIntent().getIntExtra("position",-1);
         }
-        MemberShow memberShow = dataList.get(position);
+        memberShow = dataList.get(position);
         associationTvName.setText(memberShow.getEnname());
         associationTvUsername.setText(memberShow.getName());
-        associationTvPhone.setText(memberShow.getTel());
+        String phone = memberShow.getTel().replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
+        associationTvPhone.setText(phone);
 
         tvGetcontent.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
@@ -86,10 +90,7 @@ public class NoMemberActivity extends AppCompatActivity {
                 //支付  判断 如果支付成功然后显示电话
 
                 //setresult 中去显示的
-
-
                 //TODO:支付
-
                 Intent intent1 = new Intent(view.getContext(),AllPayActivity.class);
 
                 startActivityForResult(intent1,2);
@@ -114,7 +115,7 @@ public class NoMemberActivity extends AppCompatActivity {
                 case 1:
                     boolean result = data.getBooleanExtra("result", false);
                     if (result){
-                        associationTvPhone.setBackgroundColor(Color.WHITE);
+                        associationTvPhone.setText(memberShow.getTel());
                     }else {
                         ToastUtil.shortToast(getApplicationContext(),"数据未获取成功");
                     }

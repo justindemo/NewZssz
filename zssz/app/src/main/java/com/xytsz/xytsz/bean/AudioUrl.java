@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 public class AudioUrl implements Serializable{
 
-    private String audioUrl;
+    private String audiourl;
     private String time;
 
     public String getAudioUrl() {
-        return audioUrl;
+        return audiourl;
     }
 
     public void setAudioUrl(String audioUrl) {
-        this.audioUrl = audioUrl;
+        this.audiourl = audioUrl;
     }
 
     public String getTime() {

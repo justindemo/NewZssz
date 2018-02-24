@@ -3,27 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/grayground"
+   >
 
     <LinearLayout
-        android:layout_margin="6dp"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_uncheck_information"
         android:orientation="vertical">
 
-
         <LinearLayout
+            android:padding="10dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
                 android:text="商品名称:"
                 android:textSize="18sp"
                 android:textColor="#777777"
@@ -40,10 +39,18 @@
                 tools:ignore="HardcodedText" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/grayground"/>
+
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:padding="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -66,11 +73,16 @@
                 android:textColor="#333333"
                 tools:ignore="HardcodedText" />
         </LinearLayout>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/grayground"/>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:padding="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -101,27 +113,50 @@
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/alipay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/btn_positive"
-            android:text="支付宝支付"
-            android:textColor="@color/cc_white"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/wxpay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/alipay"
+            android:background="@drawable/shape_exit"
             android:layout_margin="10dp"
-            android:background="@drawable/btn_positive"
-            android:text="微信支付"
-            android:textColor="@color/cc_white"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText" />
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="支付宝支付"
+                android:padding="10dp"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@mipmap/alipay"
+                android:textColor="@color/cc_white"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/wxpay"
+            android:background="@drawable/shape_exit"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="微信支付"
+                android:padding="10dp"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@mipmap/wechatpay"
+                android:textColor="@color/cc_white"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 

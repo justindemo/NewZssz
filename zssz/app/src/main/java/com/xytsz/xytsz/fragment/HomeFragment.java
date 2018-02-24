@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -76,7 +77,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     private LocationClient locationClient;
     private double longitude;
     private double latitude;
-    public BDLocationListener myListener = new MyListener();
+    public BDAbstractLocationListener myListener = new MyListener();
     private View.OnClickListener listener = new MyListener();
     private int role;
     private PermissionUtils.PermissionGrant mPermissionGrant
@@ -160,7 +161,6 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
         //获取当前登陆人的ID
         personId = SpUtils.getInt(getContext(), GlobalContanstant.PERSONID);
-
         getData();
 
 
@@ -170,7 +170,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         mapview.showScaleControl(false);
         map = mapview.getMap();
 
-        //PermissionUtils.requestPermission(this.getActivity(), PermissionUtils.CODE_ACCESS_FINE_LOCATION, mPermissionGrant);
+        PermissionUtils.requestPermission(this.getActivity(), PermissionUtils.CODE_ACCESS_FINE_LOCATION, mPermissionGrant);
         PermissionUtils.requestPermission(this.getActivity(), PermissionUtils.CODE_ACCESS_COARSE_LOCATION, mPermissionGrant);
 
         map.setMapStatus(MapStatusUpdateFactory.zoomTo(18));
@@ -186,7 +186,10 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
 
 
     private void getData() {
-
+        reviewNumber = 0;
+        sendNumber = 0;
+        checkNumber = 0;
+        dealNumber = 0;
         manageNumbers.clear();
         new Thread() {
             @Override
@@ -353,21 +356,22 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         super.onResume();
         mapview.onResume();
         mtvMarquee.startScroll();
-        reviewNumber = 0;
-        sendNumber = 0;
-        checkNumber = 0;
-        dealNumber = 0;
+
         getData();
+
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mapview.onPause();
-        if (locationClient != null) {
+        mtvMarquee.stopScroll();
+        if (locationClient != null){
+            locationClient.unRegisterLocationListener(myListener);
             locationClient.stop();
         }
-        mtvMarquee.stopScroll();
+
     }
 
     @Override
@@ -437,7 +441,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     };
 
 
-    private class MyListener implements BDLocationListener, View.OnClickListener {
+    private class MyListener extends BDAbstractLocationListener implements View.OnClickListener {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             //获取到经度
@@ -454,7 +458,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                     ToastUtil.shortToast(getContext(), "无法定位，请检查网络");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+
 
             }
 
@@ -471,7 +475,7 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                         handler.sendMessage(message);
 
                     } catch (Exception e) {
-                        e.printStackTrace();
+
                     }
 
                 }

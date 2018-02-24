@@ -131,6 +131,7 @@ public class CheckActivity extends AppCompatActivity {
                 Intent intent = new Intent(CheckActivity.this, CheckRoadActivity.class);
                 intent.putExtra("position", position);
                 startActivityForResult(intent, 700);
+                finish();
             }
         });
     }

@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -35,8 +34,8 @@ import com.xytsz.xytsz.activity.MyInformationActivity;
 import com.xytsz.xytsz.activity.MyReporteActivity;
 import com.xytsz.xytsz.activity.MyReviewedActivity;
 import com.xytsz.xytsz.activity.MyScoreActivity;
+import com.xytsz.xytsz.activity.MySendActivity;
 import com.xytsz.xytsz.activity.ScoreSignActivity;
-import com.xytsz.xytsz.activity.SettingActivity;
 import com.xytsz.xytsz.base.BaseFragment;
 import com.xytsz.xytsz.bean.UpdateStatus;
 import com.xytsz.xytsz.bean.VersionInfo;
@@ -101,6 +100,10 @@ public class MeFragment extends BaseFragment {
     RelativeLayout rlMyscore;
     @Bind(R.id.for_us)
     TextView forUs;
+    @Bind(R.id.tv_send_nume)
+    TextView tvSendNume;
+    @Bind(R.id.ll_my_send)
+    LinearLayout llMySend;
     private ImageView mIvicon;
     private TextView mTvLogin;
     private LinearLayout mLLDealed;
@@ -203,6 +206,7 @@ public class MeFragment extends BaseFragment {
 
         return number;
     }
+
     private String getTaskCountOfReview(int personID) throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getTaskCountOfReview);
         soapObject.addProperty("personId", personID);
@@ -289,7 +293,7 @@ public class MeFragment extends BaseFragment {
                     break;
 
                 case R.id.for_us:
-                    IntentUtil.startActivity(getContext(),ForUsActivity.class);
+                    IntentUtil.startActivity(getContext(), ForUsActivity.class);
                     break;
 
             }
@@ -356,7 +360,7 @@ public class MeFragment extends BaseFragment {
                 String photoName = saveToSDCard(photo);
                 String encode = photo2Base64(path);
                 upload(photoName, encode);
-               //mIvicon.setImageBitmap(photo);
+                //mIvicon.setImageBitmap(photo);
 
 
             }
@@ -522,12 +526,15 @@ public class MeFragment extends BaseFragment {
                 try {
                     String taskCountOfDealNumber = getTaskCountOfDeal(personID);
                     String taskCountOfReportNumber = getTaskCountOfReport(personID);
-                    //String taskCountOfReviewNumber = getTaskCountOfReview(personID);
+                    String taskCountOfReviewNumber = getTaskCountOfReview(personID);
+                    String taskCountOfSendNumber = getTaskCountOfSend(personID);
+
                     numbers.clear();
 
                     numbers.add(taskCountOfDealNumber);
                     numbers.add(taskCountOfReportNumber);
-                    //numbers.add(taskCountOfReviewNumber);
+                    numbers.add(taskCountOfReviewNumber);
+                    numbers.add(taskCountOfSendNumber);
 
 
                     Message message = Message.obtain();
@@ -535,12 +542,31 @@ public class MeFragment extends BaseFragment {
                     message.obj = numbers;
                     handler.sendMessage(message);
 
-
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }.start();
+    }
+
+    private String getTaskCountOfSend(int personID) throws Exception {
+        SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getTaskCountOfSend);
+        soapObject.addProperty("personId", personID);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.bodyOut = soapObject;
+        envelope.setOutputSoapObject(soapObject);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(NetUrl.SERVERURL);
+        httpTransportSE.call(NetUrl.getTaskCountOfReview_SOAP_ACTION, envelope);
+
+        SoapObject object = (SoapObject) envelope.bodyIn;
+
+        String number = object.getProperty(0).toString();
+
+
+        return number;
     }
 
     @Override
@@ -570,7 +596,9 @@ public class MeFragment extends BaseFragment {
                     if (tvReportNume != null && tvDealNumber != null) {
                         tvDealNumber.setText(numberlist.get(0));
                         tvReportNume.setText(numberlist.get(1));
-                        //tvReviewNum.setText(numberlist.get(2));
+                        tvReviewNum.setText(numberlist.get(2));
+                        tvSendNume.setText(numberlist.get(3));
+
                     }
                     break;
 
@@ -652,7 +680,7 @@ public class MeFragment extends BaseFragment {
         getNumber();
         //是否签到
         issign = SpUtils.getBoolean(getContext(), GlobalContanstant.SIGN, false);
-        if (issign){
+        if (issign) {
             mine_tv_sign.setText(signed);
         }
 
@@ -661,7 +689,7 @@ public class MeFragment extends BaseFragment {
     private static final int VERSIONINFO = 100211;
 
 
-    @OnClick({R.id.me_information, R.id.me_score, R.id.me_update, R.id.me_share, R.id.me_exit, R.id.me_appraise})
+    @OnClick({R.id.me_information, R.id.me_score, R.id.me_update, R.id.me_share, R.id.me_exit, R.id.me_appraise,R.id.ll_my_send})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.me_information:
@@ -688,7 +716,7 @@ public class MeFragment extends BaseFragment {
                             message.what = VERSIONINFO;
                             handler.sendMessage(message);
                         } catch (Exception e) {
-                            e.printStackTrace();
+
                         }
 
                     }
@@ -714,6 +742,10 @@ public class MeFragment extends BaseFragment {
             case R.id.me_appraise:
 
                 IntentUtil.startActivity(MeFragment.this.getActivity(), AppraiseActivity.class);
+                break;
+
+            case R.id.ll_my_send:
+                IntentUtil.startActivity(view.getContext(), MySendActivity.class);
                 break;
         }
     }
@@ -792,5 +824,6 @@ public class MeFragment extends BaseFragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionUtils.requestPermissionsResult(MeFragment.this.getActivity(), requestCode, permissions, grantResults, mPermission);
     }
+
 
 }

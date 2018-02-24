@@ -93,9 +93,6 @@ public class MainFragments extends BaseFragment {
         //添加数据
         //TOdo:添加数据
         mImageUrls.add("http://ww2.sinaimg.cn/large/610dc034jw1f3q5semm0wj20qo0hsacv.jpg");
-        mImageUrls.add("http://ww1.sinaimg.cn/large/610dc034jw1f4d4iji38kj20sg0izdl1.jpg");
-        mImageUrls.add("http://ww3.sinaimg.cn/large/610dc034jw1f070hyadzkj20p90gwq6v.jpg");
-        mImageUrls.add("https://ws1.sinaimg.cn/large/610dc034gy1fh9utulf4kj20u011itbo.jpg");
         mImageUrls.add("http://ww2.sinaimg.cn/large/c85e4a5cgw1f62hzfvzwwj20hs0qogpo.jpg");
         titles.clear();
         titles.add("北京市政协会");
@@ -103,7 +100,7 @@ public class MainFragments extends BaseFragment {
         titles.add("星光裕华");
         titles.add("天津市政协会");
         titles.add("泰达市政");
-        titles.add("星光裕华");
+        titles.add("金顺通");
 
 
         initDot();

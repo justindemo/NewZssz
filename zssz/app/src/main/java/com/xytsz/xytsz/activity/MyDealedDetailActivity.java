@@ -26,6 +26,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by admin on 2017/5/31.
@@ -82,6 +83,10 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
     TextView tvCheckProblemLoca;
     @Bind(R.id.tv_check_detail_faname)
     TextView tvCheckDetailFaname;
+    @Bind(R.id.tv_check_detail_diseasedes)
+    TextView tvCheckDetailDiseasedes;
+    @Bind(R.id.tv_checkdetail_loca)
+    TextView tvCheckdetailLoca;
     private ForMyDis detail;
     private List<ImageUrl> imageUrlReport;
     private List<ImageUrl> imageUrlPost;
@@ -191,7 +196,9 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
         String actualCompletionInfo = detail.getActualCompletionInfo();
         tvMycheckDecs.setText(actualCompletionInfo);
 
+        tvCheckDetailDiseasedes.setText(detail.getDiseaseDescription());
 
+        tvCheckProblemLoca.setText(detail.getAddressDescription());
         String requestTime = detail.getRequirementsCompleteTime();
         tvMycheckRequesttime.setText(requestTime);
 
@@ -217,42 +224,44 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
 
         if (detail.getAddressDescription().isEmpty()) {
             if (audioUrl != null) {
-                if (!audioUrl.getAudioUrl().equals("false")) {
-                    if (!audioUrl.getTime().isEmpty()) {
-                        tvCheckProblemLoca.setVisibility(View.GONE);
-                        tvCheckProblemAudio.setVisibility(View.VISIBLE);
-                        soundUtil = new SoundUtil();
-                        tvCheckProblemAudio.setText(audioUrl.getTime());
+                if (audioUrl.getAudioUrl() != null) {
+                    if (!audioUrl.getAudioUrl().equals("false")) {
+                        if (!audioUrl.getTime().isEmpty()) {
+                            tvCheckProblemLoca.setVisibility(View.GONE);
+                            tvCheckProblemAudio.setVisibility(View.VISIBLE);
+                            soundUtil = new SoundUtil();
+                            tvCheckProblemAudio.setText(audioUrl.getTime());
 
-                        tvCheckProblemAudio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                            tvCheckProblemAudio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                                Drawable drawable = getResources().getDrawable(R.mipmap.pause);
-                                final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
+                                    Drawable drawable = getResources().getDrawable(R.mipmap.pause);
+                                    final Drawable drawableRight = getResources().getDrawable(R.mipmap.play);
 
-                                tvCheckProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
+                                    tvCheckProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
 
-                                soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-                                        tvCheckProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
-                                    }
+                                    soundUtil.setOnFinishListener(new SoundUtil.OnFinishListener() {
+                                        @Override
+                                        public void onFinish() {
+                                            tvCheckProblemAudio.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
+                                        }
 
-                                    @Override
-                                    public void onError() {
+                                        @Override
+                                        public void onError() {
 
-                                    }
-                                });
+                                        }
+                                    });
 
-                                soundUtil.play(audioUrl.getAudioUrl());
-                            }
-                        });
+                                    soundUtil.play(audioUrl.getAudioUrl());
+                                }
+                            });
+                        }
+                    } else {
+                        tvCheckProblemLoca.setVisibility(View.VISIBLE);
+                        tvCheckProblemLoca.setText(detail.getAddressDescription());
+                        tvCheckProblemAudio.setVisibility(View.GONE);
                     }
-                } else {
-                    tvCheckProblemLoca.setVisibility(View.VISIBLE);
-                    tvCheckProblemLoca.setText(detail.getAddressDescription());
-                    tvCheckProblemAudio.setVisibility(View.GONE);
                 }
 
             } else {
@@ -286,5 +295,14 @@ public class MyDealedDetailActivity extends AppCompatActivity implements View.On
         }
     }
 
+    @OnClick(R.id.tv_checkdetail_loca)
+    public void onViewClicked() {
+        double longitude = detail.getLongitude();
+        double latitude = detail.getLatitude();
+        Intent intent = new Intent(MyDealedDetailActivity.this, MarkPositionActivity.class);
+        intent.putExtra("longitude", longitude);
+        intent.putExtra("latitude", latitude);
+        startActivity(intent);
+    }
 }
 

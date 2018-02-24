@@ -8,10 +8,9 @@ package com.xytsz.xytsz.net;
 public class NetUrl {
 
 
-    //public static final String SERVERURL = "http://hr.xytgps.com:10001/SZWEBSERVICE/newxytszServices.asmx";
+
     public static final String SERVERURL = "http://sz.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
-    //public static final String SERVERURL = "http://my.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
-    //public static final String SERVERURL = "http://mtg.xytgps.com:10004/SZWEBSERVICE/newxytszServices.asmx";
+    //public static final String SERVERURL = "http://sdgr.xytgps.com/SZWEBSERVICE/newxytszServices.asmx";
 
     /**
      *命名空间
@@ -41,7 +40,7 @@ public class NetUrl {
     * 去派工*/
     public static final String sendmethodName = "ToDispatching";
     /**
-     * 养护驳回 TODO:
+     * 养护驳回
      */
     public static final String sendbackmethodName = "ToDispatching";
 
@@ -68,7 +67,8 @@ public class NetUrl {
      */
     public static final String getTaskCountOfReport ="GetTaskCountOfReport";
     public static final String getTaskCountOfDeal ="GetTaskCountOfDeal";
-    public static final String getTaskCountOfReview ="GetTaskCountOfReview";
+    public static final String getTaskCountOfReview ="GetCountEXByPersonID";
+    public static final String getTaskCountOfSend ="GetTaskCountOfIssued";
 
 
     /**
@@ -93,11 +93,14 @@ public class NetUrl {
      * 获取人员列表的方法
      */
     public static final String getPersonList ="getPersonList";
+    public static final String getallPersonList ="getPersonByYH";
     /**
      * 获取自己上报处置的方法
      */
     public static final String getALlReportByPersonID = "getALlReportByPersonID";
     public static final String getALlDealByPersonID = "getAllDealByPersonID";
+    public static final String getAllSendByPersonID = "GetAllIssuedByPersonID";
+    public static final String getALlReviewByPersonID = "getAllExamineByPersonID";
     /**
      * 上传头像
      */
@@ -154,7 +157,7 @@ public class NetUrl {
     public static final String sendBack_SOAP_ACTION = "http://xytsz.org/uploadHeadImg";
 
 
-    public static final String getALlReviewByPersonID = "getAllExamineByPersonID";
+
     public static final String getALlReviewByPersonID_SOAP_ACTION = "http://xytsz.org/getAllExamineByPersonID";
     public static final String getenlist = "GetEnList";
     public static final String getenlist_SOAP_ACTION = "http://xytsz.org/GetEnList";
@@ -184,4 +187,7 @@ public class NetUrl {
     public static final String appraisemethodName = "ToFeedBack";
     public static final String appraise_SOAP_ACTION = "http://xytsz.org/ToFeedBack";
     public static final String videomethodName ="toReportMp4";
+    public static final String modificaitonmethodName = "toChangePwd";
+    public static final String replacePerson ="ToChangeRe_Person_ID";
+
 }

@@ -1,18 +1,8 @@
 package com.xytsz.xytsz.adapter;
 
-import android.content.Context;
-import android.view.View;
-import android.widget.AdapterView;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xytsz.xytsz.R;
-import com.xytsz.xytsz.activity.FloodActivity;
-import com.xytsz.xytsz.activity.LibActivity;
-import com.xytsz.xytsz.activity.MakerProblemActivty;
-import com.xytsz.xytsz.activity.MemberLocationActivity;
-import com.xytsz.xytsz.util.IntentUtil;
-import com.xytsz.xytsz.util.ToastUtil;
 
 import java.util.List;
 
@@ -23,7 +13,7 @@ import java.util.List;
  */
 public class SuperviseAdapter extends BaseQuickAdapter<String> {
 
-    private int[] mIcons = {R.mipmap.more_person,R.mipmap.more_problem,R.mipmap.more_notice,R.mipmap.more_lib,R.mipmap.more_flood };
+    private int[] mIcons = {R.mipmap.more_person,R.mipmap.more_problem,R.mipmap.more_caroil,R.mipmap.more_fica,R.mipmap.more_flood,R.mipmap.more_lib,R.mipmap.more_light };
     private int role;
 
     public SuperviseAdapter(List<String> data , int role) {
