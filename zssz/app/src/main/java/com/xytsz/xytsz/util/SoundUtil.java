@@ -168,10 +168,7 @@ public class SoundUtil {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(name);
                 mediaPlayer.prepare();
-
                 mediaPlayer.start();
-
-
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mp) {

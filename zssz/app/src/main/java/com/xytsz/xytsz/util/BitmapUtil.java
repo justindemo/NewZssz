@@ -1,8 +1,15 @@
 package com.xytsz.xytsz.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 
 import java.io.IOException;
 
@@ -11,6 +18,28 @@ import java.io.IOException;
  * 图片处理工具
  */
 public class BitmapUtil {
+
+    @Nullable
+    public static Bitmap getPickBitmap(Context context, Intent data) {
+        Bitmap bitmap;Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = context.getContentResolver().query(selectedImage,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+
+        bitmap = BitmapUtil.getScaleBitmap(picturePath);
+        if (bitmap == null) {
+            ToastUtil.shortToast(context, "此照片为空,重新选择");
+            return null;
+        }
+        return bitmap;
+    }
+
 
     public static int getBitmapDegree(String path) {
         int degree = 0;
@@ -55,6 +84,78 @@ public class BitmapUtil {
         }
 
         return null;
+    }
+
+
+
+    public static Bitmap getScaleBitmap(String fileResult) {
+        Bitmap bitmap;
+        if (fileResult == null) {
+            return null;
+        } else {
+            try {
+                bitmap = getBitmap(fileResult);
+                if (bitmap != null) {
+                    bitmap =Bitmap.createScaledBitmap(bitmap,600,600,true);
+                    return bitmap;
+                }
+            } catch (IOException e) {
+                return null;
+            }
+            return null;
+
+        }
+    }
+
+
+    private static Bitmap getBitmap(String path) throws IOException {
+        Bitmap bitmap;
+        int width = 600;
+        int height = 600;
+
+        BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
+
+        factoryOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, factoryOptions);
+
+        int imageWidth = factoryOptions.outWidth;
+        int imageHeight = factoryOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = 1;
+
+        if (imageHeight > height || imageWidth > width) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / scaleFactor) >= height && (halfWidth / scaleFactor) >= width) {
+                scaleFactor *= 2;
+            }
+        }
+        factoryOptions.inJustDecodeBounds = false;
+        factoryOptions.inSampleSize = scaleFactor;
+        factoryOptions.inPurgeable = true;
+
+        bitmap = BitmapFactory.decodeFile(path, factoryOptions);
+        //check the rotation of the image and display it properly
+        ExifInterface exif;
+
+        exif = new ExifInterface(path);
+
+        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+        Matrix matrix = new Matrix();
+        if (orientation == 6) {
+            matrix.postRotate(90);
+        } else if (orientation == 3) {
+            matrix.postRotate(180);
+        } else if (orientation == 8) {
+            matrix.postRotate(270);
+        }
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return bitmap;
     }
 
 }

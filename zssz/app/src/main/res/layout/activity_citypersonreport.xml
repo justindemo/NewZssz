@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.dalong.marqueeview.MarqueeView
+        <com.xytsz.xytsz.ui.MarqueeView
             android:id="@+id/tv_marqueeview"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            app:mvAnimDuration="1000"
+            app:mvInterval="3000"
             android:background="#FFE5D7"
-            android:gravity="center"
-            app:direction="left"
-            app:isRepeat="true"
-            app:speed="50"
-            app:startPoint="end"
-            app:textSize="16sp"
-            app:textcolor="@color/cc_supervise" />
+            android:paddingLeft="6dp"
+            app:mvSingleLine="true"
+            app:mvTextColor="@color/cc_supervise"
+            app:mvTextSize="15sp" />
 
 
         <LinearLayout
@@ -106,18 +106,18 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:padding="6dp"
-                    android:src="@mipmap/iv_citypersonreport"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:src="@mipmap/iv_citypersonreport" />
 
 
                 <TextView
-                    android:padding="6dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="@string/howreportetitle" />
+                    android:padding="6dp"
+                    android:text="@string/howreportetitle"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

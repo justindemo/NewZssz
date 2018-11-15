@@ -168,7 +168,7 @@ public class MainFragments extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+//        ButterKnife.unbind(this);
     }
 
     @OnClick({R.id.rl_assiation_main, R.id.rl_business_main, R.id.rl_simple_company})

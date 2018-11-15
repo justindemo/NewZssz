@@ -9,10 +9,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.dalong.marqueeview.MarqueeView;
+
+
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.ui.MarqueeView;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.SpUtils;
@@ -55,11 +56,10 @@ public class CityPersonReportActivity extends AppCompatActivity {
 
         alluser = SpUtils.getInt(getApplicationContext(), GlobalContanstant.ALLUSERCOUNT);
         String alltitle = getString(R.string.alltitle);
-        tvMarqueeview.setText(alltitle + alluser);
-        tvMarqueeview.setFocusable(true);
-        tvMarqueeview.requestFocus();
-        tvMarqueeview.sepX = 2;
-        tvMarqueeview.startScroll();
+        tvMarqueeview.startWithText(alltitle + alluser);
+        tvMarqueeview.startWithText(alltitle+alluser,R.anim.anim_right_in,R.anim.anim_left_out);
+
+
 
     }
 
@@ -82,7 +82,7 @@ public class CityPersonReportActivity extends AppCompatActivity {
 
                 break;
             case R.id.tv_person_help:
-                IntentUtil.startActivity(view.getContext(), ReportHelpActivity.class);
+//                IntentUtil.startActivity(view.getContext(), ReportHelpActivity.class);
                 break;
         }
     }
@@ -108,24 +108,24 @@ public class CityPersonReportActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        tvMarqueeview.startScroll();
+        tvMarqueeview.startFlipping();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        tvMarqueeview.stopScroll();
+        tvMarqueeview.stopFlipping();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        tvMarqueeview.startScroll();
+        tvMarqueeview.startFlipping();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        tvMarqueeview.stopScroll();
+        tvMarqueeview.stopFlipping();
     }
 }

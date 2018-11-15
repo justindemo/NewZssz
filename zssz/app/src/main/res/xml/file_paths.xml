@@ -2,5 +2,6 @@
 <resources>
     <paths>
         <external-path path="" name="Zssz/Image/mymy" />
+        <external-path path="." name="external_storage_root" />
     </paths>
 </resources>

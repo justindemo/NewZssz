@@ -318,21 +318,25 @@ public class MakerProblemActivty extends AppCompatActivity implements BaiduMap.O
                 mTvStatu.setText(Data.phaseIndaciton[detail.getPhaseindication()]);
 
                 //加载图片
-
+                mIvDealIcon.setVisibility(View.VISIBLE);
+                mIvDealIcon2.setVisibility(View.VISIBLE);
+                mIvDealIcon3.setVisibility(View.VISIBLE);
                 //病害头像
                 if (imageUrlLists.size() != 0) {
                     for (final List<ImageUrl> imageUrlList : imageUrlLists) {
 
                         if (imageUrlList.size() != 0) {
 
-
                             if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
                                 if (imageUrlList.size() == 1) {
                                     Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
+                                    mIvDealIcon2.setVisibility(View.INVISIBLE);
+                                    mIvDealIcon3.setVisibility(View.INVISIBLE);
                                 }
                                 if (imageUrlList.size() == 2) {
                                     Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
                                     Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
+                                    mIvDealIcon3.setVisibility(View.INVISIBLE);
                                 }
                                 if (imageUrlList.size() == 3) {
                                     Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);

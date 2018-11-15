@@ -111,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
 
         if (loginId == null || TextUtils.isEmpty(loginId)) {
             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             HomeActivity.this.finish();
         }
@@ -123,36 +123,17 @@ public class HomeActivity extends AppCompatActivity {
 
         initView();
 
-        if (isNetworkAvailable(getApplicationContext())) {
-//            mprogressbar.setVisibility(View.VISIBLE);
-//            mViewpager.setVisibility(View.GONE);
-            isOnCreat = true;
-            getData();
-
-            mViewpager.setVisibility(View.VISIBLE);
-            rl_notonlie.setVisibility(View.GONE);
-            mprogressbar.setVisibility(View.GONE);
-
-        }else {
-            rl_notonlie.setVisibility(View.VISIBLE);
-            mprogressbar.setVisibility(View.GONE);
-        }
-
         mbtrefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNetworkAvailable(getApplicationContext())){
-//                    mViewpager.setVisibility(View.GONE);
-                  getData();
-//                    rl_notonlie.setVisibility(View.GONE);
-//                    mprogressbar.setVisibility(View.VISIBLE);
-
+                if (isNetworkAvailable(getApplicationContext())) {
+                    getData();
                     //修改
                     mViewpager.setVisibility(View.VISIBLE);
                     rl_notonlie.setVisibility(View.GONE);
                     mprogressbar.setVisibility(View.GONE);
-                }else {
-                    ToastUtil.shortToast(getApplicationContext(),"请检查网络");
+                } else {
+                    ToastUtil.shortToast(getApplicationContext(), "请检查网络");
                 }
             }
         });
@@ -161,14 +142,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        new  Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
                     int allUserCount = getAllUserCount(NetUrl.getAllUserCountMethodName, NetUrl.getAllUserCount_SOAP_ACITION);
-                    SpUtils.saveInt(getApplicationContext(), GlobalContanstant.ALLUSERCOUNT,allUserCount);
+                    SpUtils.saveInt(getApplicationContext(), GlobalContanstant.ALLUSERCOUNT, allUserCount);
 
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -177,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public int getAllUserCount(String method,String soap_action) throws Exception {
+    public int getAllUserCount(String method, String soap_action) throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
@@ -195,13 +176,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
-
     private void initView() {
         mRadiogroup = (RadioGroup) findViewById(R.id.homeactivity_rg_radiogroup);
         mViewpager = (NoScrollViewpager) findViewById(R.id.homeactivity_vp);
 
-        rl_notonlie = (RelativeLayout)findViewById(R.id.rl_notonline);
+        rl_notonlie = (RelativeLayout) findViewById(R.id.rl_notonline);
         mprogressbar = (ProgressBar) findViewById(R.id.home_progressbar);
         mbtrefresh = (Button) findViewById(R.id.btn_refresh);
         //默认显示home界面
@@ -242,8 +221,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        if (role == 0){
-            mViewpager.setCurrentItem(1,false);
+        if (role == 0) {
+            mViewpager.setCurrentItem(1, false);
             mRadiogroup.check(R.id.homeactivity_rbtn_working);
         }
 
@@ -258,7 +237,7 @@ public class HomeActivity extends AppCompatActivity {
                         mViewpager.setCurrentItem(0, false);
                         break;
 
-                        //加载会员
+                    //加载会员
                     case R.id.homeactivity_rbtn_working:
                         mViewpager.setCurrentItem(1, false);
                         break;
@@ -288,9 +267,8 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
-
         //先判断有没有现版本
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
@@ -306,56 +284,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         }.start();
 
-        //判断是否是周五下午5点
-
-        isFive = isweekfive();
-
-        if (isFive){
-            String content ="主人,您已经使用一周的掌上市政了,花一分钟的时间对他评价一下吧！";
-
-            new AlertDialog.Builder(this).setTitle("掌上市政评价").setMessage(content).setNegativeButton("别烦我", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    isFive = false;
-                }
-            }).setPositiveButton("好的", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    IntentUtil.startActivity(HomeActivity.this,AppraiseActivity.class);
-                    dialog.dismiss();
-                    isFive = false;
-                }
-            }).create().show();
-        }
 
     }
-
-
-
-
-    private Boolean isweekfive() {
-
-        final long time = System.currentTimeMillis();
-
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.setTimeInMillis(time);
-
-        int week = calendar.get(Calendar.DAY_OF_WEEK);
-
-        int hour = calendar.get(Calendar.HOUR);
-
-        int minute = calendar.get(Calendar.MINUTE);
-        if (week == 6 && hour == 17 ){
-            return true;
-        }
-
-        return false;
-
-    }
-
-
 
 
     /**
@@ -383,21 +313,21 @@ public class HomeActivity extends AppCompatActivity {
     private static final int DATA_SUCCESS = 1166666;
     private static final int VERSIONINFO = 144211;
     private static final int DATA_REPORT = 155552;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case DATA_SUCCESS:
                     mViewpager.setVisibility(View.VISIBLE);
                     rl_notonlie.setVisibility(View.GONE);
                     mprogressbar.setVisibility(View.GONE);
                     break;
                 case VERSIONINFO:
-                    String  info = (String) msg.obj;
-                    if (info !=null){
+                    String info = (String) msg.obj;
+                    if (info != null) {
                         //检查更新
-                        UpdateVersionUtil.localCheckedVersion(getApplicationContext(),new UpdateVersionUtil.UpdateListener() {
+                        UpdateVersionUtil.localCheckedVersion(getApplicationContext(), new UpdateVersionUtil.UpdateListener() {
 
                             @Override
                             public void onUpdateReturned(int updateStatus, final VersionInfo versionInfo) {
@@ -405,7 +335,7 @@ public class HomeActivity extends AppCompatActivity {
                                 switch (updateStatus) {
                                     case UpdateStatus.YES:
                                         //弹出更新提示
-                                        UpdateVersionUtil.showDialog(HomeActivity.this,versionInfo);
+                                        UpdateVersionUtil.showDialog(HomeActivity.this, versionInfo);
                                         break;
                                     case UpdateStatus.NO:
                                         //没有新版本
@@ -419,7 +349,7 @@ public class HomeActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
-                                                UpdateVersionUtil.showDialog(HomeActivity.this,versionInfo);
+                                                UpdateVersionUtil.showDialog(HomeActivity.this, versionInfo);
                                             }
                                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                             @Override
@@ -440,95 +370,40 @@ public class HomeActivity extends AppCompatActivity {
                                         break;
                                 }
                             }
-                        },info);
+                        }, info);
                     }
                     break;
 
                 case DATA_REPORT:
                     mprogressbar.setVisibility(View.GONE);
                     rl_notonlie.setVisibility(View.VISIBLE);
-                    ToastUtil.shortToast(getApplicationContext(),"网络异常,未获取数据,请刷新");
+                    ToastUtil.shortToast(getApplicationContext(), "网络异常,未获取数据,请刷新");
                     break;
             }
         }
     };
 
-
+    /**
+     * 防止误触退出
+     */
+    private long mExitTime;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_BACK)
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                ToastUtil.shortToast(HomeActivity.this, "再按一次退出程序");
+                mExitTime = System.currentTimeMillis();
 
-        {
-
-            // 创建退出对话框
-
-            AlertDialog.Builder isExit = new AlertDialog.Builder(this);
-
-            // 设置对话框标题
-
-            isExit.setTitle("系统提示");
-
-            // 设置对话框消息
-
-            isExit.setMessage("确定要退出吗");
-
-            // 添加选择按钮并注册监听
-
-            isExit.setPositiveButton("确定", listener);
-
-            isExit.setNegativeButton("取消", listener);
-
-            // 显示对话框
-
-            isExit.show();
-
-
-        }
-
-        return false;
-    }
-
-
-    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()
-
-    {
-
-        public void onClick(DialogInterface dialog, int which)
-
-        {
-
-            switch (which)
-
-            {
-
-                case AlertDialog.BUTTON_POSITIVE:// "确认"按钮退出程序
-
-                    finish();
-
-                    break;
-
-                case AlertDialog.BUTTON_NEGATIVE:// "取消"第二个按钮取消对话框
-
-                    break;
-
-                default:
-
-                    break;
-
+            } else {
+                finish();
             }
-
+            return true;
         }
-
-    };
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+        return super.onKeyDown(keyCode, event);
     }
+
 
     @Override
     protected void onResume() {
@@ -537,40 +412,23 @@ public class HomeActivity extends AppCompatActivity {
         //判断是否有网络
         //做判断 如果是只走 onResume 那就请求  ,如果走onCreate 就不请求
         //isOncreat  =false
-       if (!isOnCreat) {
-            if (isNetworkAvailable(getApplicationContext())) {
-                getData();
-                mViewpager.setVisibility(View.VISIBLE);
-                rl_notonlie.setVisibility(View.GONE);
-                mprogressbar.setVisibility(View.GONE);
-            } else {
-                ToastUtil.shortToast(getApplicationContext(), "未连接网络");
-                rl_notonlie.setVisibility(View.VISIBLE);
-                mViewpager.setVisibility(View.GONE);
 
-            }
+        if (isNetworkAvailable(getApplicationContext())) {
+            getData();
+            mViewpager.setVisibility(View.VISIBLE);
+            rl_notonlie.setVisibility(View.GONE);
+            mprogressbar.setVisibility(View.GONE);
+        } else {
+            ToastUtil.shortToast(getApplicationContext(), "未连接网络");
+            rl_notonlie.setVisibility(View.VISIBLE);
+            mViewpager.setVisibility(View.GONE);
+
         }
-        isOnCreat = false;
 
-        isFive =  isweekfive();
-        if (isFive){
-            String content ="主人,您已经使用一周的掌上市政了,花一分钟的时间对他评价一下吧！";
 
-            new AlertDialog.Builder(this).setTitle("掌上市政评价").setMessage(content).setNegativeButton("别烦我", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    isFive = false;
-                }
-            }).setPositiveButton("好的", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    IntentUtil.startActivity(HomeActivity.this,AppraiseActivity.class);
-                    dialog.dismiss();
-                    isFive = false;
-                }
-            }).create().show();
-        }
+
+
+
     }
 
     @Override
@@ -578,9 +436,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         finish();
     }
-
-
-
 
 
 }

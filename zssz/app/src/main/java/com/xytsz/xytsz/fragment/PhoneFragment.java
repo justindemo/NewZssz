@@ -22,7 +22,6 @@ import com.xytsz.xytsz.activity.HomeActivity;
 import com.xytsz.xytsz.bean.VisitorInfo;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
-import com.xytsz.xytsz.ui.TimeChoiceButton;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
@@ -35,7 +34,6 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.nio.channels.Channels;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -259,7 +257,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
                                 @Override
                                 public void run() {
                                     try {
-                                        String login = login();
+                                        String login = vistorLogin();
                                         if (login != null) {
                                             VisitorInfo visitorInfo = JsonUtil.jsonToBean(login, VisitorInfo.class);
 
@@ -334,7 +332,7 @@ public class PhoneFragment extends android.support.v4.app.Fragment {
         }
     };
 
-    private String login() throws Exception {
+    private String vistorLogin() throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, NetUrl.getSZPeoplemethodName);
         soapObject.addProperty("tel", phone);
         soapObject.addProperty("name", visitor);

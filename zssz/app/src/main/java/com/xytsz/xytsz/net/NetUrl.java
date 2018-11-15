@@ -67,7 +67,7 @@ public class NetUrl {
      */
     public static final String getTaskCountOfReport ="GetTaskCountOfReport";
     public static final String getTaskCountOfDeal ="GetTaskCountOfDeal";
-    public static final String getTaskCountOfReview ="GetCountEXByPersonID";
+    public static final String getTaskCountOfReview ="GetTaskCountOfEx";
     public static final String getTaskCountOfSend ="GetTaskCountOfIssued";
 
 
@@ -132,7 +132,7 @@ public class NetUrl {
 
     public static final String getTaskCountOfReport_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfReport";
     public static final String getTaskCountOfDeal_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfDeal";
-    public static final String getTaskCountOfReview_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfReview";
+    public static final String getTaskCountOfReview_SOAP_ACTION = "http://xytsz.org/GetTaskCountOfEx";
 
     public static final String getAllImageURL_SOAP_ACTION = "http://xytsz.org/getAllImgUrl";
 

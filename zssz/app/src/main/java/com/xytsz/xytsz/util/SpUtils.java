@@ -8,10 +8,12 @@ import java.util.List;
 
 /**
  * Created by admin on 2017/1/3.
+ *
+ *
  */
 public class SpUtils {
 
-    private static final String CONFIG = "config";
+    private static final String CONFIG = "testconfig";
     private static SharedPreferences sp;
 
     /**
@@ -35,7 +37,7 @@ public class SpUtils {
     }
     public static boolean getBoolean(Context context,String key,boolean defValue){
         if (sp == null) {
-            sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            sp = context.getSharedPreferences(CONFIG, Context.MODE_PRIVATE);
         }
         return sp.getBoolean(key, defValue);
     }

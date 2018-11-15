@@ -86,14 +86,14 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                     break;
 
                 case GlobalContanstant.SENDFAIL:
-                    ToastUtil.shortToast(getApplicationContext(),"未获取数据,请稍后");
+                    ToastUtil.shortToast(getApplicationContext(), "未获取数据,请稍后");
                     break;
 
             }
         }
     };
-    private List<List<ImageUrl>> imageUrlLists = new ArrayList<>();
-    private HashMap<String,AudioUrl> audioUrls = new HashMap<>();
+    private HashMap<String,List<ImageUrl>> imageUrlLists = new HashMap<>();
+    private HashMap<String, AudioUrl> audioUrls = new HashMap<>();
     private int position;
     private LatLng latlngNow;
     private double mylongitude;
@@ -154,11 +154,6 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
 
                         Review.ReviewRoad reviewRoad = review.getReviewRoadList().get(position);
                         List<Review.ReviewRoad.ReviewRoadDetail> list = reviewRoad.getList();
-                        Message message = Message.obtain();
-                        message.what = ISMAKER;
-                        message.obj = list;
-                        handler.sendMessage(message);
-
 
                         audioUrls.clear();
                         //遍历list
@@ -173,25 +168,25 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                                 //String list = new JSONObject(json).getJSONArray("").toString();
                                 List<ImageUrl> imageUrlList = new Gson().fromJson(json, new TypeToken<List<ImageUrl>>() {
                                 }.getType());
-                                for (ImageUrl imageUrl : imageUrlList) {
-                                    imageUrl.setTaskNumber(taskNumber);
-                                }
-                                imageUrlLists.add(imageUrlList);
+
+                                imageUrlLists.put(taskNumber,imageUrlList);
                             }
 
                             String audioUrljson = RoadActivity.getAudio(taskNumber);
 
-                            if (audioUrljson != null){
-
+                            if (audioUrljson != null) {
                                 AudioUrl audioUrl = JsonUtil.jsonToBean(audioUrljson, AudioUrl.class);
-                                audioUrls.put(taskNumber,audioUrl);
+                                audioUrls.put(taskNumber, audioUrl);
 
                             }
 
 
                         }
 
-
+                        Message message = Message.obtain();
+                        message.what = ISMAKER;
+                        message.obj = list;
+                        handler.sendMessage(message);
                     }
 
 
@@ -285,21 +280,17 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
     protected void onResume() {
         super.onResume();
         mMV.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (locationClient != null){
+        if (locationClient != null) {
             locationClient.start();
         }
     }
 
+
     @Override
     public void onPause() {
-        mMV.onPause();
         super.onPause();
-        if (locationClient != null){
+        mMV.onPause();
+        if (locationClient != null) {
             locationClient.unRegisterLocationListener(myListener);
             locationClient.stop();
         }
@@ -309,7 +300,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
     public void onDestroy() {
         super.onDestroy();
         mMV.onDestroy();
-        if (locationClient != null){
+        if (locationClient != null) {
             locationClient.unRegisterLocationListener(myListener);
             locationClient.stop();
         }
@@ -345,33 +336,42 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                 if (detail.getPhaseIndication() == 2) {
                     mTvStatu.setText("待处置");
                 }
+                mIvDealIcon.setVisibility(View.VISIBLE);
+                mIvDealIcon2.setVisibility(View.VISIBLE);
+                mIvDealIcon3.setVisibility(View.VISIBLE);
 
                 //病害头像
-                if (imageUrlLists.size() != 0) {
-                    for (List<ImageUrl> imageUrlList : imageUrlLists) {
-                        if (imageUrlList.size() != 0 ) {
+                for (Map.Entry<String, List<ImageUrl>> entry : imageUrlLists.entrySet()) {
+                    if (entry.getKey().equals(detail.getTaskNumber())) {
+                        List<ImageUrl> imageUrls = entry.getValue();
+                        if (imageUrls != null && imageUrls.size()>0) {
+                            switch (imageUrls.size()) {
+                                case 1:
+                                    Glide.with(getApplicationContext()).load(imageUrls.get(0).getImgurl()).into(mIvDealIcon);
+                                    mIvDealIcon2.setVisibility(View.INVISIBLE);
+                                    mIvDealIcon3.setVisibility(View.INVISIBLE);
+                                    break;
+                                case 2:
+                                    Glide.with(getApplicationContext()).load(imageUrls.get(0).getImgurl()).into(mIvDealIcon);
+                                    Glide.with(getApplicationContext()).load(imageUrls.get(1).getImgurl()).into(mIvDealIcon2);
+                                    mIvDealIcon3.setVisibility(View.INVISIBLE);
+                                    break;
+                                case 3:
+                                    Glide.with(getApplicationContext()).load(imageUrls.get(0).getImgurl()).into(mIvDealIcon);
+                                    Glide.with(getApplicationContext()).load(imageUrls.get(1).getImgurl()).into(mIvDealIcon2);
+                                    Glide.with(getApplicationContext()).load(imageUrls.get(2).getImgurl()).into(mIvDealIcon3);
 
-                            if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
-                                if (imageUrlList.size() == 1) {
-                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
-                                }
-                                if (imageUrlList.size() == 2) {
-                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
-                                    Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
-                                }
-                                if (imageUrlList.size() == 3) {
-                                    Glide.with(getApplicationContext()).load(imageUrlList.get(0).getImgurl()).into(mIvDealIcon);
-                                    Glide.with(getApplicationContext()).load(imageUrlList.get(1).getImgurl()).into(mIvDealIcon2);
-                                    Glide.with(getApplicationContext()).load(imageUrlList.get(2).getImgurl()).into(mIvDealIcon3);
-                                }
+                                    break;
                             }
                         }else {
                             Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon);
                             Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon2);
                             Glide.with(getApplicationContext()).load(R.mipmap.prepost).into(mIvDealIcon3);
                         }
+
                     }
                 }
+
                 //头像 ：
 
                 final double latitude = detail.getLatitude();
@@ -403,19 +403,26 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                         Intent intent = new Intent(v.getContext(), DiseaseDetailActivity.class);
                         intent.putExtra("detail", detail);
 
-                        for (Map.Entry<String,AudioUrl> entry: audioUrls.entrySet()){
-                           if( entry.getKey().equals(detail.getTaskNumber())){
-                               intent.putExtra("audioUrl",entry.getValue());
-                           }
+                        for (Map.Entry<String, AudioUrl> entry : audioUrls.entrySet()) {
+                            if (entry.getKey().equals(detail.getTaskNumber())) {
+                                intent.putExtra("audioUrl", entry.getValue());
+                            }
 
                         }
 
-                        for (List<ImageUrl> imageUrlList : imageUrlLists) {
+                        for (Map.Entry<String, List<ImageUrl>> entry : imageUrlLists.entrySet()) {
+                            if (entry.getKey().equals(detail.getTaskNumber())) {
+                                intent.putExtra("imageUrls", (Serializable) entry.getValue());
+                            }
+
+                        }
+
+                       /* for (List<ImageUrl> imageUrlList : imageUrlLists) {
 
                             if (TextUtils.equals(imageUrlList.get(0).getTaskNumber(), marker.getTitle())) {
                                 intent.putExtra("imageUrls", (Serializable) imageUrlList);
                             }
-                        }
+                        }*/
                         startActivity(intent);
                     }
                 });
@@ -432,7 +439,6 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
                 .yOffset(-10)
                 .build();
         mMV.updateViewLayout(pop, param);
-
         return true;
     }
 
@@ -447,7 +453,7 @@ public class MakerActivty extends AppCompatActivity implements BaiduMap.OnMarker
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);// 可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");// 可选，默认gcj02，设置返回的定位结果坐标系
-        int span = 1000;
+        int span = 100000;
         option.setScanSpan(span);// 可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);// 可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);// 可选，默认false,设置是否使用gps

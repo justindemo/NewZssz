@@ -530,7 +530,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(path);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);//把图片数据写入文件
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);//把图片数据写入文件
                 photo2Base64(path);
             } catch (FileNotFoundException e) {
 
@@ -621,10 +621,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PermissionUtils.CODE_RECORD_AUDIO) {
-            PermissionUtils.openSettingActivity(UnCheckActivity.this, "请打开录音权限");
-            return;
-        }
 
         PermissionUtils.requestPermissionsResult(this, requestCode, permissions, grantResults, mPermissionGrant);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -651,7 +647,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 dialog.dismiss();
                                 data = new File(getPhotopath(2));
                                 //fileUri = Uri.fromFile(file);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
                                 } else {
                                     fileUri=Uri.fromFile(data);
@@ -680,7 +676,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 dialog.dismiss();
                                 data = new File(getPhotopath(3));
                                 //fileUri = Uri.fromFile(file);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
                                 } else {
                                     fileUri=Uri.fromFile(data);
@@ -740,9 +736,9 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                         switch (which) {
                             case 0:
                                 dialog.dismiss();
-                               data = new File(getPhotopath(4));
+                                data = new File(getPhotopath(4));
                                 //fileUri = Uri.fromFile(file);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
                                 } else {
                                     fileUri=Uri.fromFile(data);
@@ -772,7 +768,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 dialog.dismiss();
                              data = new File(getPhotopath(5));
                                 //fileUri = Uri.fromFile(file);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
                                 } else {
                                     fileUri=Uri.fromFile(data);
@@ -801,7 +797,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 dialog.dismiss();
                                 data = new File(getPhotopath(6));
                                 //fileUri = Uri.fromFile(file);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
                                 } else {
                                     fileUri=Uri.fromFile(data);
@@ -868,7 +864,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                                 dialog.dismiss();
                                 data = new File(getPhotopath(7));
                                 //fileUri = Uri.fromFile(file);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     fileUri = FileProvider.getUriForFile(UnCheckActivity.this, Tag, data);
                                 } else {
                                     fileUri=Uri.fromFile(data);
@@ -1029,38 +1025,6 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
     private List<String> imageBase64Stringsss = new ArrayList<>();
 
 
-    private Bitmap getBitmap(ImageView imageView, String path) {
-        Bitmap bitmap;
-        int width = imageView.getWidth();
-
-        int height = imageView.getHeight();
-
-        BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
-
-        factoryOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, factoryOptions);
-
-        int imageWidth = factoryOptions.outWidth;
-        int imageHeight = factoryOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(imageWidth / width, imageHeight
-                / height);
-
-        // Decode the image file into a Bitmap sized to fill the
-        // View
-        factoryOptions.inJustDecodeBounds = false;
-        factoryOptions.inSampleSize = scaleFactor;
-        factoryOptions.inPurgeable = true;
-
-        bitmap = BitmapFactory.decodeFile(path,
-                factoryOptions);
-
-        int bitmapDegree = BitmapUtil.getBitmapDegree(path);
-        Bitmap rotateBitmap = BitmapUtil.rotateBitmap(bitmap, bitmapDegree);
-        return rotateBitmap;
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1076,14 +1040,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
             switch (requestCode) {
                 case 9001:
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivPredealIcon1, this.data.getAbsolutePath());
-                    }else {
-                         bitmap = getBitmap(ivPredealIcon1, fileUri.getPath());
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
                     }
-
+                    ivPredealIcon1.setImageBitmap(bitmap);
                     fileName = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
-                    ivPredealIcon1.setImageBitmap(bitmap);
                     ivPredealIcon1.setClickable(false);
                     encode = photo2Base64(path);
                     fileNames.add(fileName);
@@ -1093,13 +1057,15 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case 9002:
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivPredealIcon2, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivPredealIcon2, fileUri.getPath());
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
 
-                    }fileName = saveToSDCard(bitmap);
-                    //将选择的图片设置到控件上
+                    }
                     ivPredealIcon2.setImageBitmap(bitmap);
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     ivPredealIcon2.setClickable(false);
                     encode = photo2Base64(path);
                     fileNames.add(fileName);
@@ -1109,12 +1075,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case 9003:
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivPredealIcon3, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivPredealIcon3, fileUri.getPath());
-                    }fileName = saveToSDCard(bitmap);
-                    //将选择的图片设置到控件上
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
+                    }
                     ivPredealIcon3.setImageBitmap(bitmap);
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     ivPredealIcon3.setClickable(false);
                     encode = photo2Base64(path);
                     fileNames.add(fileName);
@@ -1124,13 +1092,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case 9004:
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivDealingIcon1, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivDealingIcon1, fileUri.getPath());
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
                     }
+                    ivDealingIcon1.setImageBitmap(bitmap);
                     fileName = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
-                    ivDealingIcon1.setImageBitmap(bitmap);
                     ivDealingIcon1.setClickable(false);
                     encode = photo2Base64(path);
                     fileNamess.add(fileName);
@@ -1140,13 +1109,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case 9005:
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivDealingIcon2, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivDealingIcon2, fileUri.getPath());
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
                     }
+                    ivDealingIcon2.setImageBitmap(bitmap);
                     fileName = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
-                    ivDealingIcon2.setImageBitmap(bitmap);
                     ivDealingIcon2.setClickable(false);
                     encode = photo2Base64(path);
                     fileNamess.add(fileName);
@@ -1157,13 +1127,15 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 case 9006:
                     //bitmap = (Bitmap) data.getExtras().get("data");
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivDealingIcon3, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivDealingIcon3, fileUri.getPath());
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
 
-                    }fileName = saveToSDCard(bitmap);
-                    //将选择的图片设置到控件上
+                    }
                     ivDealingIcon3.setImageBitmap(bitmap);
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     ivDealingIcon3.setClickable(false);
                     encode = photo2Base64(path);
                     fileNamess.add(fileName);
@@ -1174,12 +1146,14 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 case 9007:
 
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivDealedIcon1, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivDealedIcon1, fileUri.getPath());
-                    }fileName = saveToSDCard(bitmap);
-                    //将选择的图片设置到控件上
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
+                    }
                     ivDealedIcon1.setImageBitmap(bitmap);
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     ivDealedIcon1.setClickable(false);
                     encode = photo2Base64(path);
                     fileNamesss.add(fileName);
@@ -1190,12 +1164,15 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 case 9008:
                     //bitmap = (Bitmap) data.getExtras().get("data");
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivDealedIcon2, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivDealedIcon2, fileUri.getPath());
-                    }fileName = saveToSDCard(bitmap);
-                    //将选择的图片设置到控件上
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
+                    }
+
                     ivDealedIcon2.setImageBitmap(bitmap);
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     ivDealedIcon2.setClickable(false);
                     encode = photo2Base64(path);
                     fileNamesss.add(fileName);
@@ -1206,12 +1183,15 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                 case 9009:
                     //bitmap = (Bitmap) data.getExtras().get("data");
                     if (Build.VERSION.SDK_INT>= 24){
-                        bitmap = getBitmap(ivDealedIcon3, this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(ivDealedIcon3, fileUri.getPath());
-                    }fileName = saveToSDCard(bitmap);
-                    //将选择的图片设置到控件上
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
+                    }
+
                     ivDealedIcon3.setImageBitmap(bitmap);
+                    fileName = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     ivDealedIcon3.setClickable(false);
                     encode = photo2Base64(path);
                     fileNamesss.add(fileName);
@@ -1220,128 +1200,86 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
                     btUncheckDealed.setBackgroundResource(R.drawable.shape_btn_uncheck_press);
                     break;
             }
-        }
+        }else {
 
-        switch (requestCode) {
-            case 9011:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivPredealIcon1, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNames.add(fileName);
-                imageBase64Strings.add(encode);
-                setParameter(bitmap, ivPredealIcon1, btUncheckPredeal);
-                break;
-            case 9012:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivPredealIcon2, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNames.add(fileName);
-                imageBase64Strings.add(encode);
-                setParameter(bitmap, ivPredealIcon2, btUncheckPredeal);
-                break;
-            case 9013:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivPredealIcon3, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNames.add(fileName);
-                imageBase64Strings.add(encode);
-                setParameter(bitmap, ivPredealIcon3, btUncheckPredeal);
-                break;
-            case 9014:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivDealingIcon1, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNamess.add(fileName);
-                imageBase64Stringss.add(encode);
-                setParameter(bitmap, ivDealingIcon1, btUncheckDealing);
-                break;
-            case 9015:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivDealingIcon2, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNamess.add(fileName);
-                imageBase64Stringss.add(encode);
-                setParameter(bitmap, ivDealingIcon2, btUncheckDealing);
-                break;
-            case 9016:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivDealingIcon3, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNamess.add(fileName);
-                imageBase64Stringss.add(encode);
-                setParameter(bitmap, ivDealingIcon3, btUncheckDealing);
-                break;
-            case 9017:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivDealedIcon1, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNamesss.add(fileName);
-                imageBase64Stringsss.add(encode);
-                setParameter(bitmap, ivDealedIcon1, btUncheckDealed);
-                break;
-            case 9018:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivDealedIcon2, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNamesss.add(fileName);
-                imageBase64Stringsss.add(encode);
-                setParameter(bitmap, ivDealedIcon2, btUncheckDealed);
-                break;
-            case 9019:
-                picturePath = getPicturePath(data);
-                bitmap = getBitmap(ivDealedIcon3, picturePath);
-                if (bitmap == null) {
-                    ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                    return;
-                }
-                fileName = saveToSDCard(bitmap);
-                encode = photo2Base64(path);
-                fileNamesss.add(fileName);
-                imageBase64Stringsss.add(encode);
-                setParameter(bitmap, ivDealedIcon3, btUncheckDealed);
-                break;
+            switch (requestCode) {
+                case 9011:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNames.add(fileName);
+                    imageBase64Strings.add(encode);
+                    setParameter(bitmap, ivPredealIcon1, btUncheckPredeal);
+                    break;
+                case 9012:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNames.add(fileName);
+                    imageBase64Strings.add(encode);
+                    setParameter(bitmap, ivPredealIcon2, btUncheckPredeal);
+                    break;
+                case 9013:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNames.add(fileName);
+                    imageBase64Strings.add(encode);
+                    setParameter(bitmap, ivPredealIcon3, btUncheckPredeal);
+                    break;
+                case 9014:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNamess.add(fileName);
+                    imageBase64Stringss.add(encode);
+                    setParameter(bitmap, ivDealingIcon1, btUncheckDealing);
+                    break;
+                case 9015:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNamess.add(fileName);
+                    imageBase64Stringss.add(encode);
+                    setParameter(bitmap, ivDealingIcon2, btUncheckDealing);
+                    break;
+                case 9016:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNamess.add(fileName);
+                    imageBase64Stringss.add(encode);
+                    setParameter(bitmap, ivDealingIcon3, btUncheckDealing);
+                    break;
+                case 9017:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNamesss.add(fileName);
+                    imageBase64Stringsss.add(encode);
+                    setParameter(bitmap, ivDealedIcon1, btUncheckDealed);
+                    break;
+                case 9018:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNamesss.add(fileName);
+                    imageBase64Stringsss.add(encode);
+                    setParameter(bitmap, ivDealedIcon2, btUncheckDealed);
+                    break;
+                case 9019:
+                    bitmap = BitmapUtil.getPickBitmap(UnCheckActivity.this,data);
+                    fileName = saveToSDCard(bitmap);
+                    encode = photo2Base64(path);
+                    fileNamesss.add(fileName);
+                    imageBase64Stringsss.add(encode);
+                    setParameter(bitmap, ivDealedIcon3, btUncheckDealed);
+                    break;
 
 
+            }
         }
 
 
@@ -1362,22 +1300,7 @@ public class UnCheckActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private String getPicturePath(Intent data) {
-        if (data != null) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            return picturePath;
-        }
-        return null;
-    }
 
 
     private void goHome() {

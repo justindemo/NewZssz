@@ -13,7 +13,8 @@ import java.util.List;
  */
 public class RecommendAdapter extends BaseQuickAdapter<String> {
 
-    private int[] mIcons = {R.mipmap.member_bot1,R.mipmap.member_bot2,R.mipmap.member_bot3,R.mipmap.member_bot1,R.mipmap.member_bot2,R.mipmap.member_bot3};
+    private int[] mIcons = {R.mipmap.member_bot1,R.mipmap.member_bot2,R.mipmap.member_bot3,
+            R.mipmap.member_bot1,R.mipmap.member_bot2,R.mipmap.member_bot3};
 
     public RecommendAdapter(List<String> data) {
         super(R.layout.item_recommend, data);

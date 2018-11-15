@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">掌上市政</string>
+    <string name="app_name">掌上市政(测试版)</string>
     <string name="logo_userName">请输入帐号</string>
     <string name="phone_number">请输入手机号</string>
     <string name="phone_password">请输入验证码</string>
@@ -46,7 +46,7 @@
 
 
     <string name="bottom_first">首页</string>
-    <string name="bottom_second">会员</string>
+    <string name="bottom_second">供应商</string>
     <string name="bottom_thrid">监管</string>
     <string name="bottom_fourth">数据</string>
     <string name="bottom_fifth">我的</string>
@@ -112,6 +112,7 @@
     <string name="mine_update">软件更新</string>
     <string name="mine_share">软件分享</string>
     <string name="mine_appraise">软件评价</string>
+    <string name="mine_clean_cache">清理缓存</string>
 
     <string name="mine_exit">退出登录</string>
     <string name="companyname">北京向阳天科技有限公司</string>
@@ -193,7 +194,7 @@
     <string name="video_fail">视频上传失败</string>
     <string name="audio_fail">音频上传失败</string>
     <string name="disrecord">请先录音</string>
-    <string name="reportmore">请重录</string>
+    <string name="reportmore">播放错误，请重录</string>
     <string name="reportlocation">请填写位置描述</string>
 
     <string name="add_video">添加视频</string>
@@ -253,7 +254,7 @@
     <string name="permission_access_fine_location_hint">请打开位置信息，提供定位信息</string>
     <string name="permission_access_coarse_location_hint">请打开位置信息，提供定位信息</string>
     <string name="permission_read_external_hint">请允许读取SD卡</string>
-    <string name="permission_white_external_hint">请允许读写SD卡</string>
+    <string name="permission_write_external_hint">请允许读写SD卡</string>
     <string name="permission_recode_audio_hint">请打开录音权限</string>
 
     <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
@@ -334,7 +335,7 @@
         <item>@string/permission_access_fine_location_hint</item>
         <item>@string/permission_access_coarse_location_hint</item>
         <item>@string/permission_read_external_hint</item>
-        <item>@string/permission_white_external_hint</item>
+        <item>@string/permission_write_external_hint</item>
     </string-array>
 
 </resources>

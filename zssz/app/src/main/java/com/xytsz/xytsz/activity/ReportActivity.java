@@ -13,7 +13,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -41,7 +40,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -65,6 +63,7 @@ import com.xytsz.xytsz.global.Data;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
 
+import com.xytsz.xytsz.util.BitmapUtil;
 import com.xytsz.xytsz.util.FileBase64Util;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
@@ -91,7 +90,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 
 
 /**
@@ -245,25 +243,25 @@ public class ReportActivity extends AppCompatActivity {
 
         reportLocation = getString(R.string.reportlocation);
 
-        if (deal == null){
+        if (deal == null) {
             deal = new Deal();
         }
-        rl_notonlie = (RelativeLayout)findViewById(R.id.rl_notonline);
-        ll_report = (LinearLayout)findViewById(R.id.ll_report);
+        rl_notonlie = (RelativeLayout) findViewById(R.id.rl_notonline);
+        ll_report = (LinearLayout) findViewById(R.id.ll_report);
         mprogressbar = (LinearLayout) findViewById(R.id.home_progressbar);
         mbtrefresh = (Button) findViewById(R.id.btn_refresh);
 
         mbtrefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (HomeActivity.isNetworkAvailable(getApplicationContext())){
+                if (HomeActivity.isNetworkAvailable(getApplicationContext())) {
                     ll_report.setVisibility(View.INVISIBLE);
                     getData();
                     rl_notonlie.setVisibility(View.GONE);
                     mprogressbar.setVisibility(View.VISIBLE);
 
-                }else {
-                    ToastUtil.shortToast(getApplicationContext(),"请检查网络");
+                } else {
+                    ToastUtil.shortToast(getApplicationContext(), "请检查网络");
                 }
             }
         });
@@ -278,7 +276,7 @@ public class ReportActivity extends AppCompatActivity {
             mprogressbar.setVisibility(View.VISIBLE);
             ll_report.setVisibility(View.INVISIBLE);
             getData();
-        }else {
+        } else {
             rl_notonlie.setVisibility(View.VISIBLE);
             mprogressbar.setVisibility(View.GONE);
         }
@@ -288,6 +286,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private static final int DATA_REPORT = 155552;
     private static final int DATA_SUCCESS = 1166666;
+
     private void getData() {
         new Thread() {
             @Override
@@ -325,7 +324,7 @@ public class ReportActivity extends AppCompatActivity {
                     deal.selectFaSizetype.clear();
                     deal.selectFaNametype.clear();
 
-                    if (dealtypeList.size() != 0 && fatypeList.size() != 0 && pbtypeList.size() != 0 && faNameList.size() != 0 && faSizeList.size() != 0  && streetList.size() != 0) {
+                    if (dealtypeList.size() != 0 && fatypeList.size() != 0 && pbtypeList.size() != 0 && faNameList.size() != 0 && faSizeList.size() != 0 && streetList.size() != 0) {
                         //开始添加数据
                         ArrayList<String> dealtype = new ArrayList<>();
                         dealtype.clear();
@@ -449,7 +448,7 @@ public class ReportActivity extends AppCompatActivity {
                         handler.sendMessage(message);
 
 
-                    }else {
+                    } else {
                         Message message = Message.obtain();
                         message.what = DATA_REPORT;
                         handler.sendMessage(message);
@@ -470,6 +469,8 @@ public class ReportActivity extends AppCompatActivity {
     private String getJson(String method, String soap_action) throws Exception {
         SoapObject soapObject = new SoapObject(NetUrl.nameSpace, method);
 
+        soapObject.addProperty("personid", personId);
+
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.bodyOut = soapObject;
         envelope.dotNet = true;
@@ -484,10 +485,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
 
-
-
     private void initView() {
-
 
         spPbName = (Spinner) findViewById(R.id.sp_problemname);
         spGrades = (Spinner) findViewById(R.id.sp_grades);
@@ -532,7 +530,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private void initData() {
         soundUtil = new SoundUtil();
-        if (diseaseInformation ==null){
+        if (diseaseInformation == null) {
             diseaseInformation = new DiseaseInformation();
         }
         //初始化上传图片列表
@@ -612,190 +610,189 @@ public class ReportActivity extends AppCompatActivity {
         });
 
 
-            //处置类型
-            dealtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.dealType);
-            dealtypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spDealFatype.setAdapter(dealtypeAdapter);
-            spDealFatype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //设施类型
-                    fatypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityTypes.get(position));
-                    fatypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spFatype.setAdapter(fatypeAdapter);
+        //处置类型
+        dealtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.dealType);
+        dealtypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spDealFatype.setAdapter(dealtypeAdapter);
+        spDealFatype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //设施类型
+                fatypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityTypes.get(position));
+                fatypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spFatype.setAdapter(fatypeAdapter);
 
 
-                    //拿到当前处置设施的position
-                    dealtypePostion = position;
+                //拿到当前处置设施的position
+                dealtypePostion = position;
 
-                    diseaseInformation.dealtype_ID = ++position;
+                diseaseInformation.dealtype_ID = ++position;
 
-                }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                }
-            });
+            }
+        });
 
-            //设施类型
-            fatypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityTypes.get(0));
-            fatypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spFatype.setAdapter(fatypeAdapter);
-            //病害类型
-            pbtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.problemTypes.get(0).get(0));
-            pbtypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spPbtype.setAdapter(pbtypeAdapter);
-            //设施名称
-            fanameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityNames.get(0).get(0));
-            fanameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spFaName.setAdapter(fanameAdapter);
-            //设施规格
-            fasizeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilitySizes.get(0).get(0).get(0));
-            fasizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spFaSize.setAdapter(fasizeAdapter);
+        //设施类型
+        fatypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityTypes.get(0));
+        fatypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFatype.setAdapter(fatypeAdapter);
+        //病害类型
+        pbtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.problemTypes.get(0).get(0));
+        pbtypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spPbtype.setAdapter(pbtypeAdapter);
+        //设施名称
+        fanameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityNames.get(0).get(0));
+        fanameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFaName.setAdapter(fanameAdapter);
+        //设施规格
+        fasizeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilitySizes.get(0).get(0).get(0));
+        fasizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFaSize.setAdapter(fasizeAdapter);
 
-            //设施类型
-            spFatype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //病害类型
-                    pbtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.problemTypes.get(dealtypePostion).get(position));
-                    pbtypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spPbtype.setAdapter(pbtypeAdapter);
-                    //设施名称
-                    fanameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityNames.get(dealtypePostion).get(position));
-                    fanameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spFaName.setAdapter(fanameAdapter);
+        //设施类型
+        spFatype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //病害类型
+                pbtypeAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.problemTypes.get(dealtypePostion).get(position));
+                pbtypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spPbtype.setAdapter(pbtypeAdapter);
+                //设施名称
+                fanameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.facilityNames.get(dealtypePostion).get(position));
+                fanameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spFaName.setAdapter(fanameAdapter);
 
-                    fatypePosition = position;
+                fatypePosition = position;
 
-                    //设施类型
-                    String fatype = spFatype.getSelectedItem().toString();
-                    for (int i = 0; i < deal.selectFatype.size(); i++) {
-                        if (fatype.equals(deal.selectFatype.get(i))) {
-                            diseaseInformation.facilityType_ID = ++i;
-                        }
+                //设施类型
+                String fatype = spFatype.getSelectedItem().toString();
+                for (int i = 0; i < deal.selectFatype.size(); i++) {
+                    if (fatype.equals(deal.selectFatype.get(i))) {
+                        diseaseInformation.facilityType_ID = ++i;
                     }
-
-                    Log.i("fa", diseaseInformation.facilityType_ID + "");
                 }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+                Log.i("fa", diseaseInformation.facilityType_ID + "");
+            }
 
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-
-            //道路信息
-            roadnameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.roadS);
-            roadnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spRoadName.setAdapter(roadnameAdapter);
+            }
+        });
 
 
-            spRoadName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    diseaseInformation.streetAddress_ID = ++position;
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
+        //道路信息
+        roadnameAdapter = new ArrayAdapter<>(ReportActivity.this, android.R.layout.simple_spinner_item, deal.roadS);
+        roadnameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRoadName.setAdapter(roadnameAdapter);
 
 
-            spFaName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    fasizeAdapter = new ArrayAdapter<>(ReportActivity.this,
-                            android.R.layout.simple_spinner_item, deal.facilitySizes.get(dealtypePostion).get(fatypePosition).get(position));
-                    fasizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spFaSize.setAdapter(fasizeAdapter);
+        spRoadName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                diseaseInformation.streetAddress_ID = ++position;
+            }
 
-                    //设施名称
-                    String faNametype = spFaName.getSelectedItem().toString();
-                    for (int i = 0; i < deal.selectFaNametype.size(); i++) {
-                        if (faNametype.equals(deal.selectFaNametype.get(i))) {
-                            diseaseInformation.facilityName_ID = ++i;
-                        }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        spFaName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                fasizeAdapter = new ArrayAdapter<>(ReportActivity.this,
+                        android.R.layout.simple_spinner_item, deal.facilitySizes.get(dealtypePostion).get(fatypePosition).get(position));
+                fasizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spFaSize.setAdapter(fasizeAdapter);
+
+                //设施名称
+                String faNametype = spFaName.getSelectedItem().toString();
+                for (int i = 0; i < deal.selectFaNametype.size(); i++) {
+                    if (faNametype.equals(deal.selectFaNametype.get(i))) {
+                        diseaseInformation.facilityName_ID = ++i;
                     }
-                    Log.i("fanameID", diseaseInformation.facilityName_ID + "");
-
                 }
+                Log.i("fanameID", diseaseInformation.facilityName_ID + "");
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+            }
 
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-
-            mIvphoto1.setOnClickListener(listener);
-            mIvphoto2.setOnClickListener(listener);
-            mIvphoto3.setOnClickListener(listener);
-            mbtReport.setOnClickListener(listener);
+            }
+        });
 
 
-            mIvInput.setOnClickListener(listener);
-            mIvReplace.setOnClickListener(listener);
-
-            mIvAdd.setOnClickListener(listener);
-            mIvAddVideo.setOnClickListener(listener);
-            mIvVideoDelete.setOnClickListener(listener);
-            mIvPlay.setOnClickListener(listener);
+        mIvphoto1.setOnClickListener(listener);
+        mIvphoto2.setOnClickListener(listener);
+        mIvphoto3.setOnClickListener(listener);
+        mbtReport.setOnClickListener(listener);
 
 
-            spPbtype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //病害类型
-                    String pbtype = spPbtype.getSelectedItem().toString();
-                    for (int i = 0; i < deal.selectPbtype.size(); i++) {
-                        if (pbtype.equals(deal.selectPbtype.get(i))) {
-                            diseaseInformation.diseaseType_ID = ++i;
-                        }
+        mIvInput.setOnClickListener(listener);
+        mIvReplace.setOnClickListener(listener);
+
+        mIvAdd.setOnClickListener(listener);
+        mIvAddVideo.setOnClickListener(listener);
+        mIvVideoDelete.setOnClickListener(listener);
+        mIvPlay.setOnClickListener(listener);
+
+
+        spPbtype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //病害类型
+                String pbtype = spPbtype.getSelectedItem().toString();
+                for (int i = 0; i < deal.selectPbtype.size(); i++) {
+                    if (pbtype.equals(deal.selectPbtype.get(i))) {
+                        diseaseInformation.diseaseType_ID = ++i;
                     }
-
-                    Log.i("fadiseaseID", diseaseInformation.diseaseType_ID + "");
-
                 }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+                Log.i("fadiseaseID", diseaseInformation.diseaseType_ID + "");
 
-                }
-            });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
-            spFaSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //设施规格
-                    String faSizetype = spFaSize.getSelectedItem().toString();
-                    for (int i = 0; i < deal.selectFaSizetype.size(); i++) {
-                        if (faSizetype.equals(deal.selectFaSizetype.get(i))) {
-                            diseaseInformation.facilitySize_ID = ++i;
-                        }
+        spFaSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //设施规格
+                String faSizetype = spFaSize.getSelectedItem().toString();
+                for (int i = 0; i < deal.selectFaSizetype.size(); i++) {
+                    if (faSizetype.equals(deal.selectFaSizetype.get(i))) {
+                        diseaseInformation.facilitySize_ID = ++i;
                     }
-                    Log.i("fasizeID", diseaseInformation.facilitySize_ID + "");
                 }
+                Log.i("fasizeID", diseaseInformation.facilitySize_ID + "");
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                }
-            });
-
+            }
+        });
 
 
         mEtRoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ReportActivity.this, SearchRoadActivity.class);
-                intent.putExtra("road",deal.roadS);
+                intent.putExtra("road", deal.roadS);
                 startActivityForResult(intent, 200);
             }
         });
@@ -877,7 +874,7 @@ public class ReportActivity extends AppCompatActivity {
                         @Override
                         public void onError() {
                             ToastUtil.shortToast(getApplicationContext(), reportMore);
-                            mtvAudio.setCompoundDrawablesWithIntrinsicBounds(drawableleft, null, null, null);
+
                         }
                     });
 
@@ -1028,7 +1025,7 @@ public class ReportActivity extends AppCompatActivity {
                                     if (Build.VERSION.SDK_INT >= 24) {
                                         fileUri = FileProvider.getUriForFile(ReportActivity.this, Tag, data);
                                     } else {
-                                        fileUri=Uri.fromFile(data);
+                                        fileUri = Uri.fromFile(data);
                                     }
 
                                     Intent intent1 = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -1062,7 +1059,6 @@ public class ReportActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionUtils.CODE_RECORD_AUDIO) {
             PermissionUtils.openSettingActivity(ReportActivity.this, "请打开录音权限");
-            return;
         }
 
         PermissionUtils.requestPermissionsResult(this, requestCode, permissions, grantResults, mPermissionGrant);
@@ -1196,10 +1192,10 @@ public class ReportActivity extends AppCompatActivity {
 
                                     data = new File(getPhotopath(2));
                                     //fileUri = Uri.fromFile(file);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                         fileUri = FileProvider.getUriForFile(ReportActivity.this, Tag, data);
                                     } else {
-                                        fileUri=Uri.fromFile(data);
+                                        fileUri = Uri.fromFile(data);
                                     }
 
                                     Intent intent2 = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -1230,10 +1226,10 @@ public class ReportActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                     data = new File(getPhotopath(3));
                                     //fileUri = Uri.fromFile(file);
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                         fileUri = FileProvider.getUriForFile(ReportActivity.this, Tag, data);
                                     } else {
-                                        fileUri=Uri.fromFile(data);
+                                        fileUri = Uri.fromFile(data);
                                     }
                                     Intent intent3 = new Intent("android.media.action.IMAGE_CAPTURE");
                                     intent3.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -1365,19 +1361,19 @@ public class ReportActivity extends AppCompatActivity {
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                ToastUtil.shortToast(getApplicationContext(),imgsuccess);
+                                                ToastUtil.shortToast(getApplicationContext(), imgsuccess);
                                             }
                                         });
 
                                         try {
                                             String remoteInfo = getRemoteInfo(diseaseInformation);
-                                            Log.e("isReport:","remoteInfo= "+remoteInfo);
+                                            Log.e("isReport:", "remoteInfo= " + remoteInfo);
                                             Message message = Message.obtain();
                                             message.obj = remoteInfo;
                                             message.what = GlobalContanstant.REPORTESUCCESS;
                                             handler.sendMessage(message);
                                         } catch (Exception e) {
-                                            Log.e("isReport:","remoteInfo= "+e);
+                                            Log.e("isReport:", "remoteInfo= " + e);
                                             Message message = Message.obtain();
                                             message.what = GlobalContanstant.REPORTEFAIL;
                                             handler.sendMessage(message);
@@ -1576,7 +1572,7 @@ public class ReportActivity extends AppCompatActivity {
             try {
                 outputStream = new FileOutputStream(path);
 
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);//把图片数据写入文件
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);                 //把图片数据写入文件
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -1625,7 +1621,7 @@ public class ReportActivity extends AppCompatActivity {
                 mEtRoad.setText(roadname);
                 for (int i = 0; i < deal.roadS.length; i++) {
                     if (roadname.equals(deal.roadS[i])) {
-                        i = i+1;
+                        i = i + 1;
                         diseaseInformation.streetAddress_ID = i;
                     }
                 }
@@ -1638,28 +1634,29 @@ public class ReportActivity extends AppCompatActivity {
             //当data为空的时候，不做任何处理
             if (resultCode == RESULT_OK) {
                 if (requestCode == 1) {
-                    if (Build.VERSION.SDK_INT >= 24){
-                       bitmap =getBitmap(mIvphoto1,this.data.getAbsolutePath());
-                    }else {
-
-                        bitmap = getBitmap(mIvphoto1, fileUri.getPath());
+                    if (Build.VERSION.SDK_INT >= 24) {
+                       /* bitmap = getBitmap(mIvphoto1, this.data.getAbsolutePath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
                     }
-                    String fileName1 = saveToSDCard(bitmap);
-
-                    //将选择的图片设置到控件上
                     mIvphoto1.setImageBitmap(bitmap);
+                    String fileName1 = saveToSDCard(bitmap);
+                    //将选择的图片设置到控件上
                     mIvphoto1.setClickable(false);
                     String encode1 = photo2Base64(path);
                     fileNames.add(fileName1);
                     imageBase64Strings.add(encode1);
 
                 } else if (requestCode == 2) {
-                    if (Build.VERSION.SDK_INT >= 24){
-                        bitmap =getBitmap(mIvphoto2,this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(mIvphoto2, fileUri.getPath());
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
                     }
-                        String fileName2 = saveToSDCard(bitmap);
+                    String fileName2 = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
                     mIvphoto2.setImageBitmap(bitmap);
                     mIvphoto2.setClickable(false);
@@ -1668,10 +1665,11 @@ public class ReportActivity extends AppCompatActivity {
                     imageBase64Strings.add(encode2);
 
                 } else if (requestCode == 3) {
-                    if (Build.VERSION.SDK_INT >= 24){
-                        bitmap =getBitmap(mIvphoto3,this.data.getAbsolutePath());
-                    }else {
-                        bitmap = getBitmap(mIvphoto3, fileUri.getPath());
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        bitmap = BitmapUtil.getScaleBitmap(this.data.getAbsolutePath());
+                    } else {
+                        /*bitmap = getBitmap(mIvphoto1, fileUri.getPath());*/
+                        bitmap = BitmapUtil.getScaleBitmap(fileUri.getPath());
                     }
                     String fileName3 = saveToSDCard(bitmap);
                     //将选择的图片设置到控件上
@@ -1685,22 +1683,8 @@ public class ReportActivity extends AppCompatActivity {
             }
             //新加的
         } else if (requestCode == 4) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            bitmap = BitmapUtil.getPickBitmap(ReportActivity.this,data);
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            bitmap = getBitmap(mIvphoto1, picturePath);
-            if (bitmap == null) {
-                ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                return;
-            }
             String fileName4 = saveToSDCard(bitmap);
             //将选择的图片设置到控件上
             mIvphoto1.setImageBitmap(bitmap);
@@ -1713,22 +1697,9 @@ public class ReportActivity extends AppCompatActivity {
 
         } else if (requestCode == 5) {
 
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            bitmap = BitmapUtil.getPickBitmap(ReportActivity.this,data);
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
 
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            bitmap = getBitmap(mIvphoto2, picturePath);
-            if (bitmap == null) {
-                ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                return;
-            }
             String fileName5 = saveToSDCard(bitmap);
             //将选择的图片设置到控件上
             mIvphoto2.setImageBitmap(bitmap);
@@ -1738,22 +1709,8 @@ public class ReportActivity extends AppCompatActivity {
             fileNames.add(fileName5);
             imageBase64Strings.add(encode5);
         } else if (requestCode == 6) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            bitmap =BitmapUtil.getPickBitmap(ReportActivity.this,data);
 
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-
-            bitmap = getBitmap(mIvphoto3, picturePath);
-            if (bitmap == null) {
-                ToastUtil.shortToast(getApplicationContext(), "此照片为空,重新选择");
-                return;
-            }
             String fileName6 = saveToSDCard(bitmap);
             //将选择的图片设置到控件上
             mIvphoto3.setImageBitmap(bitmap);
@@ -1765,83 +1722,6 @@ public class ReportActivity extends AppCompatActivity {
             imageBase64Strings.add(encode6);
 
         }
-    }
-
-    private Bitmap getBitmap(ImageView imageView, String path) {
-        Bitmap bitmap;
-        int width = imageView.getWidth();
-
-        int height = imageView.getHeight();
-
-        BitmapFactory.Options factoryOptions = new BitmapFactory.Options();
-
-        factoryOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, factoryOptions);
-
-        int imageWidth = factoryOptions.outWidth;
-        int imageHeight = factoryOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(imageWidth / width, imageHeight
-                / height);
-
-        // Decode the image file into a Bitmap sized to fill the
-        // View
-        factoryOptions.inJustDecodeBounds = false;
-        factoryOptions.inSampleSize = scaleFactor;
-        factoryOptions.inPurgeable = true;
-
-        bitmap = BitmapFactory.decodeFile(path,
-                factoryOptions);
-
-        int bitmapDegree = getBitmapDegree(path);
-        Bitmap rotateBitmap = rotateBitmap(bitmap, bitmapDegree);
-        return rotateBitmap;
-    }
-
-    private int getBitmapDegree(String path) {
-        int degree = 0;
-        try {
-            //从指定路径读取图片，获取exif信息
-            ExifInterface exifInterface = new ExifInterface(path);
-            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
-
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    degree = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    degree = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    degree = 270;
-                    break;
-            }
-
-            return degree;
-
-        } catch (IOException e) {
-            //e.printStackTrace();
-        }
-
-        return degree;
-    }
-
-
-    private Bitmap rotateBitmap(Bitmap bm, float orientationDegree) {
-        Matrix m = new Matrix();
-        m.setRotate(orientationDegree, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-
-        try {
-
-            Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-            return bm1;
-        } catch (OutOfMemoryError ex) {
-
-        }
-
-        return null;
     }
 
 
@@ -1887,11 +1767,10 @@ public class ReportActivity extends AppCompatActivity {
                     initData();
                     break;
                 case DATA_REPORT:
-
                     mprogressbar.setVisibility(View.GONE);
                     rl_notonlie.setVisibility(View.VISIBLE);
                     ll_report.setVisibility(View.INVISIBLE);
-                    ToastUtil.shortToast(getApplicationContext(),"未获取数据,请刷新");
+                    ToastUtil.shortToast(getApplicationContext(), "未获取数据,请刷新");
                     break;
 
                 case GlobalContanstant.REPORTEFAIL:
@@ -1979,7 +1858,7 @@ public class ReportActivity extends AppCompatActivity {
                         if (audioSuccess.equals("true")) {
                             ToastUtil.shortToast(getApplicationContext(), audiosuccess);
                         }
-                    }else {
+                    } else {
                         mbtReport.setVisibility(View.VISIBLE);
                         mprogressbar.setVisibility(View.GONE);
                     }
@@ -1991,13 +1870,12 @@ public class ReportActivity extends AppCompatActivity {
                         if (videoSuccess.equals("true")) {
                             ToastUtil.shortToast(getApplicationContext(), videosuccess);
                         }
-                    }else {
+                    } else {
                         mbtReport.setVisibility(View.VISIBLE);
                         mprogressbar.setVisibility(View.GONE);
                     }
 
                     break;
-
 
 
             }
@@ -2018,7 +1896,7 @@ public class ReportActivity extends AppCompatActivity {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             //经度
-            if (diseaseInformation != null){
+            if (diseaseInformation != null) {
                 diseaseInformation.longitude = bdLocation.getLongitude() + "";
                 //维度
                 diseaseInformation.latitude = bdLocation.getLatitude() + "";
@@ -2073,12 +1951,12 @@ public class ReportActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (locationClient != null){
+        if (locationClient != null) {
             locationClient.stop();
             locationClient.unRegisterLocationListener(myListener);
-            locationClient =null;
+            locationClient = null;
         }
-        diseaseInformation =null;
+        diseaseInformation = null;
         deal = null;
         finish();
     }

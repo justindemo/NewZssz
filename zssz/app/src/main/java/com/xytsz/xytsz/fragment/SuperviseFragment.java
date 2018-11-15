@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.dalong.marqueeview.MarqueeView;
+
+
+
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.activity.FacilityManageActivity;
 import com.xytsz.xytsz.activity.FloodActivity;
@@ -17,12 +19,14 @@ import com.xytsz.xytsz.activity.MemberLocationActivity;
 import com.xytsz.xytsz.adapter.SuperviseAdapter;
 import com.xytsz.xytsz.base.BaseFragment;
 import com.xytsz.xytsz.global.GlobalContanstant;
+import com.xytsz.xytsz.ui.MarqueeView;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.SpUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by admin on 2017/6/29.
@@ -117,12 +121,8 @@ public class SuperviseFragment extends BaseFragment  {
 
         mheadMarquee = (MarqueeView) headview.findViewById(R.id.tv_headmarquee);
 
-        mheadMarquee.setText(alltitle + alluser);
-        mheadMarquee.setFocusable(true);
-        mheadMarquee.requestFocus();
-        mheadMarquee.sepX = 2;
-        mheadMarquee.startScroll();
-
+        mheadMarquee.startWithText(alltitle + alluser);
+        mheadMarquee.startWithText(alltitle + alluser,R.anim.anim_right_in,R.anim.anim_left_out);
 
         adapter.addHeaderView(headview);
 
@@ -144,20 +144,25 @@ public class SuperviseFragment extends BaseFragment  {
     public void onStart() {
         super.onStart();
         role = SpUtils.getInt(getContext(), GlobalContanstant.ROLE);
-        mheadMarquee.startScroll();
+        mheadMarquee.startFlipping();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mheadMarquee.stopScroll();
+        mheadMarquee.stopFlipping();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mheadMarquee.startScroll();
+        mheadMarquee.startFlipping();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mheadMarquee.stopFlipping();
+    }
 }
 

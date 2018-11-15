@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -41,6 +42,7 @@ import com.xytsz.xytsz.bean.UpdateStatus;
 import com.xytsz.xytsz.bean.VersionInfo;
 import com.xytsz.xytsz.global.GlobalContanstant;
 import com.xytsz.xytsz.net.NetUrl;
+import com.xytsz.xytsz.util.FileUtils;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.SpUtils;
@@ -111,8 +113,6 @@ public class MeFragment extends BaseFragment {
     private LinearLayout mLLReview;
     public static final String ARGUMENT = "argument";
     private int personID;
-    private List<String> numberlist;
-    private boolean isvisitor;
     private TextView mine_tv_sign;
     private int role;
     private String error;
@@ -121,6 +121,7 @@ public class MeFragment extends BaseFragment {
     private String userName;
     private TextView mActionbartext;
     private TextView tvReviewNum;
+    private TextView tvCleanCache;
 
 
     @Override
@@ -137,7 +138,7 @@ public class MeFragment extends BaseFragment {
 
         mine_tv_sign = (TextView) view.findViewById(R.id.mine_tv_sign);
         tvReviewNum = (TextView) view.findViewById(R.id.tv_review_nume);
-
+        tvCleanCache = (TextView) view.findViewById(R.id.me_clean_cache);
         return view;
     }
 
@@ -184,6 +185,7 @@ public class MeFragment extends BaseFragment {
         mLLReview.setOnClickListener(listener);
         //mTvData.setOnClickListener(listener);
         forUs.setOnClickListener(listener);
+        tvCleanCache.setOnClickListener(listener);
     }
 
 
@@ -294,6 +296,28 @@ public class MeFragment extends BaseFragment {
 
                 case R.id.for_us:
                     IntentUtil.startActivity(getContext(), ForUsActivity.class);
+                    break;
+
+                case R.id.me_clean_cache:
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        String cleanPath = Environment.getExternalStorageDirectory().getAbsolutePath()+
+                                "/Zssz/";
+                        //判断这个文件夹是否存在
+
+                        FileUtils.cleanCustomCache(cleanPath);
+
+
+                        if (Build.VERSION.SDK_INT >=24){
+                            FileUtils.cleanExternalCache(getContext());
+                        }
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.shortToast(getContext(),"清理完成");
+                            }
+                        },1500);
+                    }
                     break;
 
             }
@@ -529,17 +553,15 @@ public class MeFragment extends BaseFragment {
                     String taskCountOfReviewNumber = getTaskCountOfReview(personID);
                     String taskCountOfSendNumber = getTaskCountOfSend(personID);
 
-                    numbers.clear();
-
-                    numbers.add(taskCountOfDealNumber);
-                    numbers.add(taskCountOfReportNumber);
-                    numbers.add(taskCountOfReviewNumber);
-                    numbers.add(taskCountOfSendNumber);
-
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dealNumber",taskCountOfDealNumber);
+                    bundle.putString("reportNumber",taskCountOfReportNumber);
+                    bundle.putString("reviewNumber",taskCountOfReviewNumber);
+                    bundle.putString("sendNumber",taskCountOfSendNumber);
 
                     Message message = Message.obtain();
                     message.what = ISNUMBER;
-                    message.obj = numbers;
+                    message.setData(bundle);
                     handler.sendMessage(message);
 
                 } catch (Exception e) {
@@ -580,10 +602,9 @@ public class MeFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+//        ButterKnife.unbind(this);
     }
 
-    private List<String> numbers = new ArrayList<>();
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -591,13 +612,19 @@ public class MeFragment extends BaseFragment {
             switch (msg.what) {
 
                 case ISNUMBER:
+                    Bundle bundle = msg.getData();
+                    String dealNumber = bundle.getString("dealNumber");
+                    String reportNumber = bundle.getString("reportNumber");
+                    String reviewNumber = bundle.getString("reviewNumber");
+                    String sendNumber = bundle.getString("sendNumber");
 
-                    numberlist = (List<String>) msg.obj;
-                    if (tvReportNume != null && tvDealNumber != null) {
-                        tvDealNumber.setText(numberlist.get(0));
-                        tvReportNume.setText(numberlist.get(1));
-                        tvReviewNum.setText(numberlist.get(2));
-                        tvSendNume.setText(numberlist.get(3));
+                    if (tvReportNume != null && tvDealNumber != null
+                            && tvReviewNum != null && tvSendNume != null) {
+
+                        tvDealNumber.setText(dealNumber);
+                        tvReportNume.setText(reportNumber);
+                        tvReviewNum.setText(reviewNumber);
+                        tvSendNume.setText(sendNumber);
 
                     }
                     break;

@@ -18,7 +18,7 @@ android {
         applicationId "com.xytsz.xytsz"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 24
+        versionCode 17
         versionName "v2.8.1"
 
         ndk {
@@ -44,7 +44,7 @@ android {
         release {
             //应用正式签名
             buildConfigField "boolean", "LOG_DEBUG", "false"
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -99,8 +99,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.0.0'
     compile project(':adapter2.0')
     compile 'com.android.support:design:24.0.0'
-    compile files('libs/MobCommons-2017.0608.1618.jar')
-    compile files('libs/MobTools-2017.0608.1618.jar')
+
     compile files('libs/MobCommons-2017.0607.1736.jar')
     compile files('libs/MobTools-2017.0607.1736.jar')
     compile files('libs/ShareSDK-Core-3.0.0.jar')
@@ -109,7 +108,6 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-3.0.0.jar')
     compile files('libs/ShareSDK-Wechat-Core-3.0.0.jar')
     compile files('libs/ShareSDK-Wechat-Moments-3.0.0.jar')
-    compile 'com.dalong:marqueeview:1.0.1'
     compile files('libs/alipaySdk-20170725.jar')
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     compile name: 'SMSSDK-3.0.0', ext: 'aar'

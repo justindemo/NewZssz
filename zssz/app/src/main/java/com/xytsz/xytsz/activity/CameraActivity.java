@@ -35,7 +35,7 @@ import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.util.PermissionUtils;
 import com.xytsz.xytsz.util.ToastUtil;
 
-import org.kobjects.base64.Base64;
+
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -91,11 +91,8 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
-
 
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 
@@ -152,13 +149,14 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             camera.stopPreview();// 停掉原来摄像头的预览
             camera.release();// 释放资源
             camera = null;// 取消原来摄像头
-        }
-        try {
-            camera = Camera.open(0);
-            camera.setPreviewDisplay(holder);
-        } catch (Exception e) {
-            ToastUtil.shortToast(getApplicationContext(), "打开摄像头失败");
+        }else {
+            try {
+                camera = Camera.open(0);
+                camera.setPreviewDisplay(holder);
+            } catch (Exception e) {
+                ToastUtil.shortToast(getApplicationContext(), "打开摄像头失败");
 
+            }
         }
 
     }
@@ -252,8 +250,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         }
-
-
 
         camera.setDisplayOrientation(90);
 

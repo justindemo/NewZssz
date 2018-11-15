@@ -1,18 +1,17 @@
 package com.xytsz.xytsz.fragment;
 
 
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
+
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
@@ -22,7 +21,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
-import com.dalong.marqueeview.MarqueeView;
+
 import com.xytsz.xytsz.R;
 import com.xytsz.xytsz.activity.CheckActivity;
 import com.xytsz.xytsz.activity.DealActivity;
@@ -36,7 +35,8 @@ import com.xytsz.xytsz.bean.Review;
 import com.xytsz.xytsz.global.GlobalContanstant;
 
 import com.xytsz.xytsz.net.NetUrl;
-import com.xytsz.xytsz.receive.CustomBroadCast;
+
+import com.xytsz.xytsz.ui.MarqueeView;
 import com.xytsz.xytsz.util.IntentUtil;
 import com.xytsz.xytsz.util.JsonUtil;
 import com.xytsz.xytsz.util.PermissionUtils;
@@ -55,7 +55,7 @@ import java.util.List;
  * Created by admin on 2017/1/4.
  * 首页
  */
-public class HomeFragment extends BaseFragment implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class HomeFragment extends BaseFragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
 
     private static final int FAIL = 404;
@@ -151,17 +151,15 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
         noData = getString(R.string.table_nodata);
 
         alluser = SpUtils.getInt(getContext(), GlobalContanstant.ALLUSERCOUNT);
-        mtvMarquee.setText(alltitle + alluser);
-        mtvMarquee.setFocusable(true);
-        mtvMarquee.requestFocus();
-        mtvMarquee.sepX = 2;
-        mtvMarquee.startScroll();
+
+        mtvMarquee.startWithText(alltitle + alluser);
+        mtvMarquee.startWithText(alltitle + alluser, R.anim.anim_right_in, R.anim.anim_left_out);
+
 
         mActionbartext.setText(R.string.app_name);
 
         //获取当前登陆人的ID
         personId = SpUtils.getInt(getContext(), GlobalContanstant.PERSONID);
-        getData();
 
 
         //是否显示缩放按钮
@@ -234,7 +232,6 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
                         message.what = MANAGER;
                         message.obj = manageNumbers;
                         handler.sendMessage(message);
-
 
                     }
 
@@ -347,16 +344,20 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
             locationClient.start();
         }
         role = SpUtils.getInt(getContext(), GlobalContanstant.ROLE);
-        mtvMarquee.startScroll();
+//        mtvMarquee.startScroll();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mtvMarquee.stopFlipping();
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         mapview.onResume();
-        mtvMarquee.startScroll();
-
+        mtvMarquee.startFlipping();
         getData();
 
 
@@ -365,19 +366,26 @@ public class HomeFragment extends BaseFragment implements ActivityCompat.OnReque
     @Override
     public void onPause() {
         super.onPause();
-        mapview.onPause();
-        mtvMarquee.stopScroll();
-        if (locationClient != null){
+        if (locationClient != null) {
             locationClient.unRegisterLocationListener(myListener);
             locationClient.stop();
         }
+        mapview.onPause();
+        mtvMarquee.stopFlipping();
+
 
     }
 
     @Override
     public void onDestroy() {
-        mapview.onDestroy();
         super.onDestroy();
+        if (locationClient != null) {
+            locationClient.unRegisterLocationListener(myListener);
+            locationClient.stop();
+        }
+
+        mapview.onDestroy();
+        mtvMarquee.stopFlipping();
     }
 
     private static final int ISLOAD = 33301;

@@ -48,7 +48,6 @@ public class MemberShowContentActivity extends AppCompatActivity {
         }
 
 
-        //v-url : "http://10.0.2.2:8080/zhbj/10007/724D6A55496A11726628.html"
         membershoucontentWebview.loadUrl(url);
         WebSettings settings = membershoucontentWebview.getSettings();
         settings.setUseWideViewPort(true);
